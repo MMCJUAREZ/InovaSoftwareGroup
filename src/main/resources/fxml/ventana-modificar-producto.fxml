@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="309.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label alignment="CENTER" contentDisplay="TOP" text="Modificar Producto">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+            <VBox.margin>
+                <Insets bottom="15.0" top="20.0" />
+            </VBox.margin></Label>
+      <Label fx:id="lblIdProducto" />
+        <HBox alignment="CENTER" prefHeight="50.0" prefWidth="540.0">
+            <children>
+                <ComboBox fx:id="cmbTipo" prefHeight="25.0" prefWidth="109.0" promptText="Tipo">
+                    <HBox.margin>
+                        <Insets right="15.0" />
+                    </HBox.margin></ComboBox>
+                <Label text=" Nombre: ">
+                    <HBox.margin>
+                        <Insets left="15.0" />
+                    </HBox.margin></Label>
+                <TextField fx:id="txtNombre" prefHeight="25.0" prefWidth="162.0" />
+                <Label text="Cantidad: ">
+                    <HBox.margin>
+                        <Insets left="15.0" />
+                    </HBox.margin></Label>
+                <TextField fx:id="txtCantidad" prefHeight="25.0" prefWidth="87.0" />
+            </children>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="50.0" prefWidth="540.0">
+            <children>
+                <Label text="Fecha de caducidad: " />
+                <DatePicker fx:id="dtpFechaCaducidad" />
+                <ComboBox fx:id="cmbUnidad" prefWidth="150.0" promptText="Unidad">
+                    <HBox.margin>
+                        <Insets left="30.0" />
+                    </HBox.margin>
+                </ComboBox>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="43.0" prefWidth="540.0">
+            <children>
+                <Label text="Precio: " />
+                <TextField fx:id="txtPrecio" prefHeight="25.0" prefWidth="84.0">
+                    <HBox.margin>
+                        <Insets right="15.0" />
+                    </HBox.margin>
+                </TextField>
+                <ComboBox fx:id="cmbMarca" prefWidth="150.0" promptText="Marca" />
+            </children>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="55.0" prefWidth="540.0">
+            <children>
+                <Button mnemonicParsing="false" onAction="#handleModificar" text="Modificar">
+                    <HBox.margin>
+                        <Insets right="15.0" />
+                    </HBox.margin>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#handleCancelar" text="Cancelar">
+                    <HBox.margin>
+                        <Insets left="15.0" />
+                    </HBox.margin>
+                </Button>
+            </children>
+        </HBox>
+    </children>
+    <padding>
+        <Insets bottom="15.0" left="30.0" right="30.0" top="15.0" />
+    </padding>
+</VBox>

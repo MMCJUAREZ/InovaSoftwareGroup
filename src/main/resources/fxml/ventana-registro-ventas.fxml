@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label alignment="TOP_CENTER" contentDisplay="CENTER" lineSpacing="100.0" text="Registro de ventas">
+            <font>
+                <Font name="System Bold" size="16.0" />
+            </font>
+         <VBox.margin>
+            <Insets bottom="15.0" />
+         </VBox.margin>
+        </Label>
+        <HBox alignment="CENTER" prefHeight="45.0" prefWidth="600.0">
+            <children>
+                <ComboBox fx:id="cmbProductos" cache="true" prefHeight="25.0" prefWidth="162.0" promptText="Productos">
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin></ComboBox>
+                <Label text="Cantidad: ">
+               <padding>
+                  <Insets left="20.0" />
+               </padding></Label>
+                <TextField fx:id="txtCantidad" alignment="CENTER" prefHeight="25.0" prefWidth="69.0" />
+            </children>
+        </HBox>
+      <HBox prefHeight="76.0" prefWidth="430.0">
+         <children>
+              <Button fx:id="btnAgregar" mnemonicParsing="false" onAction="#handleAgregar" text="Agregar">
+               <opaqueInsets>
+                  <Insets top="20.0" />
+               </opaqueInsets>
+               <HBox.margin>
+                  <Insets left="222.0" top="17.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#handleModificar" text="Modificar o eliminar">
+               <HBox.margin>
+                  <Insets left="50.0" top="17.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+        <TableView fx:id="tableVenta" prefHeight="200.0" prefWidth="24.0">
+            <columns>
+                <TableColumn fx:id="columnIdProducto" editable="false" prefWidth="75.0" text="idProducto" />
+                <TableColumn fx:id="columnNombreProducto" editable="false" prefWidth="75.0" text="NombreProducto" />
+                <TableColumn fx:id="columnMarca" editable="false" prefWidth="75.0" text="Marca" />
+                <TableColumn fx:id="columnPrecio" editable="false" prefWidth="75.0" text="Precio" />
+                <TableColumn fx:id="columnCantidad" editable="false" prefWidth="75.0" text="Cantidad" />
+                <TableColumn fx:id="columnSubtotal" editable="false" prefWidth="75.0" text="Subtotal" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+         <VBox.margin>
+            <Insets left="5.0" right="5.0" />
+         </VBox.margin>
+        </TableView>
+      <HBox alignment="CENTER" prefHeight="93.0" prefWidth="600.0">
+         <children>
+              <Label fx:id="lblTotal" prefHeight="17.0" prefWidth="220.0" text="Total:" />
+            <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#handleCancelar" prefHeight="25.0" prefWidth="72.0" text="Cancelar" />
+            <Button fx:id="btnFinalizar" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleFinalizar" prefHeight="25.0" prefWidth="72.0" text="Finalizar">
+               <HBox.margin>
+                  <Insets left="20.0" right="20.0" />
+               </HBox.margin></Button>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+    </children>
+   <padding>
+      <Insets top="15.0" />
+   </padding>
+</VBox>

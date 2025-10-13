@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" style="-fx-padding: 15px;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+
+    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Mi Aplicación" />
+
+    <Button text="Inventario" onAction="#handleInventario"
+            style="-fx-min-width: 200px; -fx-min-height: 30px;"/>
+
+    <Button text="Alertas" onAction="#handleMostrarAlertas"
+            style="-fx-min-width: 200px; -fx-min-height: 30px;"/>
+
+    <Button onAction="#handleRegistrarVenta" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Registrar venta" />
+
+    <Button onAction="#handleGenerarReporte" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Generar reporte" />
+
+    <Button onAction="#handleConfigurarUmbrales" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Configurar Umbrales" />
+
+</VBox>

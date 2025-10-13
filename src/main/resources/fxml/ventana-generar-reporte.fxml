@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="232.0" layoutY="45.0" text="Generar reporte">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="82.0" layoutY="106.0" text="Desde:" />
+      <Label layoutX="82.0" layoutY="154.0" text="Hasta:" />
+      <DatePicker fx:id="dtpDesde" layoutX="133.0" layoutY="102.0" />
+      <DatePicker fx:id="dtpHasta" layoutX="133.0" layoutY="150.0" />
+      <ComboBox fx:id="cmbTipoProducto" layoutX="367.0" layoutY="102.0" prefWidth="150.0" promptText="Tipo producto" />
+      <ComboBox fx:id="cmbTipoReporte" layoutX="82.0" layoutY="200.0" prefWidth="150.0" promptText="Tipo reporte" />
+      <ComboBox fx:id="cmbPeriodicidad" layoutX="292.0" layoutY="200.0" prefWidth="150.0" promptText="Periodicidad" />
+      <Button layoutX="83.0" layoutY="275.0" mnemonicParsing="false" onAction="#handleGenerar" text="Generar reporte" />
+      <Button layoutX="255.0" layoutY="275.0" mnemonicParsing="false" onAction="#handleCancelar" text="Cancelar" />
+   </children>
+</Pane>

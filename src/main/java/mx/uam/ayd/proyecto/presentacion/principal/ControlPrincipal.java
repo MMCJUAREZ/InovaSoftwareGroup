@@ -1,0 +1,110 @@
+package mx.uam.ayd.proyecto.presentacion.principal;
+
+import jakarta.annotation.PostConstruct;
+
+import mx.uam.ayd.proyecto.presentacion.Inventario.Controlinventario;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import mx.uam.ayd.proyecto.presentacion.agregarUsuario.ControlAgregarUsuario;
+import mx.uam.ayd.proyecto.presentacion.listarUsuarios.ControlListarUsuarios;
+import mx.uam.ayd.proyecto.presentacion.listarGrupos.ControlListarGrupos;
+import mx.uam.ayd.proyecto.presentacion.configurarUmbrales.ControlConfiguracionUmbrales;
+
+import mx.uam.ayd.proyecto.presentacion.alertas.ControlAlerta;
+import mx.uam.ayd.proyecto.presentacion.alertas.VentanaAlerta;
+
+import mx.uam.ayd.proyecto.presentacion.generarReporte.ControlGenerarReporte;
+import mx.uam.ayd.proyecto.presentacion.registroVentas.ControlRegistroVentas;
+
+/**
+ * Esta clase lleva el flujo de control de la ventana principal
+ *
+ * @author humbertocervantes
+ *
+ */
+@Component
+public class ControlPrincipal {
+
+	private final ControlConfiguracionUmbrales controlConfiguracionUmbrales;
+	private final ControlAlerta controlAlerta;
+	private final VentanaAlerta ventanaAlerta;
+	private final Controlinventario controlinventario;
+	private final ControlGenerarReporte controlGenerarReporte;
+	private final ControlRegistroVentas controlRegistroVentas;
+
+	private final VentanaPrincipal ventana;
+
+	@Autowired
+	public ControlPrincipal(
+			ControlConfiguracionUmbrales controlConfiguracionUmbrales,
+			ControlAlerta controlAlerta,
+			VentanaAlerta ventanaAlerta,
+			Controlinventario controlinventario,
+			ControlGenerarReporte controlGenerarReporte,
+			ControlRegistroVentas controlRegistroVentas,
+			VentanaPrincipal ventana) {
+		this.controlConfiguracionUmbrales = controlConfiguracionUmbrales;
+		this.controlAlerta = controlAlerta;
+		this.ventanaAlerta = ventanaAlerta;
+		this.controlinventario = controlinventario;
+		this.controlGenerarReporte = controlGenerarReporte;
+		this.controlRegistroVentas = controlRegistroVentas;
+		this.ventana = ventana;
+	}
+
+	/**
+	 * Método que se ejecuta después de la construcción del bean
+	 * y realiza la conexión bidireccional entre el control principal y la ventana principal
+	 */
+	@PostConstruct
+	public void init() {
+		ventana.setControlPrincipal(this);
+	}
+
+	/**
+	 * Inicia el flujo de control de la ventana principal
+	 *
+	 */
+	public void inicia() {
+		ventana.muestra();
+	}
+
+	/*
+        Metodo que arranca la historia de usuario "configurar umbrales"
+     */
+	public void configurarUmbrales() {
+		controlConfiguracionUmbrales.inicia();
+	}
+
+	/*
+	 * Metodo que arranca la historia de usuario "Listar prodcutos "
+	 *
+	 * */
+	public void Inventario() {
+		controlinventario.inicia();
+	}
+
+	/**
+	 * Método que arranca la historia de usuario "listar usuarios"
+	 *
+	 */
+	public void registrarVenta() {
+		controlRegistroVentas.inicia();
+	}
+
+	/**
+	 * Método que arranca la historia de usuario "listar grupos"
+	 *
+	 */
+	public void generarReporte() {
+		controlGenerarReporte.inicia();
+	}
+
+	/**
+	 * Método para mostrar ventana de alertas
+	 */
+	public void mostrarAlertas() {
+		controlAlerta.inicia();
+	}
+}

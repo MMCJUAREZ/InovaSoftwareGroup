@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+>
+    <TableView fx:id="tablaProductos" layoutX="18.0" layoutY="83.0" prefHeight="200.0" prefWidth="377.0">
+        <columns>
+            <TableColumn fx:id="columnaProducto" prefWidth="75.0" text="Producto" />
+            <TableColumn fx:id="columnaStock" prefWidth="75.0" text="Stock" />
+            <TableColumn fx:id="columnaUmbral" prefWidth="75.0" text="Umbral" />
+            <TableColumn fx:id="columnaEstado" prefWidth="75.0" text="Estado" />
+            <TableColumn fx:id="columnaAccion" prefWidth="100.0" text="Accion" />
+        </columns>
+    </TableView>
+    <Label text="Gestion Stock" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+</AnchorPane>
