@@ -111,7 +111,7 @@ Este proyecto ha sido migrado de Spring Boot 2.7.3 a 3.2.12. Los principales cam
 ### Agregar nuevas funcionalidades:
 1. Crear el modelo en `negocio/modelo/`
 2. Crear el repositorio en `datos/`
-3. Crear el servicio en `negocio/`
+3. Crear el servicio en `negocio/` 
 4. Crear la interfaz en `presentacion/`
 5. Agregar pruebas en `test/`
 
@@ -120,3 +120,5 @@ Este proyecto ha sido migrado de Spring Boot 2.7.3 a 3.2.12. Los principales cam
 Este proyecto es parte del curso de Análisis y Diseño de Software.
 
 Contactar a Humberto Cervantes hcm@xanum.uam.mx
+
+mvn clean spring-boot:run

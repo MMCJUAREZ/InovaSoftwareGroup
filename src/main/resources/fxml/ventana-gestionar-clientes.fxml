@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      spacing="10" style="-fx-padding: 15px;">
+    
+    <Label text="Gestión de Clientes" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+    
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="Registrar Nuevo Cliente" onAction="#handleRegistrarCliente" style="-fx-base: #007BFF; -fx-text-fill: white;" />
+        <Button text="Eliminar Cliente Seleccionado" onAction="#handleEliminarCliente" style="-fx-base: #DC3545; -fx-text-fill: white;" />
+    </HBox>
+    
+    <TableView fx:id="tableClientes" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
+            <TableColumn fx:id="nombreColumn" text="Nombre Completo" prefWidth="150" />
+            <TableColumn fx:id="telefonoColumn" text="Teléfono" prefWidth="100" />
+            <TableColumn fx:id="correoColumn" text="Correo" prefWidth="150" />
+            <TableColumn fx:id="direccionColumn" text="Dirección" prefWidth="200" />
+        </columns>
+    </TableView>
+    
+    <HBox alignment="CENTER_RIGHT">
+        <Button text="Cerrar" onAction="#handleCerrar" />
+    </HBox>
+    
+</VBox>

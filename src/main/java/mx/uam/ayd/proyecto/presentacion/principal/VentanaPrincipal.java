@@ -114,4 +114,10 @@ public class VentanaPrincipal {
         }
     }
 
+	@FXML
+    private void handleGestionarClientes() {
+        if (control != null) {
+            control.gestionarClientes();
+        }
+    }
 }

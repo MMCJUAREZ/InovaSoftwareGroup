@@ -6,16 +6,12 @@ import mx.uam.ayd.proyecto.presentacion.Inventario.Controlinventario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import mx.uam.ayd.proyecto.presentacion.agregarUsuario.ControlAgregarUsuario;
-import mx.uam.ayd.proyecto.presentacion.listarUsuarios.ControlListarUsuarios;
-import mx.uam.ayd.proyecto.presentacion.listarGrupos.ControlListarGrupos;
 import mx.uam.ayd.proyecto.presentacion.configurarUmbrales.ControlConfiguracionUmbrales;
-
 import mx.uam.ayd.proyecto.presentacion.alertas.ControlAlerta;
 import mx.uam.ayd.proyecto.presentacion.alertas.VentanaAlerta;
-
 import mx.uam.ayd.proyecto.presentacion.generarReporte.ControlGenerarReporte;
 import mx.uam.ayd.proyecto.presentacion.registroVentas.ControlRegistroVentas;
+import mx.uam.ayd.proyecto.presentacion.agregarCliente.ControlGestionarClientes;
 
 /**
  * Esta clase lleva el flujo de control de la ventana principal
@@ -32,6 +28,7 @@ public class ControlPrincipal {
 	private final Controlinventario controlinventario;
 	private final ControlGenerarReporte controlGenerarReporte;
 	private final ControlRegistroVentas controlRegistroVentas;
+	private final ControlGestionarClientes controlGestionarClientes;
 
 	private final VentanaPrincipal ventana;
 
@@ -43,6 +40,7 @@ public class ControlPrincipal {
 			Controlinventario controlinventario,
 			ControlGenerarReporte controlGenerarReporte,
 			ControlRegistroVentas controlRegistroVentas,
+			ControlGestionarClientes controlGestionarClientes,
 			VentanaPrincipal ventana) {
 		this.controlConfiguracionUmbrales = controlConfiguracionUmbrales;
 		this.controlAlerta = controlAlerta;
@@ -50,6 +48,7 @@ public class ControlPrincipal {
 		this.controlinventario = controlinventario;
 		this.controlGenerarReporte = controlGenerarReporte;
 		this.controlRegistroVentas = controlRegistroVentas;
+		this.controlGestionarClientes = controlGestionarClientes;
 		this.ventana = ventana;
 	}
 
@@ -107,4 +106,8 @@ public class ControlPrincipal {
 	public void mostrarAlertas() {
 		controlAlerta.inicia();
 	}
+
+	public void gestionarClientes() {
+        controlGestionarClientes.inicia();
+    }
 }
