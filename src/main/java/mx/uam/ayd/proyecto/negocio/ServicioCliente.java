@@ -5,8 +5,12 @@ import java.util.List;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
 import mx.uam.ayd.proyecto.datos.ClienteRepository;
 import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
+import mx.uam.ayd.proyecto.negocio.modelo.Membresia;
+import mx.uam.ayd.proyecto.negocio.modelo.TipoMembresia;
 
 @Service
 public class ServicioCliente {
@@ -88,5 +92,26 @@ public class ServicioCliente {
             throw new IllegalArgumentException("El cliente con ID " + idCliente + " no existe");
         }
         clienteRepository.deleteById(idCliente);
+    }
+
+    /**
+     * Asigna membresia a un cliente
+     * @param cliente a quien se le asigna la membresia
+     * @param membresia que escoge el cliente
+     * 
+     * @throws IllegalArgumentExeption si el cliente no cumple con lo necesario
+     */
+    @Transactional
+    public void asignarMembresia(Cliente cliente, TipoMembresia tipo){
+        Double monto = cliente.getMontoAcumulado();
+        Membresia membresia = new Membresia();
+        membresia.setTipo(tipo);
+
+        if (monto >= 500) {
+            cliente.setMembresia(membresia);
+            clienteRepository.save(cliente);
+        }else{
+            throw new IllegalArgumentException("El cliente no cuenta con el monto minimo necesario para adquirir una membresia");
+        }
     }
 }

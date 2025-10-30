@@ -15,12 +15,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
+import mx.uam.ayd.proyecto.presentacion.seleccionarMembresia.ControlSeleccionarMembresia;
 
 @Component
 public class VentanaGestionarClientes {
     
     private Stage stage;
     private ControlGestionarClientes control;
+    private ControlSeleccionarMembresia controlMembresia;
     private ObservableList<Cliente> clientesData = FXCollections.observableArrayList();
 
     @FXML
@@ -100,6 +102,11 @@ public class VentanaGestionarClientes {
     @FXML
     private void handleCerrar() {
         stage.close();
+    }
+
+    @FXML
+    private void handleSeleccionarMembresia(){
+        control.asignarMembresia();
     }
 
     public void muestraAlerta(Alert.AlertType type, String title, String message) {

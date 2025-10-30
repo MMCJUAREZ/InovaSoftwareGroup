@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import javafx.scene.control.Alert;
 import mx.uam.ayd.proyecto.negocio.ServicioCliente;
 import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
+import mx.uam.ayd.proyecto.presentacion.seleccionarMembresia.ControlSeleccionarMembresia;
+import mx.uam.ayd.proyecto.presentacion.seleccionarMembresia.VentanaSeleccionarMembresia;
 
 @Component
 public class ControlGestionarClientes {
@@ -17,6 +19,12 @@ public class ControlGestionarClientes {
     
     @Autowired
     private VentanaRegistrarCliente ventanaRegistrar;
+
+    @Autowired
+    private ControlSeleccionarMembresia controlMembresia;
+
+    @Autowired
+    private VentanaSeleccionarMembresia ventanaMembresia;
 
     /**
      * Inicia el caso de uso
@@ -75,5 +83,9 @@ public class ControlGestionarClientes {
                 ventanaGestionar.muestraAlerta(Alert.AlertType.ERROR, "Error", ex.getMessage());
             }
         }
+    }
+
+    public void asignarMembresia(){
+        ventanaMembresia.initializeUI();
     }
 }
