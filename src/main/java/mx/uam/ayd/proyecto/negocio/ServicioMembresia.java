@@ -7,12 +7,8 @@ import mx.uam.ayd.proyecto.negocio.modelo.TipoMembresia;
 @Service
 public class ServicioMembresia {
     
-    public TipoMembresia seleccionarMembresia(char c){
+    public void asignarMembresia(TipoMembresia tipo, Long clienteID){
+        
 
-        if(c == 'S'){
-            return TipoMembresia.Standard;
-        }else{
-            return TipoMembresia.Platinum;
-        }
     }
 }

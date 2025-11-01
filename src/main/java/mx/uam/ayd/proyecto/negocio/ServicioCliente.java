@@ -102,7 +102,7 @@ public class ServicioCliente {
      * @throws IllegalArgumentExeption si el cliente no cumple con lo necesario
      */
     @Transactional
-    public void asignarMembresia(Cliente cliente, TipoMembresia tipo){
+    public boolean asignarMembresia(TipoMembresia tipo, Cliente cliente){
         Double monto = cliente.getMontoAcumulado();
         Membresia membresia = new Membresia();
         membresia.setTipo(tipo);
@@ -110,8 +110,9 @@ public class ServicioCliente {
         if (monto >= 500) {
             cliente.setMembresia(membresia);
             clienteRepository.save(cliente);
+            return true;
         }else{
-            throw new IllegalArgumentException("El cliente no cuenta con el monto minimo necesario para adquirir una membresia");
+            return false;
         }
     }
 }
