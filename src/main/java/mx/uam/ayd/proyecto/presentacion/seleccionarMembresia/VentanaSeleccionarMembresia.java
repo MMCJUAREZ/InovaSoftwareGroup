@@ -12,7 +12,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
+import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
+import mx.uam.ayd.proyecto.negocio.modelo.TipoMembresia;
 import mx.uam.ayd.proyecto.presentacion.agregarCliente.ControlGestionarClientes;
 
 
@@ -22,7 +23,17 @@ public class VentanaSeleccionarMembresia {
     private Stage stage;
     private boolean initialized = false; 
     private ControlSeleccionarMembresia controlMembresia;
-       
+    private ControlGestionarClientes controlClientes;
+    
+    private Cliente cliente;
+
+    /**
+     * Define el ID del paciente al que se asociará la captura.
+     * @param pacienteID identificador del paciente
+     */
+    public void setcliente(Cliente cliente) {
+        this.cliente=cliente;
+    }
 
     public VentanaSeleccionarMembresia(){
         //Constructor vacio
@@ -36,12 +47,11 @@ public class VentanaSeleccionarMembresia {
         this.controlMembresia = controlMembresia;
     }    
 
-    public void initializeUI(){
+    public void initializeUI(ControlGestionarClientes controlClientes,Cliente cliente){
+        this.cliente= cliente;
+        this.controlClientes = controlClientes;
+
         if (initialized) {
-            return;
-        }
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(this::initializeUI);
             return;
         }
         if (stage == null) {
@@ -91,7 +101,7 @@ public class VentanaSeleccionarMembresia {
 
         if (!initialized) {
             if (visible) {
-                initializeUI();
+                initializeUI(controlClientes, cliente);
             } else {
                 return;
             }
@@ -105,7 +115,15 @@ public class VentanaSeleccionarMembresia {
     }   
 
     @FXML
-    public void handleSeleccionarStandard(){
-        controlMembresia.seleccionarMembresia('S');
+    private void handleSeleccionarStandard() {
+        controlMembresia.asignarMembresia(TipoMembresia.Standard, cliente);
+        stage.close();
     }
+
+    @FXML
+    private void handleSeleccionarPlatinum() {
+        stage.close();
+    }
+
+
 }

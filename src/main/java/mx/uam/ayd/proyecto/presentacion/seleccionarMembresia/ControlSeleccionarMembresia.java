@@ -8,8 +8,7 @@ import mx.uam.ayd.proyecto.negocio.ServicioCliente;
 import mx.uam.ayd.proyecto.negocio.ServicioMembresia;
 import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
 import mx.uam.ayd.proyecto.negocio.modelo.TipoMembresia;
-import mx.uam.ayd.proyecto.presentacion.agregarCliente.ControlGestionarClientes;
-import mx.uam.ayd.proyecto.presentacion.agregarCliente.VentanaGestionarClientes;
+
 
 @Component
 public class ControlSeleccionarMembresia {
@@ -23,15 +22,11 @@ public class ControlSeleccionarMembresia {
     @Autowired 
     private final VentanaSeleccionarMembresia ventanaMembresia;
 
-    @Autowired
-    private final VentanaGestionarClientes ventanaCliente;
 
     public ControlSeleccionarMembresia(VentanaSeleccionarMembresia ventanaMembresia,
-                                        VentanaGestionarClientes ventanaCliente,
                                         ServicioMembresia servicioMembresia,
                                         ServicioCliente servicioCliente){
             this.ventanaMembresia = ventanaMembresia;
-            this.ventanaCliente = ventanaCliente;
             this.servicioMembresia = servicioMembresia;
             this.servicioCliente = servicioCliente;
     }
@@ -51,20 +46,17 @@ public class ControlSeleccionarMembresia {
      * @param cliente a quien se le asigna
      * @param tipo de la membresia
      */
-    public void asignarMembresia(Cliente cliente, TipoMembresia tipo){
 
-        try{
-            servicioCliente.asignarMembresia(cliente, tipo);
-            ventanaMembresia.muestraDialogoConMensaje("Membresia asignada correctamente");
-            termina();
-        }catch(Exception e){
-            ventanaMembresia.muestraDialogoConMensaje("No cumples con los requisitos");
+    public void asignarMembresia(TipoMembresia tipo, Cliente cliente){
+        init();
+        if(servicioCliente.asignarMembresia(tipo, cliente)){
+            ventanaMembresia.muestraDialogoConMensaje("Membresia asignada exitosamente");
+        }else{
+            ventanaMembresia.muestraDialogoConMensaje("ERROR: El cliente no cuenta con el monto necesario");
         }
+        termina();
     }
 
-    public void seleccionarMembresia(char c){
-        servicioMembresia.seleccionarMembresia(c);
-    }
 
     /**
      * Cierra la ventana de asignación.

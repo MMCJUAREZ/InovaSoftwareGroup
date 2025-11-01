@@ -24,6 +24,8 @@
             <TableColumn fx:id="telefonoColumn" prefWidth="100" text="Teléfono" />
             <TableColumn fx:id="correoColumn" prefWidth="150" text="Correo" />
             <TableColumn fx:id="direccionColumn" prefWidth="200" text="Dirección" />
+            <TableColumn fx:id="montoAcumulado" prefWidth="75.0" text="Monto Acumulado" />
+            <TableColumn fx:id="membresia" prefWidth="75.0" text="Membresia" />
         </columns>
     </TableView>
     

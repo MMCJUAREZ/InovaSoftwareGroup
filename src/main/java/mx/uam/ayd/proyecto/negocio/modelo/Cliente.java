@@ -33,7 +33,7 @@ public class Cliente {
     private String direccion;
 
     @Column
-    private Double montoAcumulado;
+    private Double montoAcumulado = 501.0;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "membresia_id")
