@@ -51,9 +51,6 @@ public class VentanaSeleccionarMembresia {
         this.cliente= cliente;
         this.controlClientes = controlClientes;
 
-        if (initialized) {
-            return;
-        }
         if (stage == null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-seleccionar-membresia.fxml"));
@@ -64,12 +61,12 @@ public class VentanaSeleccionarMembresia {
                 stage.setScene(scene);
                 stage.setTitle("Membresia");
                 stage.initModality(Modality.APPLICATION_MODAL);
-                initialized = true;
-                stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+        stage.showAndWait();
     }
     
     /**
