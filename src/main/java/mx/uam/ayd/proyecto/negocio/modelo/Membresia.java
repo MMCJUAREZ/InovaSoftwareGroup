@@ -11,6 +11,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Data
@@ -30,6 +32,8 @@ public class Membresia {
     private boolean estado; //true para vigente
 
     @OneToOne(mappedBy = "membresia")
+    @EqualsAndHashCode.Exclude  //Agregue esto para evitar recursion #Ad
+    @ToString.Exclude           //Agregue esto para evitar recursion #Ad
     private Cliente cliente;
 
 }
