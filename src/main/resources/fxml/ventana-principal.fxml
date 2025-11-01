@@ -19,4 +19,6 @@
 
     <Button fx:id="btnGestionarClientes" onAction="#handleGestionarClientes" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Gestionar Clientes"/>
 
+    <Button fx:id="btnGestionarCitas" onAction="#handleGestionarCitas" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Gestionar Citas"/>
+
 </VBox>

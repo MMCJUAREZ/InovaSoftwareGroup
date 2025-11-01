@@ -120,4 +120,12 @@ public class VentanaPrincipal {
             control.gestionarClientes();
         }
     }
+
+	@FXML
+	private void handleGestionarCitas() {
+		if (control != null) {
+			control.gestionarCitas();
+		}
+	}
+
 }
