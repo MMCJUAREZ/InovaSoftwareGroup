@@ -55,6 +55,7 @@ public class VentanaSeleccionarMembresia {
                 stage.setTitle("Membresia");
                 stage.initModality(Modality.APPLICATION_MODAL);
                 initialized = true;
+                stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
