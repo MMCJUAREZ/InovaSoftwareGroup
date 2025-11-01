@@ -122,3 +122,11 @@ Este proyecto es parte del curso de Análisis y Diseño de Software.
 Contactar a Humberto Cervantes hcm@xanum.uam.mx
 
 mvn clean spring-boot:run
+
+Ver base de datos
+Direccion web: http://localhost:8080/h2-console
+Datos:
+    JDBC URL: jdbc:h2:file:./data/inovasoftware
+    User Name: admin
+    Password: 1234
+    Driver Class: org.h2.Driver
