@@ -11,8 +11,6 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 @Entity
 @Data
@@ -35,12 +33,10 @@ public class Cliente {
     private String direccion;
 
     @Column
-    private Double montoAcumulado;
+    private Double montoAcumulado = 501.0;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "membresia_id", nullable = true)
-    @EqualsAndHashCode.Exclude  //Agregue esto para evitar recursion #Ad
-    @ToString.Exclude           //Agregue esto para evitar recursion #Ad
+    @JoinColumn(name = "membresia_id")
     private Membresia membresia;
     
 }

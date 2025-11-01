@@ -51,21 +51,22 @@ public class VentanaSeleccionarMembresia {
         this.cliente = cliente;
         this.controlClientes = controlClientes;
 
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-seleccionar-membresia.fxml"));
-            loader.setController(this);
-            VBox root = loader.load();
-
-            Scene scene = new Scene(root);
-            Stage stage = new Stage(); // 👈 Nuevo Stage cada vez
-            stage.setScene(scene);
-            stage.setTitle("Seleccionar Membresía");
-            stage.initModality(Modality.APPLICATION_MODAL);
-
-            stage.showAndWait(); // 👈 Bloquea hasta que se cierre
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (stage == null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-seleccionar-membresia.fxml"));
+                loader.setController(this);
+                VBox root = loader.load(); 
+                Scene scene = new Scene(root);
+                stage = new Stage();
+                stage.setScene(scene);
+                stage.setTitle("Membresia");
+                stage.initModality(Modality.APPLICATION_MODAL);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
+        stage.showAndWait();
     }
     
     /**
@@ -118,7 +119,6 @@ public class VentanaSeleccionarMembresia {
 
     @FXML
     private void handleSeleccionarPlatinum() {
-        controlMembresia.asignarMembresia(TipoMembresia.Platinum, cliente);
         stage.close();
     }
 
