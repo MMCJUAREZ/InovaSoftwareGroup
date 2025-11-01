@@ -47,8 +47,8 @@ public class VentanaSeleccionarMembresia {
         this.controlMembresia = controlMembresia;
     }    
 
-    public void initializeUI(ControlGestionarClientes controlClientes, Cliente cliente) {
-        this.cliente = cliente;
+    public void initializeUI(ControlGestionarClientes controlClientes,Cliente cliente){
+        this.cliente= cliente;
         this.controlClientes = controlClientes;
 
         if (stage == null) {
@@ -119,6 +119,7 @@ public class VentanaSeleccionarMembresia {
 
     @FXML
     private void handleSeleccionarPlatinum() {
+        controlMembresia.asignarMembresia(TipoMembresia.Platinum, cliente);
         stage.close();
     }
 

@@ -78,6 +78,7 @@ public class ServicioCliente {
         cliente.setTelefono(telefono);
         cliente.setCorreoElectronico(correoElectronico);
         cliente.setDireccion(direccion);
+        cliente.setMontoAcumulado(500.0);
 
         return clienteRepository.save(cliente);
     }
@@ -102,17 +103,18 @@ public class ServicioCliente {
      * @throws IllegalArgumentExeption si el cliente no cumple con lo necesario
      */
     @Transactional
-    public boolean asignarMembresia(TipoMembresia tipo, Cliente cliente){
-        Double monto = cliente.getMontoAcumulado();
+    public void asignarMembresia(TipoMembresia tipo, Cliente cliente) {
+        if (cliente.getMontoAcumulado() < 500) {
+            throw new IllegalArgumentException("El cliente no cumple con el monto mínimo para obtener una membresía.");
+        }
+
         Membresia membresia = new Membresia();
         membresia.setTipo(tipo);
+        membresia.setEstado(true); // activa
+        membresia.setPrecio(tipo == TipoMembresia.Platinum ? 219.0 : 119.0);
+        membresia.setCliente(cliente);
 
-        if (monto >= 500) {
-            cliente.setMembresia(membresia);
-            clienteRepository.save(cliente);
-            return true;
-        }else{
-            return false;
-        }
+        cliente.setMembresia(membresia);
+        clienteRepository.save(cliente); // Cascade.ALL asegura que se guarde también la membresía
     }
 }

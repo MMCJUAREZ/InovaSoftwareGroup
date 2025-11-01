@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
 import mx.uam.ayd.proyecto.negocio.ServicioCliente;
-import mx.uam.ayd.proyecto.negocio.ServicioMembresia;
 import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
 import mx.uam.ayd.proyecto.negocio.modelo.TipoMembresia;
 
@@ -13,8 +12,6 @@ import mx.uam.ayd.proyecto.negocio.modelo.TipoMembresia;
 @Component
 public class ControlSeleccionarMembresia {
     
-    @Autowired
-    private final ServicioMembresia servicioMembresia;
 
     @Autowired
     private final ServicioCliente servicioCliente;
@@ -24,10 +21,8 @@ public class ControlSeleccionarMembresia {
 
 
     public ControlSeleccionarMembresia(VentanaSeleccionarMembresia ventanaMembresia,
-                                        ServicioMembresia servicioMembresia,
                                         ServicioCliente servicioCliente){
             this.ventanaMembresia = ventanaMembresia;
-            this.servicioMembresia = servicioMembresia;
             this.servicioCliente = servicioCliente;
     }
 
@@ -49,10 +44,11 @@ public class ControlSeleccionarMembresia {
 
     public void asignarMembresia(TipoMembresia tipo, Cliente cliente){
         init();
-        if(servicioCliente.asignarMembresia(tipo, cliente)){
-            ventanaMembresia.muestraDialogoConMensaje("Membresia asignada exitosamente");
-        }else{
-            ventanaMembresia.muestraDialogoConMensaje("ERROR: El cliente no cuenta con el monto necesario");
+        try {
+            servicioCliente.asignarMembresia(tipo, cliente);
+            ventanaMembresia.muestraDialogoConMensaje("Membresía asignada exitosamente.");
+        } catch (IllegalArgumentException ex) {
+            ventanaMembresia.muestraDialogoConMensaje(ex.getMessage());
         }
         termina();
     }
