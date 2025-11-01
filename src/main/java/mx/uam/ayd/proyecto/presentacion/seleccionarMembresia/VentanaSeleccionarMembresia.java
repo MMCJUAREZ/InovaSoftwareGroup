@@ -119,7 +119,6 @@ public class VentanaSeleccionarMembresia {
 
     @FXML
     private void handleSeleccionarPlatinum() {
-        controlMembresia.asignarMembresia(TipoMembresia.Platinum, cliente);
         stage.close();
     }
 

@@ -54,7 +54,7 @@ public class ControlSeleccionarMembresia {
         }else{
             ventanaMembresia.muestraDialogoConMensaje("ERROR: El cliente no cuenta con el monto necesario");
         }
-        //termina();
+        termina();
     }
 
 

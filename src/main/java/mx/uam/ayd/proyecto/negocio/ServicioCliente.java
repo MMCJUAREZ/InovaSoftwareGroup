@@ -78,7 +78,6 @@ public class ServicioCliente {
         cliente.setTelefono(telefono);
         cliente.setCorreoElectronico(correoElectronico);
         cliente.setDireccion(direccion);
-        cliente.setMontoAcumulado(500.0);
 
         return clienteRepository.save(cliente);
     }
