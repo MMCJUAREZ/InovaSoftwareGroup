@@ -47,28 +47,24 @@ public class VentanaSeleccionarMembresia {
         this.controlMembresia = controlMembresia;
     }    
 
-    public void initializeUI(ControlGestionarClientes controlClientes,Cliente cliente){
-        this.cliente= cliente;
+    public void initializeUI(ControlGestionarClientes controlClientes, Cliente cliente) {
+        this.cliente = cliente;
         this.controlClientes = controlClientes;
 
-        if (initialized) {
-            return;
-        }
-        if (stage == null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-seleccionar-membresia.fxml"));
-                loader.setController(this);
-                VBox root = loader.load(); 
-                Scene scene = new Scene(root);
-                stage = new Stage();
-                stage.setScene(scene);
-                stage.setTitle("Membresia");
-                stage.initModality(Modality.APPLICATION_MODAL);
-                initialized = true;
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-seleccionar-membresia.fxml"));
+            loader.setController(this);
+            VBox root = loader.load();
+
+            Scene scene = new Scene(root);
+            Stage stage = new Stage(); // 👈 Nuevo Stage cada vez
+            stage.setScene(scene);
+            stage.setTitle("Seleccionar Membresía");
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.showAndWait(); // 👈 Bloquea hasta que se cierre
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     
