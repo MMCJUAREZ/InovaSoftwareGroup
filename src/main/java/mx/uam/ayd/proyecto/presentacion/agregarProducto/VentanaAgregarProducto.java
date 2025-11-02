@@ -3,17 +3,15 @@ package mx.uam.ayd.proyecto.presentacion.agregarProducto;
 import mx.uam.ayd.proyecto.negocio.modelo.TipoProducto;
 import mx.uam.ayd.proyecto.negocio.modelo.UnidadProducto;
 import mx.uam.ayd.proyecto.negocio.modelo.MarcaProducto;
+import mx.uam.ayd.proyecto.negocio.modelo.UsoVeterinario;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.TextFormatter;
 import java.util.function.UnaryOperator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
@@ -21,60 +19,64 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.DateCell;
-import javafx.util.Callback;
 import java.time.LocalDate;
-
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 /**
- * Clase encargada de manejar la ventana de agregar producto en la interfaz gráfica.
- * <
- * Contiene la lógica para inicializar la UI, mostrar la ventana, validar entradas
- * y comunicarse con el controlador
- * Se asegura de que todas las operaciones gráficas se realicen en el hilo de JavaFX.
+ * Clase encargada de gestionar la ventana de la interfaz gráfica
+ * para agregar un nuevo producto al sistema.
+ * Controla los elementos visuales definidos en el archivo FXML,
+ * valida la entrada del usuario, carga opciones dinámicas en los ComboBox
+ * y se comunica con el controlador {@link ControlAgregarProducto}
+ * para realizar la operación de agregado.
+ * @see ControlAgregarProducto
+ * @see mx.uam.ayd.proyecto.negocio.ServicioProducto
  */
-
 @Component
-public class VentanaAgregarProducto{
+public class VentanaAgregarProducto {
+
+    /** Ventana principal de esta vista. */
     private Stage stage;
+
+    /** Controlador asociado que maneja la lógica de negocio. */
     private ControlAgregarProducto control;
 
+    /** Indica si la interfaz ya fue inicializada. */
+    private boolean initialized = false;
 
-    @FXML
-    private TextField txtNombre;
+    // ---------- Componentes FXML ----------
 
-    @FXML
-    private TextField txtCantidad;
+    @FXML private TextField txtNombre;
+    @FXML private TextField txtCantidad;
+    @FXML private TextField txtPrecio;
+    @FXML private ComboBox<TipoProducto> cmbTipo;
+    @FXML private ComboBox<UnidadProducto> cmbUnidad;
+    @FXML private ComboBox<MarcaProducto> cmbMarca;
+    @FXML private ComboBox<UsoVeterinario> cmbUsoVeterinario;
+    @FXML private DatePicker dtpFechaCaducidad;
 
-    @FXML
-    private TextField txtPrecio;
+    /**
+     * Constructor por defecto.
+     */
+    public VentanaAgregarProducto() {
+        // Constructor vacío por convención de Spring y JavaFX
+    }
 
-    @FXML
-    private ComboBox<TipoProducto> cmbTipo;
-
-    @FXML
-    private ComboBox<UnidadProducto> cmbUnidad;
-
-    @FXML
-    private ComboBox<MarcaProducto> cmbMarca;
-
-    @FXML
-    private DatePicker dtpFechaCaducidad;
-
+    /**
+     * Inicializa componentes FXML después de cargar la vista.
+     * Este método es llamado automáticamente por JavaFX al cargar el archivo FXML.
+     * Configura la restricción de fechas del {@link DatePicker} para evitar seleccionar
+     * fechas anteriores a una semana desde el día actual.
+     */
     @FXML
     private void initialize() {
-        // Deshabilitar fechas anteriores a partir de una semana
         dtpFechaCaducidad.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
-
                 if (item.isBefore(LocalDate.now().plusWeeks(1))) {
                     setDisable(true);
                     setStyle("-fx-background-color: #cccccc;");
@@ -83,60 +85,44 @@ public class VentanaAgregarProducto{
         });
     }
 
-    private boolean initialized = false;
-
-    public VentanaAgregarProducto() {
-        // Don't initialize JavaFX components in constructor
-    }
-
     /**
-     * Inicializa la interfaz de usuario cargando el FXML y configurando
-     * validaciones en los campos de texto.
-     *
-     * Este método se asegura de ejecutarse en el hilo de JavaFX.
-     * Si la UI ya fue inicializada previamente, no se vuelve a crear.
+     * Inicializa la interfaz de usuario cargando el archivo FXML
+     * y configurando las validaciones de los campos.
+     * Si la interfaz ya ha sido inicializada previamente, no se vuelve a crear.
+     * Se asegura de que este método siempre se ejecute en el hilo de JavaFX.
      */
     private void initializeUI() {
-        // Evita inicializar dos veces
         if (initialized) {
             return;
         }
 
-        // Verifica que el código se ejecute en el hilo de JavaFX
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(this::initializeUI);
             return;
         }
 
         try {
-            // Crea la ventana
             stage = new Stage();
             stage.setTitle("Agregar producto");
 
-            // Carga el archivo FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-agregar-producto.fxml"));
             loader.setController(this);
             Scene scene = new Scene(loader.load(), 700, 500);
-            System.out.println("FXML cargado correctamente");
             stage.setScene(scene);
 
-            // Validación: solo números enteros en txtCantidad
+            // Validación: solo números enteros en "Cantidad"
             txtCantidad.textProperty().addListener((obs, oldValue, newValue) -> {
                 if (!newValue.matches("\\d*")) {
                     txtCantidad.setText(newValue.replaceAll("[^\\d]", ""));
                 }
             });
 
-            // Validación: números decimales con un solo punto en txtPrecio
+            // Validación: números decimales válidos en "Precio"
             UnaryOperator<TextFormatter.Change> filter = change -> {
                 String newText = change.getControlNewText();
-                if (newText.matches("\\d*\\.?\\d*")) { // vacío o número decimal válido
-                    return change;
-                }
-                return null;
+                return newText.matches("\\d*\\.?\\d*") ? change : null;
             };
-            TextFormatter<String> textFormatter = new TextFormatter<>(filter);
-            txtPrecio.setTextFormatter(textFormatter);
+            txtPrecio.setTextFormatter(new TextFormatter<>(filter));
 
             initialized = true;
         } catch (IOException e) {
@@ -145,19 +131,18 @@ public class VentanaAgregarProducto{
     }
 
     /**
-     * Asigna el controlador lógico ControlAgregarProducto para manejar las acciones de la ventana.
+     * Asigna el controlador lógico para esta vista.
      *
-     * @param control Controlador de agregar producto.
+     * @param control Instancia de {@link ControlAgregarProducto}.
      */
     public void setControlAgregarProducto(ControlAgregarProducto control) {
         this.control = control;
     }
 
     /**
-     * Muestra la ventana de agregar producto.
-     *
-     * Limpia todos los campos y carga las opciones en los ComboBox.
-     * Se asegura de ejecutarse en el hilo de JavaFX.
+     * Muestra la ventana para agregar un producto.
+     * Limpia los campos, carga las opciones en los ComboBox
+     * y se asegura de ejecutar la operación en el hilo de JavaFX.
      */
     public void muestra() {
         if (!Platform.isFxApplicationThread()) {
@@ -167,17 +152,19 @@ public class VentanaAgregarProducto{
 
         initializeUI();
 
-        // Limpia campos
-        txtNombre.setText("");
-        txtCantidad.setText("");
-        txtPrecio.setText("");
+        // Limpieza de campos
+        txtNombre.clear();
+        txtCantidad.clear();
+        txtPrecio.clear();
 
-        // Carga opciones en los ComboBox
+        // Cargar opciones
         cmbTipo.setItems(FXCollections.observableArrayList(TipoProducto.values()));
         cmbUnidad.setItems(FXCollections.observableArrayList(UnidadProducto.values()));
+        cmbUnidad.setDisable(true);
         cmbMarca.setItems(FXCollections.observableArrayList(MarcaProducto.values()));
+        cmbMarca.setDisable(true);
+        cmbUsoVeterinario.setItems(FXCollections.observableArrayList(UsoVeterinario.values()));
 
-        // Deja los ComboBox sin selección inicial
         cmbTipo.getSelectionModel().clearSelection();
         cmbUnidad.getSelectionModel().clearSelection();
         cmbMarca.getSelectionModel().clearSelection();
@@ -186,9 +173,9 @@ public class VentanaAgregarProducto{
     }
 
     /**
-     * Muestra un cuadro de diálogo informativo con un mensaje.
+     * Muestra un cuadro de diálogo informativo.
      *
-     * @param mensaje Texto a mostrar en el cuadro de diálogo.
+     * @param mensaje Mensaje que se desea mostrar.
      */
     public void muestraDialogoConMensaje(String mensaje) {
         if (!Platform.isFxApplicationThread()) {
@@ -204,7 +191,7 @@ public class VentanaAgregarProducto{
     }
 
     /**
-     * Controla la visibilidad de la ventana.
+     * Cambia la visibilidad de la ventana.
      *
      * @param visible {@code true} para mostrar la ventana, {@code false} para ocultarla.
      */
@@ -230,15 +217,71 @@ public class VentanaAgregarProducto{
     }
 
     /**
-     * Maneja la acción del botón "Agregar" llama al controlador para
-     * guardar los productos en la Base de datos
-     *
-     * Valida que los campos no sean nulos y llama al controlador para agregar el producto.
+     * Maneja la selección del tipo de producto.
+     * Al seleccionar un tipo de producto, se actualizan las opciones
+     * disponibles de marca, unidad y visibilidad del campo de uso veterinario.
+     */
+    @FXML
+    private void onTipoSeleccionado() {
+        String tipoSeleccionado = cmbTipo.getValue().toString();
+        cmbMarca.getItems().clear();
+        cmbUnidad.getItems().clear();
+
+        // Filtrar marcas por tipo
+        for (MarcaProducto marca : MarcaProducto.values()) {
+            if (marca.getTipoProducto().equals(tipoSeleccionado)) {
+                cmbMarca.getItems().add(marca);
+            }
+        }
+        cmbMarca.setDisable(false);
+
+        // Filtrar unidades según tipo
+        for (UnidadProducto unidad : UnidadProducto.values()) {
+            if (tipoSeleccionado.equals("Medicamento")) {
+                if (unidad.getTipoProducto().equals(tipoSeleccionado)) {
+                    cmbUnidad.getItems().add(unidad);
+                }
+            } else {
+                if (unidad.getTipoProducto().equals("")) {
+                    cmbUnidad.getItems().add(unidad);
+                }
+            }
+        }
+        cmbUnidad.setDisable(false);
+
+        // Mostrar u ocultar uso veterinario
+        cmbUsoVeterinario.setVisible(tipoSeleccionado.equals("Medicamento"));
+
+        // Seleccionar primeras opciones por defecto
+        if (!cmbMarca.getItems().isEmpty()) {
+            cmbMarca.getSelectionModel().selectFirst();
+        }
+        if (!cmbUnidad.getItems().isEmpty()) {
+            cmbUnidad.getSelectionModel().selectFirst();
+        }
+    }
+
+    /**
+     * Maneja la acción del botón "Agregar".
+     * Valida que los campos requeridos estén completos y, si es así,
+     * delega la operación al controlador {@link ControlAgregarProducto}.
+     * </p>
      */
     @FXML
     private void handleAgregar() {
+        String tipoSeleccionado = cmbTipo.getValue().toString();
+        boolean valido = true;
+
+        if (tipoSeleccionado.equals("Medicamento")) {
+            if (dtpFechaCaducidad.getValue() == null || cmbUsoVeterinario.getValue() == null) {
+                valido = false;
+            }
+        } else if (tipoSeleccionado.equals("Comida") && dtpFechaCaducidad == null) {
+            valido = false;
+        }
+
         if (cmbUnidad == null || cmbTipo == null || cmbMarca == null ||
-                txtCantidad == null || txtNombre == null || txtPrecio == null) {
+                txtCantidad == null || txtNombre == null || txtPrecio == null || !valido) {
             muestraDialogoConMensaje("Llene los campos obligatorios");
         } else {
             control.agregarProducto(
@@ -248,14 +291,15 @@ public class VentanaAgregarProducto{
                     Double.parseDouble(txtPrecio.getText()),
                     Integer.parseInt(txtCantidad.getText()),
                     cmbUnidad.getValue(),
-                    dtpFechaCaducidad.getValue()
+                    dtpFechaCaducidad.getValue(),
+                    cmbUsoVeterinario.getValue()
             );
         }
     }
 
     /**
-     * Maneja la acción del botón "Cancelar", cierra la ventana
-     *
+     * Maneja la acción del botón "Cancelar".
+     * Cierra la ventana sin realizar cambios.
      */
     @FXML
     private void handleCancelar() {
