@@ -21,4 +21,6 @@
 
     <Button fx:id="btnGestionarCitas" onAction="#handleGestionarCitas" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Gestionar Citas"/>
 
+    <Button text="Registrar Hospedaje" onAction="#handleRegistrarHospedaje" style="-fx-min-width: 200px; -fx-min-height: 30px;" />
+
 </VBox>
