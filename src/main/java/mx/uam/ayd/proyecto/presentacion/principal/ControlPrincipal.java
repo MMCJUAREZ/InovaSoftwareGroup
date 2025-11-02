@@ -3,6 +3,7 @@ package mx.uam.ayd.proyecto.presentacion.principal;
 import jakarta.annotation.PostConstruct;
 
 import mx.uam.ayd.proyecto.presentacion.Inventario.Controlinventario;
+import mx.uam.ayd.proyecto.presentacion.citas.ControlCitas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +30,7 @@ public class ControlPrincipal {
 	private final ControlGenerarReporte controlGenerarReporte;
 	private final ControlRegistroVentas controlRegistroVentas;
 	private final ControlGestionarClientes controlGestionarClientes;
+	private final ControlCitas controlCitas;
 
 	private final VentanaPrincipal ventana;
 
@@ -41,6 +43,7 @@ public class ControlPrincipal {
 			ControlGenerarReporte controlGenerarReporte,
 			ControlRegistroVentas controlRegistroVentas,
 			ControlGestionarClientes controlGestionarClientes,
+			ControlCitas controlCitas,
 			VentanaPrincipal ventana) {
 		this.controlConfiguracionUmbrales = controlConfiguracionUmbrales;
 		this.controlAlerta = controlAlerta;
@@ -49,6 +52,7 @@ public class ControlPrincipal {
 		this.controlGenerarReporte = controlGenerarReporte;
 		this.controlRegistroVentas = controlRegistroVentas;
 		this.controlGestionarClientes = controlGestionarClientes;
+		this.controlCitas = controlCitas;
 		this.ventana = ventana;
 	}
 
@@ -110,4 +114,10 @@ public class ControlPrincipal {
 	public void gestionarClientes() {
         controlGestionarClientes.inicia();
     }
+
+	/**
+	 * Metodo que arranca la historia de usuario "listar citas"
+	 */
+
+	public void gestionarCitas() { controlCitas.inicia(); }
 }
