@@ -1,13 +1,11 @@
 package mx.uam.ayd.proyecto.presentacion.modificarProducto;
 
-import mx.uam.ayd.proyecto.negocio.modelo.Producto;
-import mx.uam.ayd.proyecto.negocio.modelo.TipoProducto;
-import mx.uam.ayd.proyecto.negocio.modelo.UnidadProducto;
-import mx.uam.ayd.proyecto.negocio.modelo.MarcaProducto;
-
 import javafx.collections.FXCollections;
 import javafx.scene.control.TextFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,54 +18,63 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.DateCell;
-
 import java.time.LocalDate;
-
-
-import mx.uam.ayd.proyecto.presentacion.modificarProducto.ControlModificarProducto;
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 
+import mx.uam.ayd.proyecto.negocio.modelo.*;
+import org.springframework.stereotype.Component;
+
+/**
+ * Ventana de la interfaz gráfica encargada de modificar los datos de un producto existente.
+ * Esta clase forma parte de la capa de presentación y utiliza JavaFX para construir la interfaz.
+ * Se comunica directamente con {@link ControlModificarProducto}, que gestiona la lógica
+ * y la interacción con la capa de negocio.
+ * La ventana permite al usuario actualizar la información de un producto, incluyendo su
+ * nombre, tipo, marca, cantidad, unidad, precio, fecha de caducidad y uso veterinario.
+ */
 @Component
 public class VentanaModificarProducto {
+
+    /** Ventana principal de la interfaz de modificación. */
     private Stage stage;
+
+    /** Controlador lógico que maneja las operaciones del producto. */
     private ControlModificarProducto control;
-    private Long idProducto;
+
+    /** Producto actualmente seleccionado para modificación. */
     private Producto producto;
 
-    @FXML
-    private Label lblIdProducto;
+    /** Indica si la ventana ya ha sido inicializada. */
+    private boolean initialized = false;
 
-    @FXML
-    private TextField txtNombre;
+    // --- Componentes FXML ---
+    @FXML private Label lblIdProducto;
+    @FXML private TextField txtNombre;
+    @FXML private TextField txtCantidad;
+    @FXML private TextField txtPrecio;
+    @FXML private ComboBox<TipoProducto> cmbTipo;
+    @FXML private ComboBox<UnidadProducto> cmbUnidad;
+    @FXML private ComboBox<MarcaProducto> cmbMarca;
+    @FXML private ComboBox<UsoVeterinario> cmbUsoVeterinario;
+    @FXML private DatePicker dtpFechaCaducidad;
 
-    @FXML
-    private TextField txtCantidad;
+    /**
+     * Constructor por defecto.
+     */
+    public VentanaModificarProducto() {}
 
-    @FXML
-    private TextField txtPrecio;
-
-    @FXML
-    private ComboBox<TipoProducto> cmbTipo;
-
-    @FXML
-    private ComboBox<UnidadProducto> cmbUnidad;
-
-    @FXML
-    private ComboBox<MarcaProducto> cmbMarca;
-
-    @FXML
-    private DatePicker dtpFechaCaducidad;
-
+    /**
+     * Inicializa ciertos comportamientos de la interfaz definidos en el FXML.
+     * Este método se ejecuta automáticamente al cargar el archivo FXML.
+     * Aquí se configuran restricciones de fecha para la fecha de caducidad.
+     */
     @FXML
     private void initialize() {
-        // Deshabilitar fechas anteriores a partir de una semana
+        // Deshabilitar fechas anteriores a una semana desde hoy
         dtpFechaCaducidad.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
-
                 if (item.isBefore(LocalDate.now().plusWeeks(1))) {
                     setDisable(true);
                     setStyle("-fx-background-color: #cccccc;");
@@ -76,60 +83,42 @@ public class VentanaModificarProducto {
         });
     }
 
-    private boolean initialized = false;
-
-    public VentanaModificarProducto() {
-        // Don't initialize JavaFX components in constructor
-    }
-
     /**
-     * Inicializa la interfaz de usuario cargando el FXML y configurando
-     * validaciones en los campos de texto.
-     *
-     * Este método se asegura de ejecutarse en el hilo de JavaFX.
-     * Si la UI ya fue inicializada previamente, no se vuelve a crear.
+     * Inicializa la interfaz gráfica cargando el archivo FXML,
+     * creando la escena y configurando validaciones.
+     * Este método solo se ejecuta una vez y se asegura de hacerlo
+     * dentro del hilo principal de JavaFX.
      */
     private void initializeUI() {
-        // Evita inicializar dos veces
-        if (initialized) {
-            return;
-        }
+        if (initialized) return; // Evita reinicialización
 
-        // Verifica que el código se ejecute en el hilo de JavaFX
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(this::initializeUI);
             return;
         }
 
         try {
-            // Crea la ventana
             stage = new Stage();
             stage.setTitle("Modificar producto");
 
-            // Carga el archivo FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-modificar-producto.fxml"));
             loader.setController(this);
             Scene scene = new Scene(loader.load(), 700, 500);
-            System.out.println("FXML cargado correctamente");
             stage.setScene(scene);
 
-            // Validación: solo números enteros en txtCantidad
+            // Validación: solo números enteros en el campo cantidad
             txtCantidad.textProperty().addListener((obs, oldValue, newValue) -> {
                 if (!newValue.matches("\\d*")) {
                     txtCantidad.setText(newValue.replaceAll("[^\\d]", ""));
                 }
             });
 
-            // Validación: números decimales con un solo punto en txtPrecio
+            // Validación: números decimales válidos en el campo precio
             UnaryOperator<TextFormatter.Change> filter = change -> {
                 String newText = change.getControlNewText();
-                if (newText.matches("\\d*\\.?\\d*")) { // vacío o número decimal válido
-                    return change;
-                }
-                return null;
+                return newText.matches("\\d*\\.?\\d*") ? change : null;
             };
-            TextFormatter<String> textFormatter = new TextFormatter<>(filter);
-            txtPrecio.setTextFormatter(textFormatter);
+            txtPrecio.setTextFormatter(new TextFormatter<>(filter));
 
             initialized = true;
         } catch (IOException e) {
@@ -138,42 +127,61 @@ public class VentanaModificarProducto {
     }
 
     /**
-     * Asigna el controlador lógico ControlModificarProducto para manejar las acciones de la ventana.
+     * Asigna el controlador lógico que gestionará las acciones de esta ventana.
      *
-     * @param control Controlador de agregar producto.
+     * @param control Instancia de {@link ControlModificarProducto}.
      */
     public void setControlModificarProducto(ControlModificarProducto control) {
         this.control = control;
     }
 
     /**
-     * Muestra la ventana de agregar producto.
-     *
-     * Limpia todos los campos y carga las opciones en los ComboBox.
-     * Se asegura de ejecutarse en el hilo de JavaFX.
+     * Muestra la ventana con los datos actuales del producto a modificar.
+     * Este método carga la información del producto, establece las selecciones
+     * correspondientes en los ComboBox y aplica filtros según el tipo de producto.
+     * @param producto Producto cuyos datos serán mostrados y editados.
      */
-    public void muestra(Long idProducto, Producto producto) {
-        this.idProducto = idProducto;
+    public void muestra(Producto producto) {
         this.producto = producto;
+
         if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> this.muestra(idProducto, producto));
+            Platform.runLater(() -> this.muestra(producto));
             return;
         }
 
         initializeUI();
 
-        // NMOstramos la informacion actual del producto
+        // Cargar valores actuales
         txtNombre.setText(producto.getNombre());
-        txtCantidad.setText(Integer.toString(producto.getCantidadStock()));
-        txtPrecio.setText(Double.toString(producto.getPrecio()));
-        lblIdProducto.setText(idProducto.toString());
+        txtCantidad.setText(String.valueOf(producto.getCantidadStock()));
+        txtPrecio.setText(String.valueOf(producto.getPrecio()));
+        lblIdProducto.setText(String.valueOf(producto.getIdProducto()));
 
-        // Carga opciones en los ComboBox
+        // Configurar ComboBox según tipo de producto
+        String filtroTipo = producto.getTipoProducto().toString();
+        if (producto.getTipoProducto().equals("Medicamento")) {
+            cmbUsoVeterinario.setVisible(true);
+            cmbUsoVeterinario.getSelectionModel().select(producto.getUsoVeterinario());
+        } else {
+            cmbUsoVeterinario.setVisible(false);
+            filtroTipo = "";
+        }
+
+        final String filtro = filtroTipo;
+
+        ArrayList<UnidadProducto> unidades = Arrays.stream(UnidadProducto.values())
+                .filter(u -> u.getTipoProducto().equals(filtro))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        ArrayList<MarcaProducto> marcas = Arrays.stream(MarcaProducto.values())
+                .filter(m -> m.getTipoProducto().equals(producto.getTipoProducto().toString()))
+                .collect(Collectors.toCollection(ArrayList::new));
+
         cmbTipo.setItems(FXCollections.observableArrayList(TipoProducto.values()));
-        cmbUnidad.setItems(FXCollections.observableArrayList(UnidadProducto.values()));
-        cmbMarca.setItems(FXCollections.observableArrayList(MarcaProducto.values()));
+        cmbUnidad.setItems(FXCollections.observableArrayList(unidades));
+        cmbMarca.setItems(FXCollections.observableArrayList(marcas));
+        cmbUsoVeterinario.setItems(FXCollections.observableArrayList(UsoVeterinario.values()));
 
-        // Deja los ComboBox con la selección inicial del producto
         cmbTipo.getSelectionModel().select(producto.getTipoProducto());
         cmbUnidad.getSelectionModel().select(producto.getUnidadProducto());
         cmbMarca.getSelectionModel().select(producto.getMarcaProducto());
@@ -184,7 +192,7 @@ public class VentanaModificarProducto {
     /**
      * Muestra un cuadro de diálogo informativo con un mensaje.
      *
-     * @param mensaje Texto a mostrar en el cuadro de diálogo.
+     * @param mensaje Texto que se mostrará en el cuadro de diálogo.
      */
     public void muestraDialogoConMensaje(String mensaje) {
         if (!Platform.isFxApplicationThread()) {
@@ -210,12 +218,8 @@ public class VentanaModificarProducto {
             return;
         }
 
-        if (!initialized) {
-            if (visible) {
-                initializeUI();
-            } else {
-                return;
-            }
+        if (!initialized && visible) {
+            initializeUI();
         }
 
         if (visible) {
@@ -226,14 +230,48 @@ public class VentanaModificarProducto {
     }
 
     /**
-     * Maneja la acción del botón "Agregar" llama al controlador para
-     * guardar los productos en la Base de datos
-     *
-     * Valida que los campos no sean nulos y llama al controlador para agregar el producto.
+     * Maneja el evento cuando se selecciona un tipo de producto.
+     * Este método actualiza las opciones disponibles en los ComboBox
+     * de marca, unidad y uso veterinario, según el tipo elegido.
+     */
+    @FXML
+    private void onTipoSeleccionado() {
+        String tipoSeleccionado = cmbTipo.getValue().toString();
+
+        cmbMarca.getItems().clear();
+        cmbUnidad.getItems().clear();
+
+        for (MarcaProducto marca : MarcaProducto.values()) {
+            if (marca.getTipoProducto().equals(tipoSeleccionado)) {
+                cmbMarca.getItems().add(marca);
+            }
+        }
+
+        for (UnidadProducto unidad : UnidadProducto.values()) {
+            if (tipoSeleccionado.equals("Medicamento")) {
+                if (unidad.getTipoProducto().equals(tipoSeleccionado)) {
+                    cmbUnidad.getItems().add(unidad);
+                }
+            } else if (unidad.getTipoProducto().equals("")) {
+                cmbUnidad.getItems().add(unidad);
+            }
+        }
+
+        cmbUsoVeterinario.setVisible(tipoSeleccionado.equals("Medicamento"));
+        cmbMarca.setDisable(false);
+        cmbUnidad.setDisable(false);
+
+        if (!cmbMarca.getItems().isEmpty()) cmbMarca.getSelectionModel().selectFirst();
+        if (!cmbUnidad.getItems().isEmpty()) cmbUnidad.getSelectionModel().selectFirst();
+    }
+
+    /**
+     * Maneja la acción del botón “Modificar”.
+     * Valida los datos ingresados y llama al controlador
+     * {@link ControlModificarProducto#modificarProducto} para actualizar el producto.
      */
     @FXML
     private void handleModificar() {
-        System.out.println("Nombre: "+producto.getNombre());
         control.modificarProducto(
                 producto,
                 txtNombre.getText(),
@@ -242,13 +280,13 @@ public class VentanaModificarProducto {
                 Double.parseDouble(txtPrecio.getText()),
                 Integer.parseInt(txtCantidad.getText()),
                 cmbUnidad.getValue(),
-                dtpFechaCaducidad.getValue()
+                dtpFechaCaducidad.getValue(),
+                cmbUsoVeterinario.getValue()
         );
     }
 
     /**
-     * Maneja la acción del botón "Cancelar", cierra la ventana
-     *
+     * Maneja la acción del botón “Cancelar”.
      */
     @FXML
     private void handleCancelar() {
