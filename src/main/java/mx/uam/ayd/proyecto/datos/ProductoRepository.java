@@ -15,6 +15,7 @@ public interface ProductoRepository extends CrudRepository <Producto, Long> {
 
     Optional<Producto> findByNombreAndTipoProductoAndMarcaProducto(String nombre, TipoProducto tipoProducto, MarcaProducto marcaProducto);
 
+    List<Producto> findByTipoProducto(TipoProducto tipoProducto);
     public Producto findByIdProducto(Long idProducto);
     //Se agrega esta parte para la implementacion con el umbral
     List<Producto> findByCantidadStockGreaterThan(int cantidad);
