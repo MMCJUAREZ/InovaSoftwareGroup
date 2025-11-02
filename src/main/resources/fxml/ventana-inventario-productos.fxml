@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -8,6 +9,7 @@
     <top>
         <VBox prefHeight="46.0" prefWidth="604.0" spacing="10" style="-fx-padding: 10px;">
             <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Inventario" />
+         <ComboBox fx:id="cmbTipoProducto" onAction="#onTipoSeleccionado" prefWidth="150.0" promptText="Tipo producto" />
         </VBox>
     </top>
     
@@ -18,7 +20,8 @@
                 <TableColumn fx:id="nombreColumn" prefWidth="153.0" text="Nombre" />
                 <TableColumn fx:id="fechaCaducidadColumn" prefWidth="121.4000244140625" text="Fecha de caducidad" />
                 <TableColumn fx:id="precioColumn" prefWidth="121.4000244140625" text="Precio" />
-                <TableColumn fx:id="stockColumn" prefWidth="110.39996337890625" text="Stock" />
+                <TableColumn fx:id="stockColumn" prefWidth="84.5" text="Stock" />
+            <TableColumn fx:id="usoVeterinarioColumn" prefWidth="101.0" text="Uso veterinario" />
             </columns>
         </TableView>
     </center>
@@ -26,12 +29,13 @@
     <bottom>
         <VBox spacing="10" style="-fx-padding: 10px;">
          <children>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox prefHeight="0.0" prefWidth="741.0">
                <children>
-                  <Label prefHeight="28.0" prefWidth="136.0" text="ID de producto a eliminar" />
-                  <TextField fx:id="campoIdProducto" prefHeight="26.0" prefWidth="241.0" />
-                     <Button onAction="#handleEliminar" prefHeight="26.0" prefWidth="97.0" style="-fx-min-width: 80px; -fx-min-height: 25px;" text="Eliminar" />
-                  <Button onAction="#handleCerrar" prefHeight="26.0" prefWidth="103.0" style="-fx-min-width: 80px; -fx-min-height: 25px;" text="Cerrar" />
+                  <Button alignment="TOP_CENTER" contentDisplay="RIGHT" onAction="#handleCerrar" prefHeight="26.0" prefWidth="103.0" style="-fx-min-width: 80px; -fx-min-height: 25px;" text="Cerrar" textAlignment="CENTER">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Button>
                </children>
             </HBox>
          </children>
@@ -42,6 +46,7 @@
          <children>
              <Button onAction="#handleAgregar" prefHeight="30.0" prefWidth="85.0" style="-fx-min-width: 80px; -fx-min-height: 25px;" text="Agregar" />
             <Button mnemonicParsing="false" onAction="#handleModificar" prefHeight="30.0" prefWidth="85.0" text="Modificar" />
+               <Button onAction="#handleEliminar" prefHeight="26.0" prefWidth="85.0" style="-fx-min-width: 80px; -fx-min-height: 25px;" text="Eliminar" />
          </children></VBox>
    </right>
     
