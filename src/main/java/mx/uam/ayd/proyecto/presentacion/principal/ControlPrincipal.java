@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 
 import mx.uam.ayd.proyecto.presentacion.Inventario.Controlinventario;
 import mx.uam.ayd.proyecto.presentacion.agregarCartilla.ControlAgregarCartilla;
+import mx.uam.ayd.proyecto.presentacion.citas.ControlCitas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,17 +44,8 @@ public class ControlPrincipal {
             Controlinventario controlinventario,
             ControlGenerarReporte controlGenerarReporte,
             ControlRegistroVentas controlRegistroVentas,
-            ControlGestionarClientes controlGestionarClientes, ControlAgregarCartilla controlAgregarCartilla,
-            VentanaPrincipal ventana) {
-			ControlConfiguracionUmbrales controlConfiguracionUmbrales,
-			ControlAlerta controlAlerta,
-			VentanaAlerta ventanaAlerta,
-			Controlinventario controlinventario,
-			ControlGenerarReporte controlGenerarReporte,
-			ControlRegistroVentas controlRegistroVentas,
-			ControlGestionarClientes controlGestionarClientes,
-			ControlCitas controlCitas,
-			VentanaPrincipal ventana) {
+            ControlGestionarClientes controlGestionarClientes, ControlAgregarCartilla controlAgregarCartilla,ControlCitas controlCitas,VentanaPrincipal ventana
+            )  {
 		this.controlConfiguracionUmbrales = controlConfiguracionUmbrales;
 		this.controlAlerta = controlAlerta;
 		this.ventanaAlerta = ventanaAlerta;
@@ -64,7 +56,7 @@ public class ControlPrincipal {
         this.controlAgregarCartilla = controlAgregarCartilla;
         this.ventana = ventana;
 		this.controlCitas = controlCitas;
-		this.ventana = ventana;
+
 	}
 
 	/**

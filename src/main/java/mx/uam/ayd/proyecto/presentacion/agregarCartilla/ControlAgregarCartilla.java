@@ -23,7 +23,8 @@ public class ControlAgregarCartilla {
 
 
     public void inicia() {
-        ventana.muestra();
+        
+        ventana.setControl(this);
     }
 
     // Métodos de búsqueda delegados al servicio
@@ -68,5 +69,12 @@ public class ControlAgregarCartilla {
 
     public List<Cartilla> obtenerTodasLasCartillas() {
         return servicioCartilla.obtenerTodasLasCartillas();
+    }
+
+    public void solicitaCargarCartilla(Long mascotaId) {
+    }
+
+    public void solicitaRegistrarVacuna(VacunaEnum value, LocalDate value1, String trim, Long lote, String trim1, Long mascotaId) {
+
     }
 }
