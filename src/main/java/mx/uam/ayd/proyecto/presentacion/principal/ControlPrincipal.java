@@ -3,13 +3,14 @@ package mx.uam.ayd.proyecto.presentacion.principal;
 import jakarta.annotation.PostConstruct;
 
 import mx.uam.ayd.proyecto.presentacion.Inventario.Controlinventario;
-import mx.uam.ayd.proyecto.presentacion.citas.ControlCitas;
+import mx.uam.ayd.proyecto.presentacion.agregarCartilla.ControlAgregarCartilla;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import mx.uam.ayd.proyecto.presentacion.registroHospedaje.ControlRegistroHospedaje;
 import mx.uam.ayd.proyecto.presentacion.configurarUmbrales.ControlConfiguracionUmbrales;
 import mx.uam.ayd.proyecto.presentacion.alertas.ControlAlerta;
 import mx.uam.ayd.proyecto.presentacion.alertas.VentanaAlerta;
+import mx.uam.ayd.proyecto.presentacion.citas.ControlCitas;
 import mx.uam.ayd.proyecto.presentacion.generarReporte.ControlGenerarReporte;
 import mx.uam.ayd.proyecto.presentacion.registroVentas.ControlRegistroVentas;
 import mx.uam.ayd.proyecto.presentacion.agregarCliente.ControlGestionarClientes;
@@ -30,20 +31,23 @@ public class ControlPrincipal {
 	private final ControlGenerarReporte controlGenerarReporte;
 	private final ControlRegistroVentas controlRegistroVentas;
 	private final ControlGestionarClientes controlGestionarClientes;
+    private final ControlAgregarCartilla controlAgregarCartilla;
 	private final ControlCitas controlCitas;
-
+	private final ControlRegistroHospedaje controlRegistroHospedaje;
 	private final VentanaPrincipal ventana;
 
 	@Autowired
 	public ControlPrincipal(
-			ControlConfiguracionUmbrales controlConfiguracionUmbrales,
-			ControlAlerta controlAlerta,
-			VentanaAlerta ventanaAlerta,
-			Controlinventario controlinventario,
-			ControlGenerarReporte controlGenerarReporte,
-			ControlRegistroVentas controlRegistroVentas,
-			ControlGestionarClientes controlGestionarClientes,
+            ControlConfiguracionUmbrales controlConfiguracionUmbrales,
+            ControlAlerta controlAlerta,
+            VentanaAlerta ventanaAlerta,
+            Controlinventario controlinventario,
+            ControlGenerarReporte controlGenerarReporte,
+            ControlRegistroVentas controlRegistroVentas,
+            ControlGestionarClientes controlGestionarClientes,
+			ControlAgregarCartilla controlAgregarCartilla,
 			ControlCitas controlCitas,
+			ControlRegistroHospedaje controlRegistroHospedaje,
 			VentanaPrincipal ventana) {
 		this.controlConfiguracionUmbrales = controlConfiguracionUmbrales;
 		this.controlAlerta = controlAlerta;
@@ -52,8 +56,10 @@ public class ControlPrincipal {
 		this.controlGenerarReporte = controlGenerarReporte;
 		this.controlRegistroVentas = controlRegistroVentas;
 		this.controlGestionarClientes = controlGestionarClientes;
+        this.controlAgregarCartilla = controlAgregarCartilla;
+        this.ventana = ventana;
 		this.controlCitas = controlCitas;
-		this.ventana = ventana;
+		this.controlRegistroHospedaje = controlRegistroHospedaje;
 	}
 
 	/**
@@ -115,9 +121,21 @@ public class ControlPrincipal {
         controlGestionarClientes.inicia();
     }
 
+    public void agregarCartilla() {
+        controlAgregarCartilla.inicia();
+    }
+
 	/**
 	 * Metodo que arranca la historia de usuario "listar citas"
 	 */
 
 	public void gestionarCitas() { controlCitas.inicia(); }
+
+	/**
+	 * Método que arranca la historia de usuario "Registro de Hospedaje"
+	 */
+	public void registrarHospedaje() {
+		System.out.println("Botón 'Registrar Hospedaje' presionado desde VentanaPrincipal.");
+		controlRegistroHospedaje.inicia();
+	}
 }

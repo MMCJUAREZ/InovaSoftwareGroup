@@ -121,10 +121,27 @@ public class VentanaPrincipal {
         }
     }
 
+    @FXML
+    private void handleCartilla(){
+        if(control != null){
+            control.agregarCartilla();
+        }
+    }
+
 	@FXML
 	private void handleGestionarCitas() {
 		if (control != null) {
 			control.gestionarCitas();
+		}
+	}
+
+	@FXML
+	private void handleRegistrarHospedaje() {
+		System.out.println("handleRegistrarHospedaje() ejecutado (boton presionado.");
+		if (control != null) {
+			control.registrarHospedaje();
+		}else{
+			System.err.println("⚠️ ControlPrincipal es null. Revisa el PostConstruct o la inyección.");
 		}
 	}
 
