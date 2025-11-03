@@ -6,6 +6,7 @@ import mx.uam.ayd.proyecto.presentacion.Inventario.Controlinventario;
 import mx.uam.ayd.proyecto.presentacion.agregarCartilla.ControlAgregarCartilla;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import mx.uam.ayd.proyecto.presentacion.registroHospedaje.ControlRegistroHospedaje;
 
 import mx.uam.ayd.proyecto.presentacion.configurarUmbrales.ControlConfiguracionUmbrales;
 import mx.uam.ayd.proyecto.presentacion.alertas.ControlAlerta;
@@ -33,7 +34,7 @@ public class ControlPrincipal {
 	private final ControlGestionarClientes controlGestionarClientes;
     private final ControlAgregarCartilla controlAgregarCartilla;
 	private final ControlCitas controlCitas;
-
+	private final ControlRegistroHospedaje controlRegistroHospedaje;
 	private final VentanaPrincipal ventana;
 
 	@Autowired
@@ -47,6 +48,7 @@ public class ControlPrincipal {
             ControlGestionarClientes controlGestionarClientes,
 			ControlAgregarCartilla controlAgregarCartilla,
 			ControlCitas controlCitas,
+			ControlRegistroHospedaje controlRegistroHospedaje,
 			VentanaPrincipal ventana) {
 		this.controlConfiguracionUmbrales = controlConfiguracionUmbrales;
 		this.controlAlerta = controlAlerta;
@@ -58,6 +60,7 @@ public class ControlPrincipal {
         this.controlAgregarCartilla = controlAgregarCartilla;
         this.ventana = ventana;
 		this.controlCitas = controlCitas;
+		this.controlRegistroHospedaje = controlRegistroHospedaje;
 	}
 
 	/**
@@ -128,4 +131,12 @@ public class ControlPrincipal {
 	 */
 
 	public void gestionarCitas() { controlCitas.inicia(); }
+
+	/**
+	 * Método que arranca la historia de usuario "Registro de Hospedaje"
+	 */
+	public void registrarHospedaje() {
+		System.out.println("Botón 'Registrar Hospedaje' presionado desde VentanaPrincipal.");
+		controlRegistroHospedaje.inicia();
+	}
 }

@@ -124,4 +124,3 @@ public class Mascota {
      */
     public void setVacunasVigentes(boolean vacunasVigentes) { this.vacunasVigentes = vacunasVigentes; }
 }
-
