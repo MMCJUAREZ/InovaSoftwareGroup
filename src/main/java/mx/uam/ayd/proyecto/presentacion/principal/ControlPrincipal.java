@@ -37,7 +37,6 @@ public class ControlPrincipal {
 	private final ControlRegistroHospedaje controlRegistroHospedaje;
 	private final VentanaPrincipal ventana;
 
-
 	@Autowired
 	public ControlPrincipal(
             ControlConfiguracionUmbrales controlConfiguracionUmbrales,
@@ -62,7 +61,6 @@ public class ControlPrincipal {
         this.ventana = ventana;
 		this.controlCitas = controlCitas;
 		this.controlRegistroHospedaje = controlRegistroHospedaje;
-
 	}
 
 	/**
