@@ -7,10 +7,6 @@ import mx.uam.ayd.proyecto.presentacion.agregarCartilla.ControlAgregarCartilla;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import mx.uam.ayd.proyecto.presentacion.registroHospedaje.ControlRegistroHospedaje;
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
 import mx.uam.ayd.proyecto.presentacion.configurarUmbrales.ControlConfiguracionUmbrales;
 import mx.uam.ayd.proyecto.presentacion.alertas.ControlAlerta;
 import mx.uam.ayd.proyecto.presentacion.alertas.VentanaAlerta;
@@ -39,7 +35,6 @@ public class ControlPrincipal {
 	private final ControlCitas controlCitas;
 	private final ControlRegistroHospedaje controlRegistroHospedaje;
 	private final VentanaPrincipal ventana;
-	private final ControlRegistroHospedaje controlRegistroHospedaje;
 
 	@Autowired
 	public ControlPrincipal(
@@ -65,10 +60,6 @@ public class ControlPrincipal {
         this.ventana = ventana;
 		this.controlCitas = controlCitas;
 		this.controlRegistroHospedaje = controlRegistroHospedaje;
-<<<<<<< HEAD
-		this.ventana = ventana;
-=======
->>>>>>> origin/master
 	}
 
 	/**

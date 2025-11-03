@@ -135,10 +135,6 @@ public class VentanaPrincipal {
 		}
 	}
 
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
 	@FXML
 	private void handleRegistrarHospedaje() {
 		System.out.println("handleRegistrarHospedaje() ejecutado (boton presionado.");
@@ -148,8 +144,4 @@ public class VentanaPrincipal {
 			System.err.println("⚠️ ControlPrincipal es null. Revisa el PostConstruct o la inyección.");
 		}
 	}
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master
 }
