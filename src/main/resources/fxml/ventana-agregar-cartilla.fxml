@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      spacing="10" style="-fx-padding: 20;">
+    <Label text="Cartilla de Vacunación de Mascotas" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10">
+        <Label text="ID Mascota:"/>
+        <TextField fx:id="txtMascotaId" promptText="Ingrese ID de mascota"/>
+        <Button fx:id="btnCargarCartilla" text="Cargar Cartilla" onAction="#cargarCartilla"/>
+    </HBox>
+
+    <TableView fx:id="tablaVacunas" VBox.vgrow="ALWAYS" prefHeight="200">
+        <columns>
+            <TableColumn fx:id="colVacuna" text="Vacuna" prefWidth="150" />
+            <TableColumn fx:id="colFechaAplicacion" text="Fecha Aplicación" prefWidth="120" />
+            <TableColumn fx:id="colProximaDosis" text="Próxima Dosis" prefWidth="120" />
+            <TableColumn fx:id="colVeterinario" text="Veterinario" prefWidth="150" />
+            <TableColumn fx:id="colLote" text="Lote" prefWidth="100" />
+            <TableColumn fx:id="colObservaciones" text="Observaciones" prefWidth="200" />
+        </columns>
+    </TableView>
+
+    <VBox spacing="5" style="-fx-border-color: gray; -fx-border-width: 1; -fx-padding: 10;">
+        <Label text="Registrar Nueva Vacuna" style="-fx-font-weight: bold;"/>
+
+        <HBox spacing="10">
+            <VBox spacing="5">
+                <Label text="Vacuna:"/>
+                <ComboBox fx:id="cmbVacuna" prefWidth="200"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Fecha Aplicación:"/>
+                <DatePicker fx:id="dpFechaAplicacion" prefWidth="150"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="10">
+            <VBox spacing="5">
+                <Label text="Veterinario:"/>
+                <TextField fx:id="txtVeterinario" prefWidth="200"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Lote Vacuna:"/>
+                <TextField fx:id="txtLote" prefWidth="150"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="10">
+            <VBox spacing="5" VBox.vgrow="ALWAYS">
+                <Label text="Observaciones:"/>
+                <TextField fx:id="txtObservaciones" prefWidth="400"/>
+            </VBox>
+        </HBox>
+
+        <Button fx:id="btnRegistrarVacuna" text="Registrar Vacuna" onAction="#registrarVacuna"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+    </VBox>
+
+</VBox>

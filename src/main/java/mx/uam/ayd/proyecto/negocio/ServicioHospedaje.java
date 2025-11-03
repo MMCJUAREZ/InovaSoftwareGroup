@@ -104,3 +104,7 @@ public class ServicioHospedaje {
         }
     }
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master

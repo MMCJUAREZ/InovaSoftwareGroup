@@ -32,3 +32,7 @@ public interface MascotaRepository extends CrudRepository<Mascota, Long> {
     // Por el momento no se definen métodos personalizados,
     // pero pueden agregarse en el futuro según los requerimientos del sistema.
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
