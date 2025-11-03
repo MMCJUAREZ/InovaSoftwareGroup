@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import java.lang.String?>
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/master
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.collections.FXCollections?>
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/master
 <VBox spacing="10" xmlns="http://javafx.com/javafx/17.0.12"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="mx.uam.ayd.proyecto.presentacion.registroHospedaje.VentanaRegistroHospedaje"

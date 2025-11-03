@@ -1,9 +1,6 @@
 package mx.uam.ayd.proyecto.presentacion.registroHospedaje;
 
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/master
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import mx.uam.ayd.proyecto.negocio.modelo.Mascota;
