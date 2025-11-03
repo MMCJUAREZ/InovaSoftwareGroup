@@ -120,4 +120,11 @@ public class VentanaPrincipal {
             control.gestionarClientes();
         }
     }
+
+    @FXML
+    private void handleCartilla(){
+        if(control != null){
+            control.agregarCartilla();
+        }
+    }
 }

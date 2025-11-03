@@ -3,6 +3,7 @@ package mx.uam.ayd.proyecto.presentacion.principal;
 import jakarta.annotation.PostConstruct;
 
 import mx.uam.ayd.proyecto.presentacion.Inventario.Controlinventario;
+import mx.uam.ayd.proyecto.presentacion.agregarCartilla.ControlAgregarCartilla;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,19 +30,20 @@ public class ControlPrincipal {
 	private final ControlGenerarReporte controlGenerarReporte;
 	private final ControlRegistroVentas controlRegistroVentas;
 	private final ControlGestionarClientes controlGestionarClientes;
+    private final ControlAgregarCartilla controlAgregarCartilla;
 
 	private final VentanaPrincipal ventana;
 
 	@Autowired
 	public ControlPrincipal(
-			ControlConfiguracionUmbrales controlConfiguracionUmbrales,
-			ControlAlerta controlAlerta,
-			VentanaAlerta ventanaAlerta,
-			Controlinventario controlinventario,
-			ControlGenerarReporte controlGenerarReporte,
-			ControlRegistroVentas controlRegistroVentas,
-			ControlGestionarClientes controlGestionarClientes,
-			VentanaPrincipal ventana) {
+            ControlConfiguracionUmbrales controlConfiguracionUmbrales,
+            ControlAlerta controlAlerta,
+            VentanaAlerta ventanaAlerta,
+            Controlinventario controlinventario,
+            ControlGenerarReporte controlGenerarReporte,
+            ControlRegistroVentas controlRegistroVentas,
+            ControlGestionarClientes controlGestionarClientes, ControlAgregarCartilla controlAgregarCartilla,
+            VentanaPrincipal ventana) {
 		this.controlConfiguracionUmbrales = controlConfiguracionUmbrales;
 		this.controlAlerta = controlAlerta;
 		this.ventanaAlerta = ventanaAlerta;
@@ -49,7 +51,8 @@ public class ControlPrincipal {
 		this.controlGenerarReporte = controlGenerarReporte;
 		this.controlRegistroVentas = controlRegistroVentas;
 		this.controlGestionarClientes = controlGestionarClientes;
-		this.ventana = ventana;
+        this.controlAgregarCartilla = controlAgregarCartilla;
+        this.ventana = ventana;
 	}
 
 	/**
@@ -109,5 +112,9 @@ public class ControlPrincipal {
 
 	public void gestionarClientes() {
         controlGestionarClientes.inicia();
+    }
+
+    public void agregarCartilla() {
+        controlAgregarCartilla.inicia();
     }
 }
