@@ -32,8 +32,36 @@ public class ServicioProductoTest {
         MockitoAnnotations.openMocks(this);
         servicioProducto = new ServicioProducto(productoRepository);
     }
+    @Test
+    public void agregarProducto_medicamento_guardaProducto() {
+        String nombre = "Sobre de gato";
+        TipoProducto tipo = TipoProducto.Comida;
+        MarcaProducto marca = MarcaProducto.HILLS;
+        UsoVeterinario uso = UsoVeterinario.Gato;
+        double precio = 12.0;
+        int cantidad = 10;
+        UnidadProducto unidad = UnidadProducto.Pieza;
+        LocalDate fechaCaducidad = LocalDate.now().plusWeeks(2);
 
-    /*@Test
+        when(productoRepository.findByNombreAndTipoProductoAndMarcaProducto(nombre, tipo, marca))
+                .thenReturn(Optional.empty());
+        when(productoRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Producto resultado = servicioProducto.agregarProducto(nombre, tipo, marca, precio, cantidad, unidad, fechaCaducidad, uso);
+
+        assertNotNull(resultado);
+        assertEquals(nombre, resultado.getNombre());
+        assertEquals(tipo, resultado.getTipoProducto());
+        assertEquals(marca, resultado.getMarcaProducto());
+        assertEquals(precio, resultado.getPrecio());
+        assertEquals(cantidad, resultado.getCantidadStock());
+        assertEquals(unidad, resultado.getUnidadProducto());
+        assertEquals(fechaCaducidad, resultado.getFechaCaducidad());
+        assertEquals(uso, resultado.getUsoVeterinario());
+
+        verify(productoRepository).save(any());
+    }
+    @Test
     public void agregarProducto_no_medicamento_guardaProducto() {
         String nombre = "Sobre de gato";
         TipoProducto tipo = TipoProducto.Comida;
@@ -60,7 +88,7 @@ public class ServicioProductoTest {
         assertEquals(fechaCaducidad, resultado.getFechaCaducidad());
 
         verify(productoRepository).save(any());
-    }*/
+    }
 
     @Test
     public void agregarProducto_productoExistente_lanzaExcepcion() {
