@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+<VBox spacing="10" xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="mx.uam.ayd.proyecto.presentacion.registroHospedaje.VentanaRegistroHospedaje"
+      style="-fx-padding: 15px;">
+
+    <Label text="Registro de Hospedaje - Mascota" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+    <GridPane hgap="10" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <Label text="Nombre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtNombre" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Raza:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtRaza" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Especie:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtEspecie" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Edad:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtEdad" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Sexo:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="cmbSexo" GridPane.rowIndex="4" GridPane.columnIndex="1">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Macho" />
+                    <String fx:value="Hembra" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <Label text="Vacunas Vigentes:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <CheckBox fx:id="chkVacunas" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <Button text="Registrar" onAction="#registrarMascota" style="-fx-min-width: 150px;"/>
+</VBox>

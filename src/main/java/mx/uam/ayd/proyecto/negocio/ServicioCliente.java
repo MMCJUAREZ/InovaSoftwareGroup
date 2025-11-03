@@ -117,4 +117,14 @@ public class ServicioCliente {
         cliente.setMembresia(membresia);
         clienteRepository.save(cliente); // Cascade.ALL asegura que se guarde también la membresía
     }
+    /**
+     * Permite buscar un cliente por su número de teléfono.
+     * Es necesario para el flujo de registro de hospedaje (HU-01).
+     * @param telefono El número de teléfono a buscar.
+     * @return El cliente si existe, o null.
+     */
+    public Cliente findByTelefono(String telefono) {
+        // La implementación se basa en que ClienteRepository tiene findByTelefono(String telefono)
+        return clienteRepository.findByTelefono(telefono);
+    }
 }

@@ -4,13 +4,13 @@ import jakarta.annotation.PostConstruct;
 
 import mx.uam.ayd.proyecto.presentacion.Inventario.Controlinventario;
 import mx.uam.ayd.proyecto.presentacion.agregarCartilla.ControlAgregarCartilla;
-import mx.uam.ayd.proyecto.presentacion.citas.ControlCitas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import mx.uam.ayd.proyecto.presentacion.registroHospedaje.ControlRegistroHospedaje;
 import mx.uam.ayd.proyecto.presentacion.configurarUmbrales.ControlConfiguracionUmbrales;
 import mx.uam.ayd.proyecto.presentacion.alertas.ControlAlerta;
 import mx.uam.ayd.proyecto.presentacion.alertas.VentanaAlerta;
+import mx.uam.ayd.proyecto.presentacion.citas.ControlCitas;
 import mx.uam.ayd.proyecto.presentacion.generarReporte.ControlGenerarReporte;
 import mx.uam.ayd.proyecto.presentacion.registroVentas.ControlRegistroVentas;
 import mx.uam.ayd.proyecto.presentacion.agregarCliente.ControlGestionarClientes;
@@ -33,7 +33,7 @@ public class ControlPrincipal {
 	private final ControlGestionarClientes controlGestionarClientes;
     private final ControlAgregarCartilla controlAgregarCartilla;
 	private final ControlCitas controlCitas;
-
+	private final ControlRegistroHospedaje controlRegistroHospedaje;
 	private final VentanaPrincipal ventana;
 
 	@Autowired
@@ -44,8 +44,11 @@ public class ControlPrincipal {
             Controlinventario controlinventario,
             ControlGenerarReporte controlGenerarReporte,
             ControlRegistroVentas controlRegistroVentas,
-            ControlGestionarClientes controlGestionarClientes, ControlAgregarCartilla controlAgregarCartilla,ControlCitas controlCitas,VentanaPrincipal ventana
-            )  {
+            ControlGestionarClientes controlGestionarClientes,
+			ControlAgregarCartilla controlAgregarCartilla,
+			ControlCitas controlCitas,
+			ControlRegistroHospedaje controlRegistroHospedaje,
+			VentanaPrincipal ventana) {
 		this.controlConfiguracionUmbrales = controlConfiguracionUmbrales;
 		this.controlAlerta = controlAlerta;
 		this.ventanaAlerta = ventanaAlerta;
@@ -56,7 +59,7 @@ public class ControlPrincipal {
         this.controlAgregarCartilla = controlAgregarCartilla;
         this.ventana = ventana;
 		this.controlCitas = controlCitas;
-
+		this.controlRegistroHospedaje = controlRegistroHospedaje;
 	}
 
 	/**
@@ -127,4 +130,12 @@ public class ControlPrincipal {
 	 */
 
 	public void gestionarCitas() { controlCitas.inicia(); }
+
+	/**
+	 * Método que arranca la historia de usuario "Registro de Hospedaje"
+	 */
+	public void registrarHospedaje() {
+		System.out.println("Botón 'Registrar Hospedaje' presionado desde VentanaPrincipal.");
+		controlRegistroHospedaje.inicia();
+	}
 }
