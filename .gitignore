@@ -36,3 +36,5 @@ build/
 .vscode/
 bin/
 doc/
+
+/data/inovasoftware.mv.db
