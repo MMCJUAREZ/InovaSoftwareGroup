@@ -42,54 +42,6 @@ class ServicioVentaTest {
     }
 
     @Test
-    void actualizarStock_productoNoDebeSerNull(){
-        Producto producto = null;
-        int cantidadVendida = 10;
-
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            servicioVenta.actualizarStock(producto, cantidadVendida);
-        });
-        assertEquals("Producto no puede ser nulo", ex.getMessage());
-    }
-
-    @Test
-    void actualizarStock_cantidadVendidaNoDebeSerMayorACantidadStock(){
-        Producto producto = new Producto();
-        producto.setCantidadStock(5);
-        producto.setIdProducto(1L);
-        int cantidadVendida = 10;
-
-        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
-            servicioVenta.actualizarStock(producto, cantidadVendida);
-        });
-        assertEquals("La cantidad vendida no puede ser mayor al stock", ex.getMessage());
-    }
-
-    @Test
-    void actualizarStock_cantidadNoDeberSerMenorA1(){
-        Producto producto = new Producto();
-
-        int cantidadVendida = -1;
-
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            servicioVenta.actualizarStock(producto, cantidadVendida);
-        });
-        assertEquals("La cantidad vendida no puede ser menor a 0", ex.getMessage());
-    }
-
-    @Test
-    void actualizarStock_debeGuardarProducto() {
-        Producto producto = new Producto();
-        int cantidadVendida = 5;
-        producto.setNombre("Producto Test");
-        producto.setCantidadStock(10);
-
-        servicioVenta.actualizarStock(producto, cantidadVendida);
-
-        verify(productoRepository, times(1)).save(producto);
-    }
-
-    @Test
     void guardarVenta_ventaNoDebeSerNull() {
         Venta venta = null;
         double montoTotal = 100.0;

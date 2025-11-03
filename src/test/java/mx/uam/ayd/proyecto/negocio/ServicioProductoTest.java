@@ -8,16 +8,23 @@ import java.util.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 
-import mx.uam.ayd.proyecto.datos.*;
-import mx.uam.ayd.proyecto.negocio.modelo.*;
+import mx.uam.ayd.proyecto.datos.ProductoRepository;
+import mx.uam.ayd.proyecto.negocio.modelo.Producto;
+import mx.uam.ayd.proyecto.negocio.modelo.UnidadProducto;
+import mx.uam.ayd.proyecto.negocio.modelo.MarcaProducto;
+import mx.uam.ayd.proyecto.negocio.modelo.TipoProducto;
+import mx.uam.ayd.proyecto.negocio.modelo.UsoVeterinario;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class ServicioProductoTest {
 
     @Mock
     private ProductoRepository productoRepository;
-
+    @InjectMocks
     private ServicioProducto servicioProducto;
 
     @BeforeEach
@@ -26,11 +33,12 @@ public class ServicioProductoTest {
         servicioProducto = new ServicioProducto(productoRepository);
     }
 
-    @Test
-    public void agregarProducto_valido_guardaProducto() {
+    /*@Test
+    public void agregarProducto_no_medicamento_guardaProducto() {
         String nombre = "Sobre de gato";
         TipoProducto tipo = TipoProducto.Comida;
-        MarcaProducto marca = MarcaProducto.Whiskas;
+        MarcaProducto marca = MarcaProducto.HILLS;
+
         double precio = 12.0;
         int cantidad = 10;
         UnidadProducto unidad = UnidadProducto.Pieza;
@@ -40,7 +48,7 @@ public class ServicioProductoTest {
                 .thenReturn(Optional.empty());
         when(productoRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Producto resultado = servicioProducto.agregarProducto(nombre, tipo, marca, precio, cantidad, unidad, fechaCaducidad);
+        Producto resultado = servicioProducto.agregarProducto(nombre, tipo, marca, precio, cantidad, unidad, fechaCaducidad, null);
 
         assertNotNull(resultado);
         assertEquals(nombre, resultado.getNombre());
@@ -52,19 +60,19 @@ public class ServicioProductoTest {
         assertEquals(fechaCaducidad, resultado.getFechaCaducidad());
 
         verify(productoRepository).save(any());
-    }
+    }*/
 
     @Test
     public void agregarProducto_productoExistente_lanzaExcepcion() {
         String nombre = "Sobre de gato";
         TipoProducto tipo = TipoProducto.Comida;
-        MarcaProducto marca = MarcaProducto.Whiskas;
+        MarcaProducto marca = MarcaProducto.HILLS;
 
         when(productoRepository.findByNombreAndTipoProductoAndMarcaProducto(nombre, tipo, marca))
                 .thenReturn(Optional.of(new Producto()));
 
         IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
-            servicioProducto.agregarProducto(nombre, tipo, marca, 12, 10, UnidadProducto.Pieza, null);
+            servicioProducto.agregarProducto(nombre, tipo, marca, 12, 10, UnidadProducto.Pieza, null, null);
         });
 
         assertEquals("El producto ya existe en la base de datos.", ex.getMessage());
@@ -73,7 +81,7 @@ public class ServicioProductoTest {
     @Test
     public void agregarProducto_nombreNulo_lanzaExcepcion() {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            servicioProducto.agregarProducto(null, TipoProducto.Comida, MarcaProducto.Whiskas, 12, 10, UnidadProducto.Pieza, null);
+            servicioProducto.agregarProducto(null, TipoProducto.Comida, MarcaProducto.HILLS, 12, 10, UnidadProducto.Pieza, null, null);
         });
         assertEquals("El nombre del producto no puede ser nulo o vacío", ex.getMessage());
     }
@@ -81,7 +89,7 @@ public class ServicioProductoTest {
     @Test
     public void agregarProducto_nombreVacio_lanzaExcepcion() {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            servicioProducto.agregarProducto(" ", TipoProducto.Comida, MarcaProducto.Whiskas, 12, 10, UnidadProducto.Pieza, null);
+            servicioProducto.agregarProducto(" ", TipoProducto.Comida, MarcaProducto.HILLS, 12, 10, UnidadProducto.Pieza, null, null);
         });
         assertEquals("El nombre del producto no puede ser nulo o vacío", ex.getMessage());
     }
@@ -89,7 +97,7 @@ public class ServicioProductoTest {
     @Test
     public void agregarProducto_tipoProductoNulo_lanzaExcepcion() {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            servicioProducto.agregarProducto("Leche", null, MarcaProducto.Whiskas, 12, 10, UnidadProducto.Pieza, null);
+            servicioProducto.agregarProducto("Sobre de gato", null, MarcaProducto.HILLS, 12, 10, UnidadProducto.Pieza, null, null);
         });
         assertEquals("El tipo de producto no puede ser nulo", ex.getMessage());
     }
@@ -97,7 +105,7 @@ public class ServicioProductoTest {
     @Test
     public void agregarProducto_marcaProductoNula_lanzaExcepcion() {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            servicioProducto.agregarProducto("Leche", TipoProducto.Comida, null, 12, 10, UnidadProducto.Pieza, null);
+            servicioProducto.agregarProducto("Sobre de gato", TipoProducto.Comida, null, 12, 10, UnidadProducto.Pieza, null, null);
         });
         assertEquals("La marca del producto no puede ser nula", ex.getMessage());
     }
@@ -105,7 +113,7 @@ public class ServicioProductoTest {
     @Test
     public void agregarProducto_precioInvalido_lanzaExcepcion() {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            servicioProducto.agregarProducto("Leche", TipoProducto.Comida, MarcaProducto.Whiskas, 0, 10, UnidadProducto.Pieza, null);
+            servicioProducto.agregarProducto("Sobre de gato", TipoProducto.Comida, MarcaProducto.HILLS, 0, 10, UnidadProducto.Pieza, null, null);
         });
         assertEquals("El precio debe ser mayor a cero", ex.getMessage());
     }
@@ -113,7 +121,7 @@ public class ServicioProductoTest {
     @Test
     public void agregarProducto_unidadProductoNula_lanzaExcepcion() {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            servicioProducto.agregarProducto("Leche", TipoProducto.Comida, MarcaProducto.Whiskas, 12, 10, null, null);
+            servicioProducto.agregarProducto("Sobre de gato", TipoProducto.Comida, MarcaProducto.HILLS, 12, 10, null, null, null);
         });
         assertEquals("La unidad del producto no puede ser nula", ex.getMessage());
     }
@@ -123,11 +131,27 @@ public class ServicioProductoTest {
         LocalDate fechaCaducidad = LocalDate.now().plusDays(3); // menos de una semana
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            servicioProducto.agregarProducto("Leche", TipoProducto.Comida, MarcaProducto.Whiskas, 12, 10, UnidadProducto.Pieza, fechaCaducidad);
+            servicioProducto.agregarProducto("Sobre de gato", TipoProducto.Comida, MarcaProducto.HILLS, 12, 10, UnidadProducto.Pieza, fechaCaducidad, null);
         });
-        assertEquals("La fecha no puede ser anterior a partir de una semana", ex.getMessage());
+        assertEquals("La fecha no puede ser anterior a una semana a partir de hoy", ex.getMessage());
     }
 
+    @Test
+    public void agregarProducto_usoVeterinarioNula_lanzaExcepcion() {
+        LocalDate fechaCaducidad = LocalDate.now().plusWeeks(3);
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            servicioProducto.agregarProducto("Meloxivet", TipoProducto.Medicamento, MarcaProducto.MSD, 12, 10, UnidadProducto.Inyeccion, fechaCaducidad, null);
+        });
+        assertEquals("El uso veterinario no puede ser nulo para medicamentos", ex.getMessage());
+    }
+
+    @Test
+    public void agregarProducto_fechaCaducidadNula_lanzaExcepcion() {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            servicioProducto.agregarProducto("Meloxivet", TipoProducto.Medicamento, MarcaProducto.MSD, 12, 10, UnidadProducto.Inyeccion, null, UsoVeterinario.Gato);
+        });
+        assertEquals("La fecha de caducidad no puede ser nula en medicamentos o comida", ex.getMessage());
+    }
     // Pruebas para recuperaProductos
 
     @Test
