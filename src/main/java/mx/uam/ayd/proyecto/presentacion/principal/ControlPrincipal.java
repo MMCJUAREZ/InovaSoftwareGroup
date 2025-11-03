@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import mx.uam.ayd.proyecto.presentacion.configurarUmbrales.ControlConfiguracionUmbrales;
 import mx.uam.ayd.proyecto.presentacion.alertas.ControlAlerta;
 import mx.uam.ayd.proyecto.presentacion.alertas.VentanaAlerta;
+import mx.uam.ayd.proyecto.presentacion.citas.ControlCitas;
 import mx.uam.ayd.proyecto.presentacion.generarReporte.ControlGenerarReporte;
 import mx.uam.ayd.proyecto.presentacion.registroVentas.ControlRegistroVentas;
 import mx.uam.ayd.proyecto.presentacion.agregarCliente.ControlGestionarClientes;
@@ -43,15 +44,8 @@ public class ControlPrincipal {
             Controlinventario controlinventario,
             ControlGenerarReporte controlGenerarReporte,
             ControlRegistroVentas controlRegistroVentas,
-            ControlGestionarClientes controlGestionarClientes, ControlAgregarCartilla controlAgregarCartilla,
-            VentanaPrincipal ventana) {
-			ControlConfiguracionUmbrales controlConfiguracionUmbrales,
-			ControlAlerta controlAlerta,
-			VentanaAlerta ventanaAlerta,
-			Controlinventario controlinventario,
-			ControlGenerarReporte controlGenerarReporte,
-			ControlRegistroVentas controlRegistroVentas,
-			ControlGestionarClientes controlGestionarClientes,
+            ControlGestionarClientes controlGestionarClientes,
+			ControlAgregarCartilla controlAgregarCartilla,
 			ControlCitas controlCitas,
 			VentanaPrincipal ventana) {
 		this.controlConfiguracionUmbrales = controlConfiguracionUmbrales;
@@ -64,7 +58,6 @@ public class ControlPrincipal {
         this.controlAgregarCartilla = controlAgregarCartilla;
         this.ventana = ventana;
 		this.controlCitas = controlCitas;
-		this.ventana = ventana;
 	}
 
 	/**
