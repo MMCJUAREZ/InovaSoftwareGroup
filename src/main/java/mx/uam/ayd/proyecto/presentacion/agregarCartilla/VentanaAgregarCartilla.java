@@ -239,7 +239,9 @@ public class VentanaAgregarCartilla {
             txtObservaciones.clear();
         });
     }
-
+    public void cierra() {
+        stage.close();
+    }
     /**
      * Obtiene el stage de la ventana
      */

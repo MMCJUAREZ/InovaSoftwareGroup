@@ -10,7 +10,7 @@
     <HBox spacing="10">
         <Label text="ID Mascota:"/>
         <TextField fx:id="txtMascotaId" promptText="Ingrese ID de mascota"/>
-        <Button fx:id="btnCargarCartilla" text="Cargar Cartilla" onAction="#cargarCartilla"/>
+        <Button fx:id="btnCargarCartilla" text="Cargar Cartilla" onAction="#handleCargarCartilla"/>
     </HBox>
 
     <TableView fx:id="tablaVacunas" VBox.vgrow="ALWAYS" prefHeight="200">
@@ -58,7 +58,7 @@
             </VBox>
         </HBox>
 
-        <Button fx:id="btnRegistrarVacuna" text="Registrar Vacuna" onAction="#registrarVacuna"
+        <Button fx:id="btnRegistrarVacuna" text="Registrar Vacuna" onAction="#handleRegistrarVacuna"
                 style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
     </VBox>
 
