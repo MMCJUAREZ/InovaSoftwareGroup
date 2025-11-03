@@ -16,7 +16,7 @@
          </VBox.margin></Label>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="540.0">
          <children>
-            <ComboBox fx:id="cmbTipo" prefHeight="25.0" prefWidth="109.0" promptText="Tipo">
+            <ComboBox fx:id="cmbTipo" onAction="#onTipoSeleccionado" prefHeight="25.0" prefWidth="109.0" promptText="Tipo">
                <HBox.margin>
                   <Insets right="15.0" />
                </HBox.margin></ComboBox>
@@ -52,6 +52,11 @@
                </HBox.margin>
             </TextField>
             <ComboBox fx:id="cmbMarca" prefWidth="150.0" promptText="Marca" />
+            <ComboBox fx:id="cmbUsoVeterinario" prefWidth="150.0" promptText="Uso veterianrio" visible="false">
+               <HBox.margin>
+                  <Insets left="15.0" />
+               </HBox.margin>
+            </ComboBox>
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="55.0" prefWidth="540.0">

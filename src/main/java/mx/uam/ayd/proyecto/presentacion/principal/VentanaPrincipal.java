@@ -127,4 +127,12 @@ public class VentanaPrincipal {
             control.agregarCartilla();
         }
     }
+
+	@FXML
+	private void handleGestionarCitas() {
+		if (control != null) {
+			control.gestionarCitas();
+		}
+	}
+
 }

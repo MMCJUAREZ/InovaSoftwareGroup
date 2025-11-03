@@ -11,15 +11,17 @@ spring:
           starttls:
             enable: true
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:file:./data/inovasoftware
     driver-class-name: org.h2.Driver
+    username: admin
+    password: 1234
   jpa:
     database: h2
     database-platform: org.hibernate.dialect.H2Dialect
     generate-ddl: true
     show-sql: false
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
   h2:
     console:
       enabled: true

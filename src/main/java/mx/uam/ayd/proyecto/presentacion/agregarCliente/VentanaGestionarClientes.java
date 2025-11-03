@@ -2,6 +2,7 @@ package mx.uam.ayd.proyecto.presentacion.agregarCliente;
 import java.io.IOException;
 import java.util.List;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,8 +14,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+
+
 import org.springframework.stereotype.Component;
 import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
+import mx.uam.ayd.proyecto.negocio.modelo.TipoMembresia;
+
 
 @Component
 public class VentanaGestionarClientes {
@@ -22,6 +27,7 @@ public class VentanaGestionarClientes {
     private Stage stage;
     private ControlGestionarClientes control;
     private ObservableList<Cliente> clientesData = FXCollections.observableArrayList();
+
 
     @FXML
     private TableView<Cliente> tableClientes;
@@ -35,6 +41,10 @@ public class VentanaGestionarClientes {
     private TableColumn<Cliente, String> correoColumn;
     @FXML
     private TableColumn<Cliente, String> direccionColumn;
+    @FXML
+    private TableColumn<Cliente, Double> montoAcumuladoColumn;
+    @FXML
+    private TableColumn<Cliente, TipoMembresia> membresiaColumn;
 
     /**
      * Muestra la ventana principal de gestión de clientes
@@ -57,6 +67,15 @@ public class VentanaGestionarClientes {
                 telefonoColumn.setCellValueFactory(new PropertyValueFactory<>("telefono"));
                 correoColumn.setCellValueFactory(new PropertyValueFactory<>("correoElectronico"));
                 direccionColumn.setCellValueFactory(new PropertyValueFactory<>("direccion"));
+                montoAcumuladoColumn.setCellValueFactory(new PropertyValueFactory<>("montoAcumulado"));
+                membresiaColumn.setCellValueFactory(cellData -> {
+                    Cliente cliente = cellData.getValue();
+                    TipoMembresia tipo = null;
+                    if (cliente.getMembresia() != null) {
+                        tipo = cliente.getMembresia().getTipo();
+                    }
+                    return new ReadOnlyObjectWrapper<>(tipo);
+                });
 
                 tableClientes.setItems(clientesData);
                 
@@ -100,6 +119,16 @@ public class VentanaGestionarClientes {
     @FXML
     private void handleCerrar() {
         stage.close();
+    }
+
+    @FXML
+    private void handleSeleccionarMembresia(){
+        Cliente clienteSeleccionado = tableClientes.getSelectionModel().getSelectedItem();
+        if (clienteSeleccionado == null) {
+            muestraAlerta(Alert.AlertType.WARNING, "Ningún cliente seleccionado", "Por favor, selecciona un cliente de la tabla para asignar membresia.");
+        } else {
+            control.asignarMembresia(clienteSeleccionado);
+        }
     }
 
     public void muestraAlerta(Alert.AlertType type, String title, String message) {

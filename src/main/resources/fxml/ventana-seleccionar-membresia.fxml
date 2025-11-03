@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
+    <HBox alignment="CENTER" spacing="40" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50" AnchorPane.topAnchor="50">
+
+        <!-- Tarjeta Standard -->
+        <VBox fx:id="cardStandard" alignment="CENTER" spacing="15" style="-fx-background-color: #ffffff; -fx-padding: 20; -fx-border-color: #cccccc; -fx-border-radius: 8; -fx-background-radius: 8;">
+            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Membresía Standard" />
+            <Label text="Descuentos en productos de hasta el 10%" wrapText="true" />
+            <Label text="Placa personalizada con el nombre de tu mascota" wrapText="true" />
+         <Label text="Costo $119" />
+         <HBox prefHeight="1.0" prefWidth="238.0">
+            <children>
+                  <Button fx:id="btnStandard" alignment="TOP_RIGHT" nodeOrientation="RIGHT_TO_LEFT" text="Seleccionar" onAction = "#handleSeleccionarStandard"/>
+            </children>
+         </HBox>
+        </VBox>
+
+        <!-- Tarjeta Platinum -->
+        <StackPane>
+            <VBox fx:id="cardPlatinum" alignment="CENTER" spacing="15" style="-fx-background-color: #f2f2f2; -fx-padding: 20; -fx-border-color: #999999; -fx-border-radius: 8; -fx-background-radius: 8;">
+                <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Membresía Platinum" />
+                <Label text="Descuentos en productos de hasta el 15%" wrapText="true" />
+                <Label text="Placa personalizada con el nombre de tu mascota" wrapText="true" />
+                <Label text="Acceso al servicio de hospedaje para mascotas" wrapText="true" />
+            <HBox prefHeight="26.0" prefWidth="106.0">
+               <children>
+                  <Label text="Costo $219" />
+               </children>
+            </HBox>
+                <Button fx:id="btnPlatinum" text="Seleccionar" onAction="#handleSeleccionarPlatinum" />
+            </VBox>
+
+            <!-- Etiqueta superior (opcional) -->
+            <Label style="-fx-background-color: lightgoldenrodyellow; -fx-padding: 4 8; -fx-font-weight: bold; -fx-border-color: #cccccc;" text="★ Recomendado" StackPane.alignment="TOP_RIGHT" />
+        </StackPane>
+
+    </HBox>
+
+</VBox>
