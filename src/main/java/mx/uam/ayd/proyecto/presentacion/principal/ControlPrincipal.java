@@ -31,6 +31,7 @@ public class ControlPrincipal {
 	private final ControlRegistroVentas controlRegistroVentas;
 	private final ControlGestionarClientes controlGestionarClientes;
     private final ControlAgregarCartilla controlAgregarCartilla;
+	private final ControlCitas controlCitas;
 
 	private final VentanaPrincipal ventana;
 
@@ -44,6 +45,15 @@ public class ControlPrincipal {
             ControlRegistroVentas controlRegistroVentas,
             ControlGestionarClientes controlGestionarClientes, ControlAgregarCartilla controlAgregarCartilla,
             VentanaPrincipal ventana) {
+			ControlConfiguracionUmbrales controlConfiguracionUmbrales,
+			ControlAlerta controlAlerta,
+			VentanaAlerta ventanaAlerta,
+			Controlinventario controlinventario,
+			ControlGenerarReporte controlGenerarReporte,
+			ControlRegistroVentas controlRegistroVentas,
+			ControlGestionarClientes controlGestionarClientes,
+			ControlCitas controlCitas,
+			VentanaPrincipal ventana) {
 		this.controlConfiguracionUmbrales = controlConfiguracionUmbrales;
 		this.controlAlerta = controlAlerta;
 		this.ventanaAlerta = ventanaAlerta;
@@ -53,6 +63,8 @@ public class ControlPrincipal {
 		this.controlGestionarClientes = controlGestionarClientes;
         this.controlAgregarCartilla = controlAgregarCartilla;
         this.ventana = ventana;
+		this.controlCitas = controlCitas;
+		this.ventana = ventana;
 	}
 
 	/**
@@ -117,4 +129,10 @@ public class ControlPrincipal {
     public void agregarCartilla() {
         controlAgregarCartilla.inicia();
     }
+
+	/**
+	 * Metodo que arranca la historia de usuario "listar citas"
+	 */
+
+	public void gestionarCitas() { controlCitas.inicia(); }
 }
