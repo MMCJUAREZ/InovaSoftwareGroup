@@ -144,5 +144,4 @@ public class VentanaPrincipal {
 			System.err.println("⚠️ ControlPrincipal es null. Revisa el PostConstruct o la inyección.");
 		}
 	}
-
 }

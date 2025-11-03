@@ -49,10 +49,10 @@ public class ServicioMascota {
         //this.mascotaRepository = mascotaRepository;
 
 
-        /**
-         * Crea y valida una nueva mascota.
-         * @throws IllegalArgumentException si algún campo obligatorio falta o es inválido.
-         */
+    /**
+     * Crea y valida una nueva mascota.
+     * @throws IllegalArgumentException si algún campo obligatorio falta o es inválido.
+     */
         if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre de la mascota es obligatorio.");
         }
