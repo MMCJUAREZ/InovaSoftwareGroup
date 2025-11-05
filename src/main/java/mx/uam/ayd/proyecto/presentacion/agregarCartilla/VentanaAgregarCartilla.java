@@ -1,20 +1,28 @@
 package mx.uam.ayd.proyecto.presentacion.agregarCartilla;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import mx.uam.ayd.proyecto.negocio.modelo.Cartilla;
 import mx.uam.ayd.proyecto.negocio.modelo.VacunaEnum;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
 @Component
 public class VentanaAgregarCartilla {
 
+    private Stage stage;
     private ControlAgregarCartilla control;
+    private ObservableList<Cartilla> cartillasData = FXCollections.observableArrayList();
 
     @FXML
     private TableView<Cartilla> tablaVacunas;
@@ -44,86 +52,122 @@ public class VentanaAgregarCartilla {
     @FXML
     private TextField txtObservaciones;
 
-    private ObservableList<Cartilla> vacunasObservableList;
-
-    public void setControl(ControlAgregarCartilla control) {
+    /**
+     * Muestra la ventana principal de gestión de cartillas
+     */
+    public void muestra(ControlAgregarCartilla control) {
         this.control = control;
-        inicializarControles();
-    }
 
-    @FXML
-    public void initialize() {
-        // La inicialización básica se hace aquí
-        configurarTabla();
-        vacunasObservableList = FXCollections.observableArrayList();
-        tablaVacunas.setItems(vacunasObservableList);
-        dpFechaAplicacion.setValue(LocalDate.now());
-    }
+        if (stage == null) {
+            try {
+                stage = new Stage();
+                stage.setTitle("Agregar Cartilla de Vacunación");
 
-    private void inicializarControles() {
-        // La inicialización que depende del control se hace aquí
-        if (control != null) {
-            cmbVacuna.setItems(FXCollections.observableArrayList(control.obtenerTodasLasVacunas()));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-agregar-cartilla.fxml"));
+                loader.setController(this);
+                Scene scene = new Scene(loader.load(), 800, 600);
+                stage.setScene(scene);
+
+                configurarTabla();
+                inicializarControles();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                muestraAlerta(Alert.AlertType.ERROR, "Error", "No se pudo cargar la interfaz: " + e.getMessage());
+            }
         }
+
+        stage.show();
     }
 
+    /**
+     * Configura las columnas de la tabla
+     */
     private void configurarTabla() {
         colVacuna.setCellValueFactory(cellData -> {
             VacunaEnum vacuna = cellData.getValue().getVacuna();
             return new javafx.beans.property.SimpleStringProperty(vacuna != null ? vacuna.name() : "");
         });
-        colFechaAplicacion.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("fechaAplicacion"));
-        colProximaDosis.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("proximaDosis"));
-        colVeterinario.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("veterinario"));
-        colLote.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("lote"));
-        colObservaciones.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("observaciones"));
+        colFechaAplicacion.setCellValueFactory(new PropertyValueFactory<>("fechaAplicacion"));
+        colProximaDosis.setCellValueFactory(new PropertyValueFactory<>("proximaDosis"));
+        colVeterinario.setCellValueFactory(new PropertyValueFactory<>("veterinario"));
+        colLote.setCellValueFactory(new PropertyValueFactory<>("lote"));
+        colObservaciones.setCellValueFactory(new PropertyValueFactory<>("observaciones"));
+
+        tablaVacunas.setItems(cartillasData);
     }
 
-    @FXML
-    private void cargarCartilla() {
-        try {
-            Long mascotaId = Long.parseLong(txtMascotaId.getText().trim());
-            List<Cartilla> cartillas = control.obtenerCartillaPorMascota(mascotaId);
-            vacunasObservableList.setAll(cartillas);
-            mostrarAlerta("Éxito", "Cartilla cargada para mascota ID: " + mascotaId, Alert.AlertType.INFORMATION);
-        } catch (NumberFormatException e) {
-            mostrarAlerta("Error", "Por favor ingrese un ID de mascota válido", Alert.AlertType.ERROR);
+    /**
+     * Inicializa los controles de la ventana
+     */
+    private void inicializarControles() {
+        if (control != null) {
+            // Obtener todas las vacunas disponibles del control
+            List<VacunaEnum> vacunas = control.obtenerTodasLasVacunas();
+            if (vacunas != null) {
+                cmbVacuna.setItems(FXCollections.observableArrayList(vacunas));
+            }
+        }
+        dpFechaAplicacion.setValue(LocalDate.now());
+    }
+
+    /**
+     * Actualiza la tabla con la lista de cartillas
+     */
+    public void actualizaTabla(List<Cartilla> cartillas) {
+        if (!Platform.isFxApplicationThread()) {
+            Platform.runLater(() -> this.actualizaTabla(cartillas));
+            return;
+        }
+
+        cartillasData.clear();
+        if (cartillas != null) {
+            cartillasData.addAll(cartillas);
         }
     }
 
     @FXML
-    private void registrarVacuna() {
+    private void handleCargarCartilla() {
         try {
-            // Validaciones
-            if (cmbVacuna.getValue() == null) {
-                mostrarAlerta("Error", "Seleccione una vacuna", Alert.AlertType.ERROR);
-                return;
-            }
+            Long mascotaId = Long.parseLong(txtMascotaId.getText().trim());
+            control.solicitaCargarCartilla(mascotaId);
+        } catch (NumberFormatException e) {
+            muestraAlerta(Alert.AlertType.ERROR, "Error de formato", "Por favor ingrese un ID de mascota válido.");
+        }
+    }
 
-            if (dpFechaAplicacion.getValue() == null) {
-                mostrarAlerta("Error", "Seleccione la fecha de aplicación", Alert.AlertType.ERROR);
-                return;
-            }
+    @FXML
+    private void handleRegistrarVacuna() {
+        // Validaciones básicas
+        if (cmbVacuna.getValue() == null) {
+            muestraAlerta(Alert.AlertType.WARNING, "Vacuna no seleccionada", "Por favor, seleccione una vacuna.");
+            return;
+        }
 
-            if (txtVeterinario.getText().trim().isEmpty()) {
-                mostrarAlerta("Error", "Ingrese el nombre del veterinario", Alert.AlertType.ERROR);
-                return;
-            }
+        if (dpFechaAplicacion.getValue() == null) {
+            muestraAlerta(Alert.AlertType.WARNING, "Fecha no seleccionada", "Por favor, seleccione la fecha de aplicación.");
+            return;
+        }
 
-            if (txtMascotaId.getText().trim().isEmpty()) {
-                mostrarAlerta("Error", "Ingrese el ID de la mascota", Alert.AlertType.ERROR);
-                return;
-            }
+        if (txtVeterinario.getText().trim().isEmpty()) {
+            muestraAlerta(Alert.AlertType.WARNING, "Veterinario requerido", "Por favor, ingrese el nombre del veterinario.");
+            return;
+        }
 
+        if (txtMascotaId.getText().trim().isEmpty()) {
+            muestraAlerta(Alert.AlertType.WARNING, "ID de mascota requerido", "Por favor, ingrese el ID de la mascota.");
+            return;
+        }
+
+        try {
+            Long mascotaId = Long.parseLong(txtMascotaId.getText().trim());
             Long lote = null;
+
             if (!txtLote.getText().trim().isEmpty()) {
                 lote = Long.parseLong(txtLote.getText().trim());
             }
 
-            Long mascotaId = Long.parseLong(txtMascotaId.getText().trim());
-
-            // Registrar la vacuna a través del control
-            Cartilla nuevaVacuna = control.registrarVacuna(
+            control.solicitaRegistrarVacuna(
                     cmbVacuna.getValue(),
                     dpFechaAplicacion.getValue(),
                     txtVeterinario.getText().trim(),
@@ -132,41 +176,76 @@ public class VentanaAgregarCartilla {
                     mascotaId
             );
 
-            // Actualizar tabla
-            vacunasObservableList.add(nuevaVacuna);
-
-            // Limpiar formulario
-            limpiarFormulario();
-
-            mostrarAlerta("Éxito", "Vacuna registrada correctamente", Alert.AlertType.INFORMATION);
-
         } catch (NumberFormatException e) {
-            mostrarAlerta("Error", "El lote debe ser un número válido", Alert.AlertType.ERROR);
+            muestraAlerta(Alert.AlertType.ERROR, "Error de formato", "El lote debe ser un número válido.");
         }
     }
 
-    private void limpiarFormulario() {
-        cmbVacuna.setValue(null);
-        dpFechaAplicacion.setValue(LocalDate.now());
-        txtVeterinario.clear();
-        txtLote.clear();
-        txtObservaciones.clear();
+    @FXML
+    private void handleLimpiarFormulario() {
+        limpiarFormulario();
     }
 
-    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
+    @FXML
+    private void handleCerrar() {
+        if (stage != null) {
+            stage.close();
+        }
+    }
+
+    /**
+     * Establece el control de la ventana
+     */
+    public void setControl(ControlAgregarCartilla control) {
+        this.control = control;
+        // Si la ventana ya fue inicializada, actualizar los controles
+        if (stage != null) {
+            inicializarControles();
+        }
+    }
+
+    /**
+     * Muestra una alerta al usuario
+     */
+    public void muestraAlerta(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(mensaje);
+        alert.setContentText(message);
         alert.showAndWait();
     }
 
-    public void muestra() {
-        // Método para mostrar la ventana
-        //tablaVacunas.refresh();
-        initialize();
-        inicializarControles();
-        configurarTabla();
+    /**
+     * Muestra una confirmación al usuario
+     */
+    public boolean muestraConfirmacion(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
 
+        return alert.showAndWait().filter(response -> response == ButtonType.OK).isPresent();
+    }
+
+    /**
+     * Limpia el formulario después de un registro exitoso
+     */
+    public void limpiarFormulario() {
+        Platform.runLater(() -> {
+            cmbVacuna.setValue(null);
+            dpFechaAplicacion.setValue(LocalDate.now());
+            txtVeterinario.clear();
+            txtLote.clear();
+            txtObservaciones.clear();
+        });
+    }
+    public void cierra() {
+        stage.close();
+    }
+    /**
+     * Obtiene el stage de la ventana
+     */
+    public Stage getStage() {
+        return stage;
     }
 }

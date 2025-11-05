@@ -1,11 +1,14 @@
 package mx.uam.ayd.proyecto.datos;
 
 import mx.uam.ayd.proyecto.negocio.modelo.Cartilla;
+import mx.uam.ayd.proyecto.negocio.modelo.VacunaEnum;
 import org.springframework.data.repository.CrudRepository;
 
 
 import mx.uam.ayd.proyecto.negocio.modelo.Cartilla;
 import org.springframework.data.repository.CrudRepository;
+
+import java.time.LocalDate;
 import java.util.List;
 
 public interface CartillaRepository extends CrudRepository<Cartilla, Long> {
@@ -45,4 +48,6 @@ public interface CartillaRepository extends CrudRepository<Cartilla, Long> {
      * @return Lista de cartillas con próxima dosis antes de la fecha límite
      */
     List<Cartilla> findByProximaDosisBefore(java.time.LocalDate fechaLimite);
+
+    boolean existsByVacunaAndMascotaIdAndFechaAplicacion(VacunaEnum vacuna, Long mascotaId, LocalDate fechaAplicacion);
 }
