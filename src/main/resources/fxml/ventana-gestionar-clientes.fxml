@@ -14,7 +14,8 @@
     <HBox alignment="CENTER_LEFT" spacing="10">
         <Button onAction="#handleRegistrarCliente" style="-fx-base: #007BFF; -fx-text-fill: white;" text="Registrar Nuevo Cliente" />
         <Button onAction="#handleEliminarCliente" style="-fx-base: #DC3545; -fx-text-fill: white;" text="Eliminar Cliente Seleccionado" />
-      <Button mnemonicParsing="false" onAction="#handleSeleccionarMembresia" text="SeleccionarMembresia" />
+        <Button mnemonicParsing="false" onAction="#handleSeleccionarMembresia" text="SeleccionarMembresia" />
+        <Button onAction="#handleMascotas" style="-fx-base: #17A2B8; -fx-text-fill: white;" text="Ver Mascotas" />
     </HBox>
     
     <TableView fx:id="tableClientes" VBox.vgrow="ALWAYS">

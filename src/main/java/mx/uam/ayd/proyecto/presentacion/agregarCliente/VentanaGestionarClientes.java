@@ -131,6 +131,16 @@ public class VentanaGestionarClientes {
         }
     }
 
+    @FXML
+    private void handleMascotas() {
+        Cliente clienteSeleccionado = tableClientes.getSelectionModel().getSelectedItem();
+        if (clienteSeleccionado == null) {
+            muestraAlerta(Alert.AlertType.WARNING, "Ningún cliente seleccionado", "Por favor, selecciona un cliente para ver sus mascotas.");
+        } else {
+            control.gestionarMascotas(clienteSeleccionado);
+        }
+    }
+
     public void muestraAlerta(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

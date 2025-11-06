@@ -7,6 +7,12 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import mx.uam.ayd.proyecto.negocio.ServicioMascota;
+import mx.uam.ayd.proyecto.negocio.modelo.Mascota;
+import mx.uam.ayd.proyecto.negocio.ServicioCliente;
+import mx.uam.ayd.proyecto.negocio.ServicioHospedaje;
+import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
+import java.time.LocalDate;
+
 
 
 /**
@@ -29,6 +35,12 @@ public class ControlRegistroHospedaje {
     /** Servicio de negocio para gestionar las operaciones relacionadas con mascotas. */
     @Autowired
     private ServicioMascota servicioMascota;
+
+    @Autowired
+    private ServicioCliente servicioCliente;
+
+    @Autowired
+    private ServicioHospedaje servicioHospedaje;
 
     /**
      * @brief Inicia la ventana de registro de hospedaje.
@@ -59,6 +71,9 @@ public class ControlRegistroHospedaje {
             VentanaRegistroHospedaje controller = loader.getController();
             controller.setControlRegistroHospedaje(this);
             controller.setServicioMascota(servicioMascota);
+            controller.setServicioCliente(servicioCliente);
+
+            controller.iniciaDatos();
 
 
             // Crear y configurar la nueva ventana modal
@@ -71,5 +86,15 @@ public class ControlRegistroHospedaje {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void registraHospedaje(Cliente cliente, Mascota mascota, LocalDate fechaInicio, LocalDate fechaFin) {
+        servicioHospedaje.registrar(
+            cliente, 
+            mascota, 
+            fechaInicio, 
+            fechaFin, 
+            null 
+        );
     }
 }
