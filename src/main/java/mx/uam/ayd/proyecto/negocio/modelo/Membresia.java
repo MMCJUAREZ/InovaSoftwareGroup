@@ -28,7 +28,7 @@ public class Membresia {
     private boolean estado; //true para vigente
 
     @OneToOne(mappedBy = "membresia")
-    @EqualsAndHashCode.Exclude  //Agregue esto para evitar recursion #Ad
+    @EqualsAndHashCode.Exclude  
     @ToString.Exclude 
     private Cliente cliente;
 

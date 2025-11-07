@@ -52,7 +52,7 @@ public class Hospedaje {
      * Relación muchos-a-uno con {@link Cliente}.
      * Indica el dueño de la mascota hospedada.
      */
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "idCliente")
     private Cliente cliente; // Dueño
 
@@ -61,7 +61,7 @@ public class Hospedaje {
      * Relación uno-a-uno con {@link Mascota}.
      * Se configura con cascada para que los cambios se propaguen automáticamente.
      */
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "idMascota")
     private Mascota mascota;
 

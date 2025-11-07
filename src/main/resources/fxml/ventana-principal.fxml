@@ -5,7 +5,7 @@
 
 <VBox spacing="10" style="-fx-padding: 15px;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
 
-    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Mi Aplicación" />
+    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Mi Aplicación"/>
 
     <Button onAction="#handleInventario" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Inventario"/>
 
@@ -20,9 +20,9 @@
     <Button fx:id="btnGestionarClientes" onAction="#handleGestionarClientes" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Gestionar Clientes"/>
 
     <Button onAction="#handleCartilla" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Cartilla de vacunacion"/>
-
+    
     <Button fx:id="btnGestionarCitas" onAction="#handleGestionarCitas" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Gestionar Citas"/>
-
-    <Button text="Registrar Hospedaje" onAction="#handleRegistrarHospedaje" style="-fx-min-width: 200px; -fx-min-height: 30px;" />
+    
+    <Button text="Registrar Hospedaje" onAction="#handleRegistrarHospedaje" style="-fx-min-width: 200px; -fx-min-height: 30px;"/>
 
 </VBox>

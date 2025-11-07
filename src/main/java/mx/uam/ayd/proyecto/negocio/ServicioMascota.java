@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import mx.uam.ayd.proyecto.datos.MascotaRepository;
 import mx.uam.ayd.proyecto.negocio.modelo.Mascota;
+import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
+import java.util.List;
 
 
 /**
@@ -80,5 +82,56 @@ public class ServicioMascota {
         return mascotaRepository.save(mascota); // Se guarda implícitamente a través del Hospedaje
     }
 
+    /**
+     * @brief Registra una nueva mascota ASOCIADA A UN CLIENTE.
+     * (Usado por ControlGestionarMascotas)
+     * Se realiza una sobrecarga de metodos
+     */
+    public Mascota registraMascota(Cliente cliente, String nombre, String raza, String especie, int edad, String sexo, boolean vacunasVigentes) {
+        
+        if (cliente == null) {
+            throw new IllegalArgumentException("No se puede registrar una mascota sin un cliente");
+        }
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de la mascota es obligatorio.");
+        }
+        if (raza == null || raza.trim().isEmpty() || especie == null || especie.trim().isEmpty()) {
+            throw new IllegalArgumentException("La raza y la especie son obligatorias.");
+        }
+        if (edad <= 0) {
+            throw new IllegalArgumentException("La edad debe ser mayor a cero.");
+        }
+        if (sexo == null || sexo.trim().isEmpty()) {
+            throw new IllegalArgumentException("El sexo de la mascota es obligatorio.");
+        }
 
+        Mascota mascota = new Mascota();
+        mascota.setCliente(cliente);
+        mascota.setNombre(nombre);
+        mascota.setRaza(raza);
+        mascota.setEspecie(especie);
+        mascota.setEdad(edad);
+        mascota.setSexo(sexo);
+        mascota.setVacunasVigentes(vacunasVigentes);
+
+        return mascotaRepository.save(mascota);
+    }
+
+    
+    /**
+     * @brief Recupera todas las mascotas de un cliente específico.
+     */
+    public List<Mascota> recuperaMascotas(Cliente cliente) {
+        return mascotaRepository.findByCliente(cliente);
+    }
+
+    /**
+     * @brief Elimina una mascota por su ID.
+     */
+    public void eliminaMascota(Long idMascota) {
+        if (!mascotaRepository.existsById(idMascota)) {
+            throw new IllegalArgumentException("La mascota con ID " + idMascota + " no existe");
+        }
+        mascotaRepository.deleteById(idMascota);
+    }
 }

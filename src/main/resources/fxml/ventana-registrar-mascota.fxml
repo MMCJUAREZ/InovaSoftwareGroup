@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+      spacing="10" style="-fx-padding: 20px;">
+    
+    <Label text="Nombre:" />
+    <TextField fx:id="textFieldNombre" promptText="Ej: Firulais" />
+    
+    <Label text="Raza:" />
+    <TextField fx:id="textFieldRaza" promptText="Ej: Chihuahua" />
+    
+    <Label text="Especie:" />
+    <TextField fx:id="textFieldEspecie" promptText="Ej: Perro" />
+    
+    <Label text="Edad:" />
+    <TextField fx:id="textFieldEdad" promptText="Ej: 5" />
+    
+    <Label text="Sexo:" />
+    <TextField fx:id="textFieldSexo" promptText="Ej: Macho" />
+    
+    <CheckBox fx:id="checkBoxVacunas" text="Vacunas Vigentes" />
+    
+    <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10px 0 0 0;">
+        <Button text="Guardar" onAction="#handleGuardar" style="-fx-base: #4CAF50; -fx-text-fill: white;" />
+        <Button text="Cancelar" onAction="#handleCancelar" />
+    </HBox>
+    
+</VBox>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="10" style="-fx-padding: 15px;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    
+    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Gestión de Mascotas" />
+    
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Button onAction="#handleRegistrarMascota" style="-fx-base: #007BFF; -fx-text-fill: white;" text="Registrar Nueva Mascota" />
+        <Button onAction="#handleEliminarMascota" style="-fx-base: #DC3545; -fx-text-fill: white;" text="Eliminar Mascota Seleccionada" />
+    </HBox>
+    
+    <TableView fx:id="tableMascotas" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
+            <TableColumn fx:id="nombreColumn" text="Nombre" prefWidth="100" />
+            <TableColumn fx:id="razaColumn" text="Raza" prefWidth="100" />
+            <TableColumn fx:id="especieColumn" text="Especie" prefWidth="100" />
+            <TableColumn fx:id="edadColumn" text="Edad" prefWidth="50" />
+            <TableColumn fx:id="sexoColumn" text="Sexo" prefWidth="75" />
+            <TableColumn fx:id="vacunasColumn" text="Vacunas" prefWidth="75" />
+        </columns>
+    </TableView>
+    
+    <HBox alignment="CENTER_RIGHT">
+        <Button onAction="#handleCerrar" text="Cerrar" />
+    </HBox>
+    
+</VBox>

@@ -1,6 +1,8 @@
 package mx.uam.ayd.proyecto.datos;
 
+import java.util.List;
 import org.springframework.data.repository.CrudRepository;
+import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
 import mx.uam.ayd.proyecto.negocio.modelo.Mascota;
 
 
@@ -31,5 +33,12 @@ public interface MascotaRepository extends CrudRepository<Mascota, Long> {
 
     // Por el momento no se definen métodos personalizados,
     // pero pueden agregarse en el futuro según los requerimientos del sistema.
+
+    /**
+     * Encuentra todas las mascotas asociadas a un cliente específico
+     * @param cliente el cliente dueño de las mascotas
+     * @return una lista de mascotas
+     */
+    public List<Mascota> findByCliente(Cliente cliente);
 }
 
