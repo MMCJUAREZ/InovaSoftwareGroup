@@ -32,9 +32,9 @@ public class VentanaGestionarMascotas {
     @FXML
     private TableColumn<Mascota, String> nombreColumn;
     @FXML
-    private TableColumn<Mascota, String> razaColumn;
-    @FXML
     private TableColumn<Mascota, String> especieColumn;
+    @FXML
+    private TableColumn<Mascota, String> razaColumn;
     @FXML
     private TableColumn<Mascota, Integer> edadColumn;
     @FXML
@@ -56,8 +56,8 @@ public class VentanaGestionarMascotas {
                 // Configurar columnas
                 idColumn.setCellValueFactory(new PropertyValueFactory<>("idMascota"));
                 nombreColumn.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-                razaColumn.setCellValueFactory(new PropertyValueFactory<>("raza"));
                 especieColumn.setCellValueFactory(new PropertyValueFactory<>("especie"));
+                razaColumn.setCellValueFactory(new PropertyValueFactory<>("raza"));
                 edadColumn.setCellValueFactory(new PropertyValueFactory<>("edad"));
                 sexoColumn.setCellValueFactory(new PropertyValueFactory<>("sexo"));
                 vacunasColumn.setCellValueFactory(new PropertyValueFactory<>("vacunasVigentes"));

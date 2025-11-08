@@ -40,14 +40,15 @@ public class Mascota {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idMascota;
 
+    //Especie de la mascota( por ejemplo, perro, gato, etc.)
+    private String especie;
+
+
     //Nombre de la mascota
     private String nombre;
 
     //Raza a la que pertenece la mascota
     private String raza;
-
-    //Especie de la mascota( por ejemplo, perro, gato, etc.)
-    private String especie;
 
     //Edad de la mascota
     private int edad;

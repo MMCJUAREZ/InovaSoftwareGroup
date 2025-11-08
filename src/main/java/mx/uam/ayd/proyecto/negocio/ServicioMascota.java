@@ -72,8 +72,8 @@ public class ServicioMascota {
         // --- Creación del objeto Mascota ---
         Mascota mascota = new Mascota();
         mascota.setNombre(nombre);
-        mascota.setRaza(raza);
         mascota.setEspecie(especie);
+        mascota.setRaza(raza);
         mascota.setEdad(edad);
         mascota.setSexo(sexo);
         mascota.setVacunasVigentes(vacunasVigentes);
@@ -108,8 +108,8 @@ public class ServicioMascota {
         Mascota mascota = new Mascota();
         mascota.setCliente(cliente);
         mascota.setNombre(nombre);
-        mascota.setRaza(raza);
         mascota.setEspecie(especie);
+        mascota.setRaza(raza);
         mascota.setEdad(edad);
         mascota.setSexo(sexo);
         mascota.setVacunasVigentes(vacunasVigentes);
