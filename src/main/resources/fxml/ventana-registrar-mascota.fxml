@@ -8,12 +8,13 @@
     
     <Label text="Nombre:" />
     <TextField fx:id="textFieldNombre" promptText="Ej: Firulais" />
-    
-    <Label text="Raza:" />
-    <TextField fx:id="textFieldRaza" promptText="Ej: Chihuahua" />
-    
+
     <Label text="Especie:" />
     <TextField fx:id="textFieldEspecie" promptText="Ej: Perro" />
+
+    <Label text="Raza:" />
+    <TextField fx:id="textFieldRaza" promptText="Ej: Chihuahua" />
+
     
     <Label text="Edad:" />
     <TextField fx:id="textFieldEdad" promptText="Ej: 5" />

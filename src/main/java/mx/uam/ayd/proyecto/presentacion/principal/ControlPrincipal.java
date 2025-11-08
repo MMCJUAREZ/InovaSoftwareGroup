@@ -7,6 +7,7 @@ import mx.uam.ayd.proyecto.presentacion.agregarCartilla.ControlAgregarCartilla;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import mx.uam.ayd.proyecto.presentacion.registroHospedaje.ControlRegistroHospedaje;
+
 import mx.uam.ayd.proyecto.presentacion.configurarUmbrales.ControlConfiguracionUmbrales;
 import mx.uam.ayd.proyecto.presentacion.alertas.ControlAlerta;
 import mx.uam.ayd.proyecto.presentacion.alertas.VentanaAlerta;

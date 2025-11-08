@@ -48,10 +48,10 @@ public class ControlGestionarMascotas {
     /**
      * Intenta registrar una mascota
      */
-    public void registraMascota(String nombre, String raza, String especie, int edad, String sexo, boolean vacunas) {
+    public void registraMascota(String nombre, String especie, String raza, int edad, String sexo, boolean vacunas) {
         try {
             // Usa el método sobrecargado
-            servicioMascota.registraMascota(clientePropietario, nombre, raza, especie, edad, sexo, vacunas);
+            servicioMascota.registraMascota(clientePropietario, nombre, especie, raza, edad, sexo, vacunas);
             
             ventanaRegistrar.cierra();
             ventanaGestionar.muestraAlerta(Alert.AlertType.INFORMATION, "Éxito", "Mascota registrada exitosamente");
