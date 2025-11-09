@@ -6,13 +6,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 import java.time.LocalDateTime;
 
+// Importacion clave de Lombok
+
+import lombok.Data;
+
 /**
- * Entidad de negocio Cita, para registrar y gestionar agendamientos.
+ * Entidad de negocio Cita, para registrar y gestionar las agendas de citas.
  */
 
 @Entity
+@Data // Genera automáticamente todos los getters, setters, equals, hashCode y toString.
 public class Cita {
 
     @Id
@@ -28,84 +35,19 @@ public class Cita {
     private String contacto; // Puede ser correo o teléfono
     private boolean atendida; // Para saber si puede modificarse/cancelarse
 
-    // Getters y Setters
+    // Campos de la HU-02
 
-    public Long getIdCita() {
+    @ManyToOne
+    @JoinColumn(name = "veterinario_id")
+    private Veterinario veterinario; // Relación con la nueva entidad
 
-        return idCita;
+    private String motivo; // Campo de texto para el motivo de la cita
+    private String notas;  // Campo de texto para notas/observaciones
 
-    }
-
-    public void setIdCita(Long idCita) {
-
-        this.idCita = idCita;
-
-    }
-
-    public LocalDateTime getFechaHora() {
-
-        return fechaHora;
-
-    }
-
-    public void setFechaHora(LocalDateTime fechaHora) {
-
-        this.fechaHora = fechaHora;
-
-    }
-
-    public TipoCita getTipo() {
-
-        return tipo;
-
-    }
-
-    public void setTipo(TipoCita tipo) {
-
-        this.tipo = tipo;
-
-    }
-
-    public String getNombreSolicitante() {
-
-        return nombreSolicitante;
-
-    }
-
-    public void setNombreSolicitante(String nombreSolicitante) {
-
-        this.nombreSolicitante = nombreSolicitante;
-
-    }
-
-    public String getContacto() {
-
-        return contacto;
-
-    }
-
-    public void setContacto(String contacto) {
-
-        this.contacto = contacto;
-
-    }
-
-    public boolean isAtendida() {
-
-        return atendida;
-
-    }
-
-    public void setAtendida(boolean atendida) {
-
-        this.atendida = atendida;
-
-    }
+    // Nota: No es necesario escribir los getters y setters aquí porque @Data los genera.
 
     @Override
     public String toString() {
-
-        return "Cita [idCita=" + idCita + ", fechaHora=" + fechaHora + ", tipo=" + tipo + ", nombreSolicitante=" + nombreSolicitante + "]";
-
+        return "Cita [idCita=" + idCita + ", fechaHora=" + fechaHora + ", tipo=" + tipo + ", nombreSolicitante=" + nombreSolicitante + ", veterinario=" + (veterinario != null ? veterinario.getNombreCompleto() : "N/A") + "]";
     }
 }
