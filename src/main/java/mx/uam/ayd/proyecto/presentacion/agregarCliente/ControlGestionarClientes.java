@@ -102,7 +102,7 @@ public class ControlGestionarClientes {
     }
 
     public void registrarVenta(Cliente cliente){
-        controlRegistroVentas.inicia();
+        controlRegistroVentas.inicia(cliente);
     }
 
 }
