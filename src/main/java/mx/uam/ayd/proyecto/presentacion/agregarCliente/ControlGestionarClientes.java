@@ -7,6 +7,8 @@ import mx.uam.ayd.proyecto.negocio.ServicioCliente;
 import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
 import mx.uam.ayd.proyecto.presentacion.seleccionarMembresia.VentanaSeleccionarMembresia;
 import mx.uam.ayd.proyecto.presentacion.gestionarMascotas.ControlGestionarMascotas;
+import mx.uam.ayd.proyecto.presentacion.registroVentas.ControlRegistroVentas;
+
 
 @Component
 public class ControlGestionarClientes {
@@ -25,6 +27,9 @@ public class ControlGestionarClientes {
 
     @Autowired
     private ControlGestionarMascotas controlGestionarMascotas;
+
+    @Autowired
+    private ControlRegistroVentas controlRegistroVentas;
 
     /**
      * Inicia el caso de uso
@@ -94,6 +99,10 @@ public class ControlGestionarClientes {
      */
     public void gestionarMascotas(Cliente cliente) {
         controlGestionarMascotas.inicia(cliente);
+    }
+
+    public void registrarVenta(Cliente cliente){
+        controlRegistroVentas.inicia();
     }
 
 }

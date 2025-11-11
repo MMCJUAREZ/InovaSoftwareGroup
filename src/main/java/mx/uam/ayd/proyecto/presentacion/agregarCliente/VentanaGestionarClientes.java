@@ -141,6 +141,16 @@ public class VentanaGestionarClientes {
         }
     }
 
+    @FXML
+    private void handleRegistrarVenta(){
+        Cliente clienteSeleccionado = tableClientes.getSelectionModel().getSelectedItem();
+        if (clienteSeleccionado == null) {
+            muestraAlerta(Alert.AlertType.WARNING, "Ningún cliente seleccionado", "Por favor, selecciona un cliente de la tabla para registrar una venta");
+        } else {
+            control.registrarVenta(clienteSeleccionado);
+        }
+    }
+
     public void muestraAlerta(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
