@@ -7,13 +7,14 @@ import javafx.scene.control.Alert;
 import mx.uam.ayd.proyecto.negocio.ServicioMascota;
 import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
 import mx.uam.ayd.proyecto.negocio.modelo.Mascota;
+import mx.uam.ayd.proyecto.negocio.ServicioNotificacion;
 
 @Component
 public class ControlGestionarMascotas {
     
     @Autowired
     private ServicioMascota servicioMascota;
-    
+
     @Autowired
     private VentanaGestionarMascotas ventanaGestionar;
     
@@ -21,6 +22,15 @@ public class ControlGestionarMascotas {
     private VentanaRegistrarMascota ventanaRegistrar;
 
     private Cliente clientePropietario;
+
+    @Autowired
+    private ServicioNotificacion servicioNotificacion;
+
+
+    public void enviarNotificacionPrueba(Mascota mascota) {
+        String mensaje = "Tu mascota " + mascota.getNombre() + " ha sido alimentada y se encuentra bien 😊";
+        servicioNotificacion.enviarNotificacion(mascota, mensaje);
+    }
 
     /**
      * Inicia el caso de uso para un cliente específico

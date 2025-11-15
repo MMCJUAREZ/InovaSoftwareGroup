@@ -6,7 +6,6 @@ import mx.uam.ayd.proyecto.datos.HospedajeRepository;
 import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
 import mx.uam.ayd.proyecto.negocio.modelo.Mascota;
 import mx.uam.ayd.proyecto.negocio.modelo.Hospedaje;
-
 import java.time.LocalDate;
 
 /**
@@ -30,6 +29,7 @@ public class ServicioHospedaje {
 
     /** Repositorio para la persistencia de hospedajes. */
     private final HospedajeRepository hospedajeRepository;
+    private final ServicioCorreo servicioCorreo;
 
     /**
      * Constructor que inyecta el repositorio de hospedaje.
@@ -37,8 +37,9 @@ public class ServicioHospedaje {
      * @param hospedajeRepository referencia al repositorio de hospedaje.
      */
     @Autowired
-    public ServicioHospedaje(HospedajeRepository hospedajeRepository) {
+    public ServicioHospedaje(HospedajeRepository hospedajeRepository,ServicioCorreo servicioCorreo) {
         this.hospedajeRepository = hospedajeRepository;
+        this.servicioCorreo = servicioCorreo;
     }
 
     /**
@@ -79,8 +80,41 @@ public class ServicioHospedaje {
         hospedaje.setFechaSalida(fechaSalida);
         hospedaje.setObservaciones(observaciones);
 
-        return hospedajeRepository.save(hospedaje);
+        //Guardar en BD
+        Hospedaje hospedajeGuardado = hospedajeRepository.save(hospedaje);
+
+        //Enviar correo confirmando el hospedaje
+         servicioCorreo.enviarCorreoConfirmacionHospedaje(
+                 cliente,
+                 mascota,
+                 hospedajeGuardado
+         );
+         return hospedajeGuardado;
+
+
+
+        //Enviar correo de confirmacion
+        //enviarCorreoConfirmacion(cliente, mascota, hospedaje);
+       // return hospedaje;
     }
+
+   /* private void enviarCorreoConfirmacion(Cliente cliente, Mascota mascota, Hospedaje hospedaje) {
+        try {
+            String destinatario = cliente.getCorreoElectronico();
+            String asunto = "confirmacion de hospedaje Kroketa";
+            String mensaje = String.format(
+                    "Hola %s,\n\nTu mascota %s ha sido registrada correctamente en el hospedaje del %s al %s.\n\nGracias por confiar en Kroketa ",
+                    cliente.getNombreCompleto(),
+                    mascota.getNombre(),
+                    hospedaje.getFechaEntrada(),
+                    hospedaje.getFechaSalida()
+            );
+
+            servicioCorreo.enviarCorreo(destinatario, asunto,mensaje);
+        } catch (Exception e){
+            System.err.println("Error al enviar correo de confirmacion: "+ e.getMessage());
+        }
+    }*/
 
     /**
      * @brief Elimina un hospedaje antes de que inicie.
