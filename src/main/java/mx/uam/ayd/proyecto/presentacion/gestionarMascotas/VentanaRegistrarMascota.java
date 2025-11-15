@@ -21,9 +21,9 @@ public class VentanaRegistrarMascota {
     @FXML
     private TextField textFieldNombre;
     @FXML
-    private TextField textFieldRaza;
-    @FXML
     private TextField textFieldEspecie;
+    @FXML
+    private TextField textFieldRaza;
     @FXML
     private TextField textFieldEdad;
     @FXML
@@ -51,8 +51,8 @@ public class VentanaRegistrarMascota {
         
         // Limpiar campos
         textFieldNombre.clear();
-        textFieldRaza.clear();
         textFieldEspecie.clear();
+        textFieldRaza.clear();
         textFieldEdad.clear();
         textFieldSexo.clear();
         checkBoxVacunas.setSelected(false);
@@ -73,8 +73,8 @@ public class VentanaRegistrarMascota {
 
             control.registraMascota(
                 textFieldNombre.getText(),
+                    textFieldEspecie.getText(),
                 textFieldRaza.getText(),
-                textFieldEspecie.getText(),
                 edad,
                 textFieldSexo.getText(),
                 checkBoxVacunas.isSelected()

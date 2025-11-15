@@ -19,8 +19,8 @@
         <columns>
             <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
             <TableColumn fx:id="nombreColumn" text="Nombre" prefWidth="100" />
-            <TableColumn fx:id="razaColumn" text="Raza" prefWidth="100" />
             <TableColumn fx:id="especieColumn" text="Especie" prefWidth="100" />
+            <TableColumn fx:id="razaColumn" text="Raza" prefWidth="100" />
             <TableColumn fx:id="edadColumn" text="Edad" prefWidth="50" />
             <TableColumn fx:id="sexoColumn" text="Sexo" prefWidth="75" />
             <TableColumn fx:id="vacunasColumn" text="Vacunas" prefWidth="75" />

@@ -41,3 +41,4 @@ public interface MascotaRepository extends CrudRepository<Mascota, Long> {
      */
     public List<Mascota> findByCliente(Cliente cliente);
 }
+
