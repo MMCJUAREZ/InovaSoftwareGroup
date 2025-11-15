@@ -5,24 +5,25 @@
 
 <VBox spacing="10" style="-fx-padding: 15px;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
 
-    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Mi Aplicación"/>
+    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Mi Aplicación" />
 
-    <Button onAction="#handleInventario" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Inventario"/>
+    <Button onAction="#handleInventario" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Inventario" />
 
-    <Button onAction="#handleMostrarAlertas" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Alertas"/>
+    <Button onAction="#handleMostrarAlertas" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Alertas" />
 
-    <Button onAction="#handleRegistrarVenta" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Registrar venta"/>
+    <Button onAction="#handleRegistrarVenta" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Registrar venta" />
 
-    <Button onAction="#handleGenerarReporte" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Generar reporte"/>
+    <Button onAction="#handleGenerarReporte" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Generar reporte" />
 
-    <Button onAction="#handleConfigurarUmbrales" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Configurar Umbrales"/>
+    <Button onAction="#handleConfigurarUmbrales" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Configurar Umbrales" />
 
-    <Button fx:id="btnGestionarClientes" onAction="#handleGestionarClientes" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Gestionar Clientes"/>
+    <Button fx:id="btnGestionarClientes" onAction="#handleGestionarClientes" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Gestionar Clientes" />
 
-    <Button onAction="#handleCartilla" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Cartilla de vacunacion"/>
+    <Button onAction="#handleCartilla" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Cartilla de vacunacion" />
     
-    <Button fx:id="btnGestionarCitas" onAction="#handleGestionarCitas" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Gestionar Citas"/>
+    <Button fx:id="btnGestionarCitas" onAction="#handleGestionarCitas" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Gestionar Citas" />
     
-    <Button text="Registrar Hospedaje" onAction="#handleRegistrarHospedaje" style="-fx-min-width: 200px; -fx-min-height: 30px;"/>
+    <Button onAction="#handleRegistrarHospedaje" style="-fx-min-width: 200px; -fx-min-height: 30px;" text="Registrar Hospedaje" />
+   <Button mnemonicParsing="false" onAction="#handleGenerarReceta" prefHeight="25.0" prefWidth="201.0" text="Generar Receta" />
 
 </VBox>
