@@ -215,6 +215,25 @@ public class ServicioProducto {
     public List<Producto> buscarPorTipo(TipoProducto tipoProducto) {
         return productoRepository.findByTipoProducto(tipoProducto);
     }
+    /**
+     * @brief Busca productos por tipo.
+     *
+     * @param usoVeterinario uso veterinario del producto a buscar.
+     * @param unidadProducto  a buscar.
+     * @return Lista de productos filtrados por su uso veterianrio y el tipo de unidad que manejan.
+     */
+    public List<Producto> buscarPorUsoVeterinarioAndUnidadProducto(UsoVeterinario usoVeterinario, UnidadProducto unidadProducto) {
+        return productoRepository.findByUsoVeterinarioAndUnidadProducto(usoVeterinario, unidadProducto);
+    }
+    /**
+     * @brief Busca productos por tipo.
+     *
+     * @param usoVeterinario uso veterinario del producto a buscar.
+     * @return Lista de productos filtrados por su uso veterianrio.
+     */
+    public List<Producto> buscarPorUsoVeterinario(UsoVeterinario usoVeterinario) {
+        return productoRepository.findByUsoVeterinario(usoVeterinario);
+    }
 }
 
 
