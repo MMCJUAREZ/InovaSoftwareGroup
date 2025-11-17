@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import mx.uam.ayd.proyecto.negocio.ServicioCliente;
 import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
 import mx.uam.ayd.proyecto.negocio.modelo.TipoMembresia;
+import mx.uam.ayd.proyecto.presentacion.agregarCliente.ControlGestionarClientes;
 
 
 @Component
@@ -19,11 +20,16 @@ public class ControlSeleccionarMembresia {
     @Autowired 
     private final VentanaSeleccionarMembresia ventanaMembresia;
 
+    @Autowired
+    private final ControlGestionarClientes controlCliente;
+
 
     public ControlSeleccionarMembresia(VentanaSeleccionarMembresia ventanaMembresia,
-                                        ServicioCliente servicioCliente){
+                                        ServicioCliente servicioCliente,
+                                        ControlGestionarClientes controlCliente){
             this.ventanaMembresia = ventanaMembresia;
             this.servicioCliente = servicioCliente;
+            this.controlCliente = controlCliente;
     }
 
     /**
@@ -47,6 +53,7 @@ public class ControlSeleccionarMembresia {
         try {
             servicioCliente.asignarMembresia(tipo, cliente);
             ventanaMembresia.muestraDialogoConMensaje("Membresía asignada exitosamente.");
+            controlCliente.actualizaListaClientes();
         } catch (IllegalArgumentException ex) {
             ventanaMembresia.muestraDialogoConMensaje(ex.getMessage());
         }

@@ -10,6 +10,7 @@ import mx.uam.ayd.proyecto.negocio.ServicioVenta;
 import mx.uam.ayd.proyecto.negocio.ServicioDetalleVenta;
 import mx.uam.ayd.proyecto.negocio.ServicioProducto;
 import mx.uam.ayd.proyecto.negocio.modelo.Venta;
+import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
 import mx.uam.ayd.proyecto.negocio.modelo.DetalleVenta;
 import mx.uam.ayd.proyecto.negocio.modelo.Producto;
 import mx.uam.ayd.proyecto.util.UtilPDF;
@@ -28,12 +29,13 @@ public class ControlRegistroVentas {
     private final ServicioProducto servicioProducto;
     private final VentanaRegistroVentas ventana;
     private final UtilPDF utilPDF = new UtilPDF();
+    
 
     /**
      * Venta actual en proceso.
      */
     private Venta venta;
-
+    private Cliente cliente;
     /**
      * Constructor con inyección de dependencias.
      *
@@ -72,6 +74,22 @@ public class ControlRegistroVentas {
      * En caso de error al crear la venta, muestra mensaje al usuario.
      */
     public void inicia() {
+        List<Producto> productos = servicioProducto.recuperaProductosConStock();
+        if (productos.isEmpty()) {
+            ventana.muestraDialogoConMensaje("No hay productos con stock disponible, por favor agregue manualmente productos primero");
+        } else {
+            try {
+                this.venta = servicioVenta.crearVenta();
+            } catch(Exception ex) {
+                ventana.muestraDialogoConMensaje("Ocurrió un error al crear la venta");
+            }
+
+            ventana.muestra(productos, venta);
+        }
+    }
+
+    public void inicia(Cliente cliente) {
+        this.cliente = cliente;
         List<Producto> productos = servicioProducto.recuperaProductosConStock();
         if (productos.isEmpty()) {
             ventana.muestraDialogoConMensaje("No hay productos con stock disponible, por favor agregue manualmente productos primero");
@@ -129,7 +147,7 @@ public class ControlRegistroVentas {
         for (DetalleVenta detalleVenta : detallesVenta) {
             montoTotal += detalleVenta.getSubtotal();
         }
-        servicioVenta.guardarVenta(venta, montoTotal);
+        servicioVenta.guardarVenta(venta, montoTotal, cliente);
     }
 
     /**

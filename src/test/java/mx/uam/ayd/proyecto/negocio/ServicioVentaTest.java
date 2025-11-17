@@ -45,9 +45,10 @@ class ServicioVentaTest {
     void guardarVenta_ventaNoDebeSerNull() {
         Venta venta = null;
         double montoTotal = 100.0;
+        Cliente cliente = null;
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            servicioVenta.guardarVenta(venta, montoTotal);
+            servicioVenta.guardarVenta(venta, montoTotal, cliente);
         });
         assertEquals("La venta no puede ser nulo", ex.getMessage());
     }
@@ -56,9 +57,10 @@ class ServicioVentaTest {
     void guardarVenta_montoTotalNoDeberSerMenorA1() {
         Venta venta = new Venta();
         double montoTotal = -1;
+        Cliente cliente = null;
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            servicioVenta.guardarVenta(venta, montoTotal);
+            servicioVenta.guardarVenta(venta, montoTotal, cliente);
         });
         assertEquals("El monto total no puede ser menor o igual a 0", ex.getMessage());
     }
@@ -67,8 +69,9 @@ class ServicioVentaTest {
     void guardarVenta_debeGuardarVenta() {
         Venta venta = new Venta();
         double montoTotal = 100.0;
+        Cliente cliente = null;
 
-        servicioVenta.guardarVenta(venta, montoTotal);
+        servicioVenta.guardarVenta(venta, montoTotal, cliente);
 
         verify(ventaRepository, times(1)).save(venta);
     }

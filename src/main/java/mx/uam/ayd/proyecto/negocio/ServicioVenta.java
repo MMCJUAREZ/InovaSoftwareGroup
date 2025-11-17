@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import mx.uam.ayd.proyecto.datos.VentaRepository;
+import mx.uam.ayd.proyecto.datos.ClienteRepository;
 import mx.uam.ayd.proyecto.datos.DetalleVentaRepository;
 import mx.uam.ayd.proyecto.datos.ProductoRepository;
 import mx.uam.ayd.proyecto.negocio.modelo.ReporteVentaDTO;
@@ -34,6 +35,7 @@ public class ServicioVenta {
     private final ProductoRepository productoRepository;
     private final UmbralRepository umbralRepository;
     private final ServicioCorreo servicioCorreo;
+    private final ClienteRepository clienteRepository;
 
     /**
      * Constructor con inyección de dependencias.
@@ -45,12 +47,14 @@ public class ServicioVenta {
     @Autowired
     public ServicioVenta(VentaRepository ventaRepository,
                          DetalleVentaRepository detalleVentaRepository,
-                         ProductoRepository productoRepository, UmbralRepository umbralRepository, ServicioCorreo servicioCorreo) {
+                         ProductoRepository productoRepository, UmbralRepository umbralRepository, ServicioCorreo servicioCorreo,
+                         ClienteRepository clienteRepository) {
         this.ventaRepository = ventaRepository;
         this.detalleVentaRepository = detalleVentaRepository;
         this.productoRepository = productoRepository;
         this.umbralRepository = umbralRepository;
         this.servicioCorreo = servicioCorreo;
+        this.clienteRepository = clienteRepository;
     }
 
     /**
@@ -102,12 +106,18 @@ public class ServicioVenta {
      * @param montoTotal monto total calculado para la venta
      * @throws IllegalArgumentException si la venta es nula o el monto es inválido
      */
-    public void guardarVenta(Venta venta, double montoTotal){
+    public void guardarVenta(Venta venta, double montoTotal, Cliente cliente){
         if(venta == null){
             throw new IllegalArgumentException("La venta no puede ser nulo");
         }
         if (montoTotal <= 0) {
             throw new IllegalArgumentException("El monto total no puede ser menor o igual a 0");
+        }
+        if(cliente != null){
+            Double montoActual = cliente.getMontoAcumulado();
+            Double total = montoActual + montoTotal;
+            cliente.setMontoAcumulado(total);
+            clienteRepository.save(cliente);
         }
         venta.setMontoTotal(montoTotal);
         venta.setFecha(LocalDate.now());
