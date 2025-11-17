@@ -4,6 +4,7 @@ import mx.uam.ayd.proyecto.datos.HospedajeRepository;
 import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
 import mx.uam.ayd.proyecto.negocio.modelo.Hospedaje;
 import mx.uam.ayd.proyecto.negocio.modelo.Mascota;
+import mx.uam.ayd.proyecto.negocio.ServicioCorreo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
