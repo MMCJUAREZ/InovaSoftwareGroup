@@ -15,6 +15,7 @@ import mx.uam.ayd.proyecto.presentacion.citas.ControlCitas;
 import mx.uam.ayd.proyecto.presentacion.generarReporte.ControlGenerarReporte;
 import mx.uam.ayd.proyecto.presentacion.registroVentas.ControlRegistroVentas;
 import mx.uam.ayd.proyecto.presentacion.agregarCliente.ControlGestionarClientes;
+import mx.uam.ayd.proyecto.presentacion.generarReceta.ControlGenerarReceta;
 
 /**
  * Esta clase lleva el flujo de control de la ventana principal
@@ -35,6 +36,7 @@ public class ControlPrincipal {
     private final ControlAgregarCartilla controlAgregarCartilla;
 	private final ControlCitas controlCitas;
 	private final ControlRegistroHospedaje controlRegistroHospedaje;
+	private final ControlGenerarReceta controlGenerarReceta;
 	private final VentanaPrincipal ventana;
 
 	@Autowired
@@ -49,6 +51,7 @@ public class ControlPrincipal {
 			ControlAgregarCartilla controlAgregarCartilla,
 			ControlCitas controlCitas,
 			ControlRegistroHospedaje controlRegistroHospedaje,
+			ControlGenerarReceta controlGenerarReceta,
 			VentanaPrincipal ventana) {
 		this.controlConfiguracionUmbrales = controlConfiguracionUmbrales;
 		this.controlAlerta = controlAlerta;
@@ -61,6 +64,7 @@ public class ControlPrincipal {
         this.ventana = ventana;
 		this.controlCitas = controlCitas;
 		this.controlRegistroHospedaje = controlRegistroHospedaje;
+		this.controlGenerarReceta = controlGenerarReceta;
 	}
 
 	/**
@@ -139,4 +143,8 @@ public class ControlPrincipal {
 		System.out.println("Botón 'Registrar Hospedaje' presionado desde VentanaPrincipal.");
 		controlRegistroHospedaje.inicia();
 	}
+	/**
+	 * Método que arranca la historia de usuario "Generar receta"
+	 */
+	public void generarReceta() { controlGenerarReceta.inicia(); }
 }

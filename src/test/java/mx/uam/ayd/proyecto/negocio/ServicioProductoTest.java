@@ -198,6 +198,41 @@ public class ServicioProductoTest {
         assertTrue(productos.contains(p2));
     }
 
+    @Test
+    public void buscarPorUsoVeterinarioAndUnidadProducto_devuelveLista() {
+        Producto p1 = new Producto();
+        p1.setNombre("Frontline Plus");
+        p1.setUsoVeterinario(UsoVeterinario.Gato);
+        p1.setUnidadProducto(UnidadProducto.Inyeccion);
+        Producto p2 = new Producto();
+        p2.setNombre("Drontal Feline");
+        p2.setUsoVeterinario(UsoVeterinario.Gato);
+        p2.setUnidadProducto(UnidadProducto.Inyeccion);
+        when(productoRepository.findByUsoVeterinarioAndUnidadProducto(UsoVeterinario.Gato, UnidadProducto.Inyeccion)).thenReturn(Arrays.asList(p1, p2));
+        List<Producto> productos = servicioProducto.buscarPorUsoVeterinarioAndUnidadProducto(UsoVeterinario.Gato, UnidadProducto.Inyeccion);
+
+        assertEquals(2, productos.size());
+        assertTrue(productos.contains(p1));
+        assertTrue(productos.contains(p2));
+    }
+
+    @Test
+    public void buscarPorUsoVeterinario_devuelveLista() {
+        Producto p1 = new Producto();
+        p1.setNombre("Frontline Plus");
+        p1.setUsoVeterinario(UsoVeterinario.Gato);
+        p1.setUnidadProducto(UnidadProducto.Inyeccion);
+        Producto p2 = new Producto();
+        p2.setNombre("Drontal Feline");
+        p2.setUsoVeterinario(UsoVeterinario.Gato);
+        p2.setUnidadProducto(UnidadProducto.Bebible);
+        when(productoRepository.findByUsoVeterinario(UsoVeterinario.Gato)).thenReturn(Arrays.asList(p1, p2));
+        List<Producto> productos = servicioProducto.buscarPorUsoVeterinario(UsoVeterinario.Gato);
+
+        assertEquals(2, productos.size());
+        assertTrue(productos.contains(p1));
+        assertTrue(productos.contains(p2));
+    }
 }
 
 
