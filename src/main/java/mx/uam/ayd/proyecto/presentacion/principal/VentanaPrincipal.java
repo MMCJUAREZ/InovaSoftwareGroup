@@ -151,4 +151,11 @@ public class VentanaPrincipal {
 			control.generarReceta();
 		}
 	}
+
+	@FXML
+    private void handleRegistrarCirugia() {
+        if (control != null) {
+            control.registrarCirugia();
+        }
+    }
 }

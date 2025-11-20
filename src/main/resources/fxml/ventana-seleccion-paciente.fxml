@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" alignment="CENTER" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <Label text="Paso 1: Seleccionar Paciente" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+    
+    <Label text="Cliente:"/>
+    <ComboBox fx:id="cmbCliente" prefWidth="250" onAction="#handleClienteSeleccionado"/>
+    
+    <Label text="Mascota:"/>
+    <ComboBox fx:id="cmbMascota" prefWidth="250" onAction="#handleMascotaSeleccionada"/>
+    
+    <Button fx:id="btnContinuar" text="Continuar al Formulario" onAction="#handleContinuar"/>
+</VBox>
