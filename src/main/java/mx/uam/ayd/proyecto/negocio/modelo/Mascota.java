@@ -60,7 +60,7 @@ public class Mascota {
     private boolean vacunasVigentes;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cliente_id", nullable = false)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

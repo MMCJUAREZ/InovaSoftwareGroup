@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <VBox spacing="10" style="-fx-padding: 20;">
+        <Label text="Registro de Cirugía e Historial" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+        <Label fx:id="lblPaciente" style="-fx-font-weight: bold; -fx-text-fill: blue;"/>
+        
+        <Separator/>
+        
+        <Label text="Fecha *"/>
+        <DatePicker fx:id="dateFecha"/>
+
+        <Label text="Tipo de Cirugía * (Máx 100)"/>
+        <TextField fx:id="txtTipo"/>
+
+        <Label text="Descripción * (Máx 300)"/>
+        <TextArea fx:id="txtDescripcion" prefRowCount="3" wrapText="true"/>
+
+        <Label text="Consultas * (Máx 300)"/>
+        <TextArea fx:id="txtConsultas" prefRowCount="3" wrapText="true"/>
+
+        <Label text="Tratamientos * (Máx 300)"/>
+        <TextArea fx:id="txtTratamientos" prefRowCount="3" wrapText="true"/>
+
+        <Label text="Observaciones Generales"/>
+        <TextArea fx:id="txtObservaciones" prefRowCount="2" wrapText="true"/>
+
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Cancelar" onAction="#handleCancelar"/>
+            <Button text="Guardar Registro" style="-fx-base: #4CAF50; -fx-text-fill: white;" onAction="#handleGuardar"/>
+        </HBox>
+    </VBox>
+</ScrollPane>
