@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import mx.uam.ayd.proyecto.negocio.modelo.DetalleVenta;
 import mx.uam.ayd.proyecto.negocio.modelo.ReporteVentaDTO;
 import mx.uam.ayd.proyecto.negocio.modelo.Venta;
-import mx.uam.ayd.proyecto.presentacion.generarReceta.Medicacion;
+import mx.uam.ayd.proyecto.presentacion.generarReceta.DatosReceta;
 
 import java.io.File;
 import java.util.List;
@@ -146,7 +146,7 @@ public class UtilPDF {
      * Genera un archivo PDF que contiene una receta médica basada en una lista de objetos DatosReceta.
      * @param datosReceta Lista de objetos DatosReceta que contienen la información a mostrar en la receta.
      */
-    public String crearReceta(List<Medicacion> datosReceta) {
+    public String crearReceta(List<DatosReceta> datosReceta) {
 
         // Configuración inicial del FileChooser para guardar el PDF
         FileChooser fileChooser = new FileChooser();
@@ -219,7 +219,7 @@ public class UtilPDF {
                 table.addCell("Nota");
 
                 // Llenar filas de la tabla con datos
-                for (Medicacion datos : datosReceta) {
+                for (DatosReceta datos : datosReceta) {
                     table.addCell(String.valueOf(datos.getProducto()));
                     table.addCell(datos.getDosis());
                     table.addCell(datos.getCada());

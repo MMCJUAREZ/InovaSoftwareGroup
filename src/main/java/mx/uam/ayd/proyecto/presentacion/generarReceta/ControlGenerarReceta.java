@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.annotation.PostConstruct;
 
 import mx.uam.ayd.proyecto.negocio.ServicioProducto;
+import mx.uam.ayd.proyecto.negocio.ServicioCorreo;
 import mx.uam.ayd.proyecto.negocio.modelo.Producto;
 import mx.uam.ayd.proyecto.negocio.modelo.UnidadProducto;
 import mx.uam.ayd.proyecto.negocio.modelo.UsoVeterinario;
@@ -24,6 +25,8 @@ import mx.uam.ayd.proyecto.util.UtilPDF;
 @Component
 public class ControlGenerarReceta {
 
+    /** Servicio para manejar operaciones relacionadas con el envio de correos. */
+    private final ServicioCorreo servicioCorreo;
     /** Servicio para manejar operaciones relacionadas con productos. */
     private final ServicioProducto servicioProducto;
 
@@ -43,8 +46,10 @@ public class ControlGenerarReceta {
      */
     @Autowired
     public ControlGenerarReceta(ServicioProducto servicioProducto,
+                                ServicioCorreo servicioCorreo,
                                 VentanaGenerarReceta ventana) {
         this.servicioProducto = servicioProducto;
+        this.servicioCorreo = servicioCorreo;
         this.ventana = ventana;
     }
 
@@ -93,8 +98,11 @@ public class ControlGenerarReceta {
      *
      * @param receta Lista de objetos DatosReceta que contienen la información a incluir.
      */
-    public void generarReceta(List<DatosReceta> receta) {
-        utilPDF.crearReceta(receta);
+    public void generarReceta(List<DatosReceta> receta, String correo) {
+        String ruta = utilPDF.crearReceta(receta);
+        if(ruta != null && correo != null) {
+            servicioCorreo.enviarCorreoConAdjunto(correo, ruta);
+        }
     }
 
     /**
