@@ -10,10 +10,12 @@ import org.slf4j.LoggerFactory;
 import mx.uam.ayd.proyecto.datos.VentaRepository;
 import mx.uam.ayd.proyecto.datos.DetalleVentaRepository;
 import mx.uam.ayd.proyecto.datos.ProductoRepository;
+import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
 import mx.uam.ayd.proyecto.negocio.modelo.Venta;
 import mx.uam.ayd.proyecto.negocio.modelo.DetalleVenta;
 import mx.uam.ayd.proyecto.negocio.modelo.Producto;
-
+import mx.uam.ayd.proyecto.negocio.modelo.Membresia;
+import mx.uam.ayd.proyecto.negocio.modelo.TipoMembresia;
 /**
  * Servicio para gestionar la creacion de los detalle de venta.
  */
@@ -54,7 +56,7 @@ public class ServicioDetalleVenta {
      * @throws IllegalArgumentException si producto o venta son nulos, o cantidad es <= 0
      * @throws IllegalStateException si el producto ya está en la lista o la cantidad supera el stock disponible
      */
-    public DetalleVenta newDetalleVenta(Producto producto, int cantidadVendida, Venta venta, List<DetalleVenta> detallesVenta){
+    public DetalleVenta newDetalleVenta(Producto producto, int cantidadVendida, Venta venta, List<DetalleVenta> detallesVenta, Cliente cliente){
         if(producto == null) {
             throw new IllegalArgumentException("El producto no puede ser nulo");
         }
@@ -74,13 +76,20 @@ public class ServicioDetalleVenta {
         }
 
         log.info("Agregando producto " + producto.getNombre());
+        Membresia membresia = cliente.getMembresia();
 
         DetalleVenta detalleVenta = new DetalleVenta();
         detalleVenta.setVenta(venta);
         detalleVenta.setProducto(producto);
         double subtotal = producto.getPrecio() * cantidadVendida;
         detalleVenta.setCantidadVendida(cantidadVendida);
-        detalleVenta.setSubtotal(subtotal);
+        if(cliente == null || membresia == null){
+            detalleVenta.setSubtotal(subtotal);
+        }else if(membresia.getTipoMembresia() == TipoMembresia.Standard){
+            detalleVenta.setSubtotal(subtotal*0.9);
+        }else{
+            detalleVenta.setSubtotal(subtotal*0.85);
+        }
 
         return detalleVenta;
     }

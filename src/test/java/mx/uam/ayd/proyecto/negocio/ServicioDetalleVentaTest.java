@@ -45,8 +45,9 @@ class ServicioDetalleVentaTest {
         Venta venta = new Venta();
 
         List<DetalleVenta> detallesVenta = new ArrayList<>();
+        Cliente cliente = null;
 
-        DetalleVenta detalle = servicioDetalleVenta.newDetalleVenta(producto, 5, venta, detallesVenta);
+        DetalleVenta detalle = servicioDetalleVenta.newDetalleVenta(producto, 5, venta, detallesVenta, cliente);
 
         assertNotNull(detalle);
         assertEquals(producto, detalle.getProducto());
@@ -68,8 +69,10 @@ class ServicioDetalleVentaTest {
         detalleExistente.setProducto(producto);
         detallesVenta.add(detalleExistente);
 
+        Cliente cliente = null;
+
         IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
-            servicioDetalleVenta.newDetalleVenta(producto, 1, venta, detallesVenta);
+            servicioDetalleVenta.newDetalleVenta(producto, 1, venta, detallesVenta, cliente);
         });
         assertEquals("El producto ya esta en la tabla", ex.getMessage());
     }
@@ -78,9 +81,10 @@ class ServicioDetalleVentaTest {
     void newDetalleVenta_lanzaException_siProductoNulo() {
         Venta venta = new Venta();
         List<DetalleVenta> detallesVenta = new ArrayList<>();
+             Cliente cliente = null;
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            servicioDetalleVenta.newDetalleVenta(null, 1, venta, detallesVenta);
+            servicioDetalleVenta.newDetalleVenta(null, 1, venta, detallesVenta, cliente);
         });
         assertEquals("El producto no puede ser nulo", ex.getMessage());
     }
@@ -93,14 +97,15 @@ class ServicioDetalleVentaTest {
 
         Venta venta = new Venta();
         List<DetalleVenta> detallesVenta = new ArrayList<>();
+        Cliente cliente = null;
 
         IllegalArgumentException ex1 = assertThrows(IllegalArgumentException.class, () -> {
-            servicioDetalleVenta.newDetalleVenta(producto, 0, venta, detallesVenta);
+            servicioDetalleVenta.newDetalleVenta(producto, 0, venta, detallesVenta, cliente);
         });
         assertEquals("La cantidad no puede ser menor o igual a 0", ex1.getMessage());
 
         IllegalArgumentException ex2 = assertThrows(IllegalArgumentException.class, () -> {
-            servicioDetalleVenta.newDetalleVenta(producto, -5, venta, detallesVenta);
+            servicioDetalleVenta.newDetalleVenta(producto, -5, venta, detallesVenta, cliente);
         });
         assertEquals("La cantidad no puede ser menor o igual a 0", ex2.getMessage());
     }
@@ -113,9 +118,10 @@ class ServicioDetalleVentaTest {
 
         Venta venta = new Venta();
         List<DetalleVenta> detallesVenta = new ArrayList<>();
+        Cliente cliente = null;
 
         IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
-            servicioDetalleVenta.newDetalleVenta(producto, 5, venta, detallesVenta);
+            servicioDetalleVenta.newDetalleVenta(producto, 5, venta, detallesVenta, cliente);
         });
         assertEquals("La cantidad vendida no puede ser mayor al stock", ex.getMessage());
     }
@@ -127,9 +133,10 @@ class ServicioDetalleVentaTest {
         producto.setPrecio(20.0);
 
         List<DetalleVenta> detallesVenta = new ArrayList<>();
+        Cliente cliente = null;
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            servicioDetalleVenta.newDetalleVenta(producto, 1, null, detallesVenta);
+            servicioDetalleVenta.newDetalleVenta(producto, 1, null, detallesVenta, cliente);
         });
         assertEquals("La venta no puede ser nulo", ex.getMessage());
     }
