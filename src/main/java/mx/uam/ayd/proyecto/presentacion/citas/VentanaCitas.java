@@ -188,6 +188,22 @@ public class VentanaCitas {
 
     }
 
+    // HU-03: Generar comprobante PDF ***
+
+    @FXML
+    private void handleGenerarComprobante() {
+
+        Cita citaSeleccionada = tableCitas.getSelectionModel().getSelectedItem();
+
+        if (citaSeleccionada == null) {
+            muestraAlerta("Advertencia", "Por favor, seleccione una cita de la tabla para generar su comprobante.", "WARNING");
+            return;
+        }
+
+        // Llamada al controlador para generar el PDF
+        control.generarComprobante(citaSeleccionada);
+    }
+
     @FXML
     private void handleCerrar() {
 

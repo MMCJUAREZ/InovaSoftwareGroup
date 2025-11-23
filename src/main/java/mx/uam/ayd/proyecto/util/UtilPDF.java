@@ -10,19 +10,129 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import com.itextpdf.layout.properties.VerticalAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import mx.uam.ayd.proyecto.negocio.modelo.Cita;
 import mx.uam.ayd.proyecto.negocio.modelo.DetalleVenta;
 import mx.uam.ayd.proyecto.negocio.modelo.ReporteVentaDTO;
 import mx.uam.ayd.proyecto.negocio.modelo.Venta;
 import mx.uam.ayd.proyecto.presentacion.generarReceta.DatosReceta;
 
 import java.io.File;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class UtilPDF {
+
+    /**
+     * Genera un comprobante PDF para una Cita agendada.
+     * (HU-03)
+     * @param cita La cita de la cual se generará el comprobante.
+     */
+
+    public void generarComprobanteCita(Cita cita) {
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Guardar comprobante de cita");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos PDF", "*.pdf"));
+
+        // Nombre sugerido: Cita_[Nombre]_[ID].pdf
+
+        String nombreArchivo = "Cita_" + cita.getNombreSolicitante().replace(" ", "_") + "_" + cita.getIdCita() + ".pdf";
+        fileChooser.setInitialFileName(nombreArchivo);
+
+        // Carpeta inicial: Descargas
+
+        String userHome = System.getProperty("user.home");
+        File carpetaDescargas = new File(userHome, "Downloads");
+        if (carpetaDescargas.exists()) {
+            fileChooser.setInitialDirectory(carpetaDescargas);
+        }
+
+        File archivo = fileChooser.showSaveDialog(new Stage());
+
+        if (archivo != null) {
+            try {
+                String ruta = archivo.getAbsolutePath();
+                if (!ruta.endsWith(".pdf")) {
+                    ruta += ".pdf";
+                }
+
+                // Inicializar PDF
+
+                PdfWriter writer = new PdfWriter(ruta);
+                PdfDocument pdf = new PdfDocument(writer);
+                Document document = new Document(pdf);
+
+                // 1. Encabezado
+
+                document.add(new Paragraph("CLÍNICA VETERINARIA UAM")
+                        .setBold().setFontSize(20).setTextAlignment(TextAlignment.CENTER));
+                document.add(new Paragraph("Comprobante de Cita")
+                        .setBold().setFontSize(16).setTextAlignment(TextAlignment.CENTER));
+                document.add(new Paragraph("\n")); // Espacio
+
+                // 2. Tabla de Detalles
+
+                // Tabla de 2 columnas (Etiqueta : Valor)
+
+                Table table = new Table(UnitValue.createPercentArray(new float[]{30, 70}));
+                table.setWidth(UnitValue.createPercentValue(100));
+
+                // Estilo de celdas
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' yyyy, HH:mm 'hrs'");
+
+                agregarFila(table, "ID de Cita:", String.valueOf(cita.getIdCita()));
+                agregarFila(table, "Fecha y Hora:", cita.getFechaHora().format(formatter));
+                agregarFila(table, "Tipo de Servicio:", cita.getTipo().toString());
+                agregarFila(table, "Solicitante:", cita.getNombreSolicitante());
+                agregarFila(table, "Contacto:", cita.getContacto());
+
+                // Validación de nulos para campos opcionales o relaciones
+
+                String nombreVet = (cita.getVeterinario() != null) ? cita.getVeterinario().getNombreCompleto() : "No asignado";
+                agregarFila(table, "Veterinario:", nombreVet);
+
+                String motivo = (cita.getMotivo() != null && !cita.getMotivo().isEmpty()) ? cita.getMotivo() : "---";
+                agregarFila(table, "Motivo:", motivo);
+
+                String notas = (cita.getNotas() != null && !cita.getNotas().isEmpty()) ? cita.getNotas() : "---";
+                agregarFila(table, "Notas/Observaciones:", notas);
+
+                document.add(table);
+
+                // 3. Pie de página
+
+                document.add(new Paragraph("\n\n"));
+                document.add(new Paragraph("Favor de presentarse 10 minutos antes de su cita.")
+                        .setItalic().setFontSize(10).setTextAlignment(TextAlignment.CENTER));
+                document.add(new Paragraph("¡Gracias por confiar en nosotros!")
+                        .setBold().setTextAlignment(TextAlignment.CENTER));
+
+                document.close();
+                System.out.println("PDF generado exitosamente en: " + archivo.getAbsolutePath());
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw new RuntimeException("Error al generar el PDF: " + ex.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Metodo auxiliar para agregar filas a la tabla del comprobante de cita.
+     */
+
+    private void agregarFila(Table table, String etiqueta, String valor) {
+
+        table.addCell(new Cell().add(new Paragraph(etiqueta).setBold()));
+        table.addCell(new Cell().add(new Paragraph(valor)));
+
+    }
 
     /**
      * Genera un documento PDF con la información de la venta y sus detalles,
@@ -31,6 +141,7 @@ public class UtilPDF {
      * @param detallesVenta lista de detalles de la venta
      * @param venta venta correspondiente a los detalles
      */
+
     public void crearDocumentoVenta(List<DetalleVenta> detallesVenta, Venta venta){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Guardar PDF");
