@@ -16,6 +16,7 @@ import mx.uam.ayd.proyecto.presentacion.generarReporte.ControlGenerarReporte;
 import mx.uam.ayd.proyecto.presentacion.registroVentas.ControlRegistroVentas;
 import mx.uam.ayd.proyecto.presentacion.agregarCliente.ControlGestionarClientes;
 import mx.uam.ayd.proyecto.presentacion.generarReceta.ControlGenerarReceta;
+import mx.uam.ayd.proyecto.presentacion.registroCirugia.ControlRegistroCirugia;
 
 /**
  * Esta clase lleva el flujo de control de la ventana principal
@@ -38,6 +39,7 @@ public class ControlPrincipal {
 	private final ControlRegistroHospedaje controlRegistroHospedaje;
 	private final ControlGenerarReceta controlGenerarReceta;
 	private final VentanaPrincipal ventana;
+	private final ControlRegistroCirugia controlRegistroCirugia;
 
 	@Autowired
 	public ControlPrincipal(
@@ -52,6 +54,7 @@ public class ControlPrincipal {
 			ControlCitas controlCitas,
 			ControlRegistroHospedaje controlRegistroHospedaje,
 			ControlGenerarReceta controlGenerarReceta,
+			ControlRegistroCirugia controlRegistroCirugia,
 			VentanaPrincipal ventana) {
 		this.controlConfiguracionUmbrales = controlConfiguracionUmbrales;
 		this.controlAlerta = controlAlerta;
@@ -61,6 +64,7 @@ public class ControlPrincipal {
 		this.controlRegistroVentas = controlRegistroVentas;
 		this.controlGestionarClientes = controlGestionarClientes;
         this.controlAgregarCartilla = controlAgregarCartilla;
+		this.controlRegistroCirugia = controlRegistroCirugia;
         this.ventana = ventana;
 		this.controlCitas = controlCitas;
 		this.controlRegistroHospedaje = controlRegistroHospedaje;
@@ -128,6 +132,10 @@ public class ControlPrincipal {
 
     public void agregarCartilla() {
         controlAgregarCartilla.inicia();
+    }
+
+	public void registrarCirugia() {
+        controlRegistroCirugia.inicia();
     }
 
 	/**
