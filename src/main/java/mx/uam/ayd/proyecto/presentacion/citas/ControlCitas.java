@@ -5,6 +5,7 @@ import mx.uam.ayd.proyecto.negocio.ServicioVeterinario;
 import mx.uam.ayd.proyecto.negocio.modelo.Cita;
 import mx.uam.ayd.proyecto.negocio.modelo.TipoCita;
 import mx.uam.ayd.proyecto.negocio.modelo.Veterinario;
+import mx.uam.ayd.proyecto.util.UtilPDF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ public class ControlCitas {
     private final ServicioCita servicioCita;
     private final VentanaCitas ventana;
     private final ServicioVeterinario servicioVeterinario;
+    private final UtilPDF utilPDF = new UtilPDF();
 
     @Autowired
     public ControlCitas(ServicioCita servicioCita, ServicioCita servicioCita1, VentanaCitas ventana, ServicioVeterinario servicioVeterinario) {
@@ -50,6 +52,22 @@ public class ControlCitas {
 
     public List<Veterinario> recuperarVeterinarios() {
         return servicioVeterinario.recuperarVeterinarios();
+    }
+
+    /**
+     * Genera el comprobante PDF para una cita específica.
+     */
+
+    public void generarComprobante(Cita cita) {
+
+        try {
+            utilPDF.generarComprobanteCita(cita);
+        } catch (Exception ex) {
+
+            ventana.muestraAlerta("Error al generar PDF", ex.getMessage(), "ERROR");
+
+        }
+
     }
 
     /**
