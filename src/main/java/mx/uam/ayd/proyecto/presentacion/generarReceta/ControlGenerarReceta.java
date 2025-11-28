@@ -42,12 +42,11 @@ public class ControlGenerarReceta {
      * Inicializa el controlador con el servicio de productos y la ventana asociada.
      *
      * @param servicioProducto Servicio encargado de operaciones con productos.
+     * @param servicioCorreo Servicio encargado del envio de correos electronicos
      * @param ventana Vista para la selección y muestra de medicamentos.
      */
     @Autowired
-    public ControlGenerarReceta(ServicioProducto servicioProducto,
-                                ServicioCorreo servicioCorreo,
-                                VentanaGenerarReceta ventana) {
+    public ControlGenerarReceta(ServicioProducto servicioProducto, ServicioCorreo servicioCorreo, VentanaGenerarReceta ventana) {
         this.servicioProducto = servicioProducto;
         this.servicioCorreo = servicioCorreo;
         this.ventana = ventana;
@@ -83,13 +82,10 @@ public class ControlGenerarReceta {
      * @return Lista filtrada de productos.
      */
     public List<Producto> filtrarMedicamentos(String usoVeterinario, String presentacion) {
-        if (presentacion.equals("Sin filtro")) {
-            return servicioProducto.buscarPorUsoVeterinario(
-                    UsoVeterinario.valueOf(usoVeterinario));
-        } else {
-            return servicioProducto.buscarPorUsoVeterinarioAndUnidadProducto(
-                    UsoVeterinario.valueOf(usoVeterinario),
-                    UnidadProducto.valueOf(presentacion));
+        if(presentacion.equals("Sin filtro")) {
+            return servicioProducto.buscarPorUsoVeterinario(UsoVeterinario.valueOf(usoVeterinario));
+        }else {
+            return servicioProducto.buscarPorUsoVeterinarioAndUnidadProducto(UsoVeterinario.valueOf(usoVeterinario), UnidadProducto.valueOf(presentacion));
         }
     }
 
@@ -97,11 +93,23 @@ public class ControlGenerarReceta {
      * @brief Genera el documento PDF de la receta.
      *
      * @param receta Lista de objetos DatosReceta que contienen la información a incluir.
+     * @param correo Direccion a la cual se va a enviar la receta.
      */
     public void generarReceta(List<DatosReceta> receta, String correo) {
         String ruta = utilPDF.crearReceta(receta);
-        if(ruta != null && correo != null) {
-            servicioCorreo.enviarCorreoConAdjunto(correo, ruta);
+        if(ruta != null) {
+            if(!correo.isEmpty()) {
+                try {
+                    servicioCorreo.enviarCorreoConAdjunto(correo, ruta);
+                    ventana.muestraDialogoConMensaje("Receta enviada correctamente");
+                }catch(Exception e) {
+                    ventana.muestraDialogoConMensaje("Error al enviar el correo del receta: " + e.getMessage());
+                }
+            }else {
+                ventana.muestraDialogoConMensaje("Receta generada correctamente");
+            }
+        }else {
+            ventana.muestraDialogoConMensaje("No se genero la receta");
         }
     }
 
