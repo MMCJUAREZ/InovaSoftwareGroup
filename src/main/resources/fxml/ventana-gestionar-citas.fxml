@@ -15,6 +15,9 @@
         <Button text="Modificar Cita Seleccionada" onAction="#handleModificarCita" />
         <Button text="Cancelar Cita Seleccionada" onAction="#handleEliminarCita"
                 style="-fx-base: #DC3545; -fx-text-fill: white;" />
+
+        <Button text="Descargar Comprobante" onAction="#handleGenerarComprobante"
+                style="-fx-base: #28A745; -fx-text-fill: white;" />
     </HBox>
 
     <TableView fx:id="tableCitas" VBox.vgrow="ALWAYS">
@@ -22,9 +25,7 @@
             <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
             <TableColumn fx:id="fechaHoraColumn" text="Fecha y Hora" prefWidth="150" />
             <TableColumn fx:id="tipoColumn" text="Tipo de Servicio" prefWidth="120" />
-
-            <TableColumn fx:id="veterinarioColumn" text="Veterinario" prefWidth="160" />
-
+            <TableColumn fx:id="veterinarioColumn" text="Veterinario" prefWidth="150" />
             <TableColumn fx:id="nombreColumn" text="Solicitante" prefWidth="150" />
             <TableColumn fx:id="contactoColumn" text="Contacto" prefWidth="150" />
             <TableColumn fx:id="estadoColumn" text="Estado" prefWidth="80" />
