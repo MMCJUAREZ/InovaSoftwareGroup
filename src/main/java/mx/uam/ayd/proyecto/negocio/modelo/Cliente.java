@@ -52,9 +52,5 @@ public class Cliente {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<Mascota> mascotas = new ArrayList<>();
-
-    public Membresia getMembresia() {
-        return membresia;
-    }
     
 }
