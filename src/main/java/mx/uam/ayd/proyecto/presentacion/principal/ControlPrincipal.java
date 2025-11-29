@@ -2,6 +2,7 @@ package mx.uam.ayd.proyecto.presentacion.principal;
 
 import jakarta.annotation.PostConstruct;
 
+import mx.uam.ayd.proyecto.presentacion.RegistroDiarioHospedaje.ControlRegistroDiarioHospedaje;
 import mx.uam.ayd.proyecto.presentacion.Inventario.Controlinventario;
 import mx.uam.ayd.proyecto.presentacion.agregarCartilla.ControlAgregarCartilla;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import mx.uam.ayd.proyecto.presentacion.agregarCliente.ControlGestionarClientes;
 import mx.uam.ayd.proyecto.presentacion.generarReceta.ControlGenerarReceta;
 import mx.uam.ayd.proyecto.presentacion.registroCirugia.ControlRegistroCirugia;
 
-/**
+/**;
  * Esta clase lleva el flujo de control de la ventana principal
  *
  * @author humbertocervantes
@@ -40,6 +41,7 @@ public class ControlPrincipal {
 	private final ControlGenerarReceta controlGenerarReceta;
 	private final VentanaPrincipal ventana;
 	private final ControlRegistroCirugia controlRegistroCirugia;
+    private final ControlRegistroDiarioHospedaje controlRegistroDiarioHospedaje;
 
 	@Autowired
 	public ControlPrincipal(
@@ -55,7 +57,8 @@ public class ControlPrincipal {
 			ControlRegistroHospedaje controlRegistroHospedaje,
 			ControlGenerarReceta controlGenerarReceta,
 			ControlRegistroCirugia controlRegistroCirugia,
-			VentanaPrincipal ventana) {
+            ControlRegistroDiarioHospedaje controlRegistroDiarioHospedaje,
+            VentanaPrincipal ventana) {
 		this.controlConfiguracionUmbrales = controlConfiguracionUmbrales;
 		this.controlAlerta = controlAlerta;
 		this.ventanaAlerta = ventanaAlerta;
@@ -69,6 +72,7 @@ public class ControlPrincipal {
 		this.controlCitas = controlCitas;
 		this.controlRegistroHospedaje = controlRegistroHospedaje;
 		this.controlGenerarReceta = controlGenerarReceta;
+        this.controlRegistroDiarioHospedaje = controlRegistroDiarioHospedaje;
 	}
 
 	/**
@@ -155,4 +159,14 @@ public class ControlPrincipal {
 	 * Método que arranca la historia de usuario "Generar receta"
 	 */
 	public void generarReceta() { controlGenerarReceta.inicia(); }
+
+    /**
+     * Método que arranca la historia de usuario "Registro Diario de Hospedaje"
+     */
+    public void registrarDiarioHospedaje() {
+        System.out.println("Abriendo Registro Diario de Hospedaje...");
+        controlRegistroDiarioHospedaje.inicia();
+
+    }
+
 }

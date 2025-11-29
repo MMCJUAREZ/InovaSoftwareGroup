@@ -28,4 +28,7 @@
     <Button mnemonicParsing="false" onAction="#handleGenerarReceta" prefHeight="25.0" prefWidth="201.0" text="Generar Receta" />
 
     <Button text="Registrar Cirugía" onAction="#handleRegistrarCirugia" style="-fx-min-width: 200px; -fx-min-height: 30px;"/>
+
+    <Button text="Registro Diario de Hospedaje" onAction="#handleRegistrarDiarioHospedaje" style="-fx-min-width: 200px; -fx-min-height: 30px;"/>
+
 </VBox>
