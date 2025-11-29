@@ -1,12 +1,17 @@
 package mx.uam.ayd.proyecto.negocio;
 
+import jakarta.mail.internet.MimeMessage;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
 import mx.uam.ayd.proyecto.negocio.modelo.Mascota;
 import mx.uam.ayd.proyecto.negocio.modelo.Hospedaje;
+
+import java.io.File;
 
 /**
  * @file ServicioCorreo.java
@@ -67,5 +72,29 @@ public class ServicioCorreo {
 
         enviarCorreo(cliente.getCorreoElectronico(), asunto, mensaje);
 
+    }
+
+    public void enviarCorreoConAdjunto(String destino, String rutaArchivoAdjunto) {
+        try {
+            File archivoAdjunto = new File(rutaArchivoAdjunto);
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            String mensajeTexto = "Gracias por confiar en Kroketa para cuidar a tu compañero peludo \n\n" +
+                    "Atentamente, \n" +
+                    "Equipo Kroketa \uD83D\uDC36\uD83D\uDC31";
+            String asunto = "Receta medica";
+            helper.setTo(destino);
+            helper.setSubject(asunto);
+            helper.setText(mensajeTexto);
+
+            FileSystemResource file = new FileSystemResource(archivoAdjunto);
+            helper.addAttachment(archivoAdjunto.getName(), file);
+            mailSender.send(mimeMessage);
+            System.out.println("Correo enviado correctamente a " + destino);
+
+        } catch (Exception e) {
+            System.err.println("Error al enviar correo: " + e.getMessage());
+        }
     }
 }

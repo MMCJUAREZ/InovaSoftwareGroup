@@ -306,8 +306,9 @@ public class Producto {
      */
     @Override
     public String toString() {
-        return "Producto [idProducto=" + idProducto + ", nombre=" + nombre +
-                ", marca=" + marcaProducto + ", precio=" + precio +
-                ", Stock=" + cantidadStock + "]";
+        if(tipoProducto.equals(TipoProducto .Medicamento)){
+            return "nombre: " + nombre + ", Presentacion: " + unidadProducto + ", marca: " + marcaProducto;
+        }
+        return "Producto [idProducto=" + idProducto + ", nombre=" + nombre + ", marca=" + marcaProducto + ", precio=" + precio + ", Stock=" + cantidadStock + "]";
     }
 }

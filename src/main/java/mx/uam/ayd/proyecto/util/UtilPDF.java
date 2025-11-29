@@ -257,96 +257,73 @@ public class UtilPDF {
      * Genera un archivo PDF que contiene una receta médica basada en una lista de objetos DatosReceta.
      * @param datosReceta Lista de objetos DatosReceta que contienen la información a mostrar en la receta.
      */
-    public void crearReceta(List<DatosReceta> datosReceta) {
-
+    public String crearReceta(List<DatosReceta> datosReceta) {
         // Configuración inicial del FileChooser para guardar el PDF
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Guardar PDF");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos PDF", "*.pdf"));
         fileChooser.setInitialFileName("Receta.pdf");
 
-        // Seleccionar la carpeta Descargas como directorio inicial
         String userHome = System.getProperty("user.home");
         File carpetaDescargas = new File(userHome, "Downloads");
-        if (carpetaDescargas.exists()) {
+        if(carpetaDescargas.exists()) {
             fileChooser.setInitialDirectory(carpetaDescargas);
         }
 
-        // Mostrar ventana para elegir ubicación del archivo
         File archivo = fileChooser.showSaveDialog(new Stage());
-        if (archivo != null) {
+        if(archivo != null) {
             String ruta = archivo.getAbsolutePath();
 
-            // Asegurar extensión .pdf
-            if (!ruta.endsWith(".pdf")) {
+            if(!ruta.endsWith(".pdf")) {
                 ruta += ".pdf";
             }
 
             try {
-                // Inicialización del PDF
                 PdfWriter writer = new PdfWriter(ruta);
                 PdfDocument pdf = new PdfDocument(writer);
                 Document document = new Document(pdf);
 
-                // Cargar imagen del logo
                 String imgPath = getClass().getResource("/imagenes/logo.jpg").getPath();
                 ImageData imageData = ImageDataFactory.create(imgPath);
                 Image logo = new Image(imageData);
                 logo.scaleToFit(50, 50);
 
-                // Tabla para colocar logo y título en una misma fila
                 float[] colWidths = {1, 5};
                 Table encabezado = new Table(colWidths);
                 encabezado.setWidth(UnitValue.createPercentValue(100));
 
-                // Celda con el logo
-                encabezado.addCell(
-                        new Cell()
-                                .add(logo)
-                                .setBorder(Border.NO_BORDER)
-                );
+                encabezado.addCell(new Cell().add(logo).setBorder(Border.NO_BORDER));
 
-                // Celda con el nombre del negocio
-                encabezado.addCell(
-                        new Cell()
-                                .add(new Paragraph("Kroketa").setBold().setFontSize(24))
-                                .setBorder(Border.NO_BORDER)
-                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                );
+                encabezado.addCell(new Cell().add(new Paragraph("Kroketa").setBold().setFontSize(24)).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE));
 
                 document.add(encabezado);
 
-                // Título de la receta
                 document.add(new Paragraph("Receta médica").setBold().setFontSize(16));
 
                 float[] columnWidths = {100f, 100f, 100f, 100f, 100f};
                 Table table = new Table(columnWidths);
 
-                // Encabezados de la tabla
                 table.addCell("Medicamento");
                 table.addCell("Dosis");
                 table.addCell("Cada");
                 table.addCell("Hasta");
                 table.addCell("Nota");
 
-                // Llenar filas de la tabla con datos
-                for (DatosReceta datos : datosReceta) {
-                    table.addCell(String.valueOf(datos.getProducto()));
-                    table.addCell(datos.getDosis());
-                    table.addCell(datos.getCada());
-                    table.addCell(datos.getHasta());
+                for(DatosReceta datos : datosReceta) {
+                    table.addCell(String.valueOf(datos.getProducto().getNombre()));
+                    table.addCell(String.valueOf(datos.getDosis()));
+                    table.addCell(String.valueOf(datos.getCada()) + " hrs");
+                    table.addCell(String.valueOf(datos.getHasta()) + "dosis");
                     table.addCell(datos.getNota());
                 }
 
                 document.add(table);
 
-                // Imagen ilustrativa
                 imgPath = getClass().getResource("/imagenes/decoracion.jpeg").getPath();
                 imageData = ImageDataFactory.create(imgPath);
                 Image image = new Image(imageData);
                 image.scaleToFit(80, 80);
 
-                // Imagen firma
                 imgPath = getClass().getResource("/imagenes/firma.png").getPath();
                 imageData = ImageDataFactory.create(imgPath);
                 Image firma = new Image(imageData);
@@ -356,39 +333,21 @@ public class UtilPDF {
                 Table pie = new Table(colWidthsFirma);
                 pie.setWidth(UnitValue.createPercentValue(100));
 
-                // Imagen lateral del pie
-                pie.addCell(
-                        new Cell()
-                                .add(image)
-                                .setBorder(Border.NO_BORDER)
-                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                );
+                pie.addCell(new Cell().add(image).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE));
 
-                // Texto del pie
-                pie.addCell(
-                        new Cell()
-                                .add(new Paragraph("Firma del veterinario:").setBold().setFontSize(12))
-                                .setBorder(Border.NO_BORDER)
-                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                );
+                pie.addCell(new Cell().add(new Paragraph("Firma del veterinario:").setBold().setFontSize(12)).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE));
 
-                // Imagen de firma
-                pie.addCell(
-                        new Cell()
-                                .add(firma)
-                                .setBorder(Border.NO_BORDER)
-                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                );
+                pie.addCell(new Cell().add(firma).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE));
 
                 document.add(pie);
-
-                // Cerrar documento
                 document.close();
 
-            } catch (Exception ex) {
+                return ruta;
+            }catch (Exception ex) {
                 ex.printStackTrace();
+                return null;
             }
         }
+        return null;
     }
-
 }
