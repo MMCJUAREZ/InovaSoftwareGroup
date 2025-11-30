@@ -1,15 +1,15 @@
 package mx.uam.ayd.proyecto.util;
 
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.element.Image;
-import com.itextpdf.io.image.ImageData;
-import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import com.itextpdf.layout.properties.VerticalAlignment;
@@ -25,26 +25,25 @@ import java.io.File;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Clase de utilidad para la generación de documentos PDF.
+ * @author InovaSoftwareGroup
+ */
 public class UtilPDF {
 
     /**
      * Genera un comprobante PDF para una Cita agendada.
-     * (HU-03)
+     * Corresponde a la HU-03.
+     *
      * @param cita La cita de la cual se generará el comprobante.
      */
-
     public void generarComprobanteCita(Cita cita) {
-
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Guardar comprobante de cita");
+        fileChooser.setTitle("Guardar Comprobante de Cita");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos PDF", "*.pdf"));
-
-        // Nombre sugerido: Cita_[Nombre]_[ID].pdf
 
         String nombreArchivo = "Cita_" + cita.getNombreSolicitante().replace(" ", "_") + "_" + cita.getIdCita() + ".pdf";
         fileChooser.setInitialFileName(nombreArchivo);
-
-        // Carpeta inicial: Descargas
 
         String userHome = System.getProperty("user.home");
         File carpetaDescargas = new File(userHome, "Downloads");
@@ -61,28 +60,20 @@ public class UtilPDF {
                     ruta += ".pdf";
                 }
 
-                // Inicializar PDF
-
                 PdfWriter writer = new PdfWriter(ruta);
                 PdfDocument pdf = new PdfDocument(writer);
                 Document document = new Document(pdf);
 
-                // 1. Encabezado
-
+                // Encabezado
                 document.add(new Paragraph("CLÍNICA VETERINARIA UAM")
                         .setBold().setFontSize(20).setTextAlignment(TextAlignment.CENTER));
                 document.add(new Paragraph("Comprobante de Cita")
                         .setBold().setFontSize(16).setTextAlignment(TextAlignment.CENTER));
-                document.add(new Paragraph("\n")); // Espacio
+                document.add(new Paragraph("\n"));
 
-                // 2. Tabla de Detalles
-
-                // Tabla de 2 columnas (Etiqueta : Valor)
-
+                // Tabla de Detalles
                 Table table = new Table(UnitValue.createPercentArray(new float[]{30, 70}));
                 table.setWidth(UnitValue.createPercentValue(100));
-
-                // Estilo de celdas
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' yyyy, HH:mm 'hrs'");
 
@@ -91,8 +82,6 @@ public class UtilPDF {
                 agregarFila(table, "Tipo de Servicio:", cita.getTipo().toString());
                 agregarFila(table, "Solicitante:", cita.getNombreSolicitante());
                 agregarFila(table, "Contacto:", cita.getContacto());
-
-                // Validación de nulos para campos opcionales o relaciones
 
                 String nombreVet = (cita.getVeterinario() != null) ? cita.getVeterinario().getNombreCompleto() : "No asignado";
                 agregarFila(table, "Veterinario:", nombreVet);
@@ -105,8 +94,7 @@ public class UtilPDF {
 
                 document.add(table);
 
-                // 3. Pie de página
-
+                // Pie de pagina
                 document.add(new Paragraph("\n\n"));
                 document.add(new Paragraph("Favor de presentarse 10 minutos antes de su cita.")
                         .setItalic().setFontSize(10).setTextAlignment(TextAlignment.CENTER));
@@ -124,31 +112,28 @@ public class UtilPDF {
     }
 
     /**
-     * Metodo auxiliar para agregar filas a la tabla del comprobante de cita.
+     * Método auxiliar para agregar filas a la tabla del comprobante.
+     *
+     * @param table La tabla a la que se añadirán las celdas.
+     * @param etiqueta El texto de la etiqueta (negrita).
+     * @param valor El valor del campo.
      */
-
     private void agregarFila(Table table, String etiqueta, String valor) {
-
         table.addCell(new Cell().add(new Paragraph(etiqueta).setBold()));
         table.addCell(new Cell().add(new Paragraph(valor)));
-
     }
 
     /**
-     * Genera un documento PDF con la información de la venta y sus detalles,
-     * y permite al usuario seleccionar dónde guardarlo.
-     *
-     * @param detallesVenta lista de detalles de la venta
-     * @param venta venta correspondiente a los detalles
+     * Genera un documento PDF con la información de la venta y sus detalles.
+     * * @param detallesVenta Lista de detalles de la venta.
+     * @param venta La venta correspondiente.
      */
-
-    public void crearDocumentoVenta(List<DetalleVenta> detallesVenta, Venta venta){
+    public void crearDocumentoVenta(List<DetalleVenta> detallesVenta, Venta venta) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Guardar PDF");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos PDF", "*.pdf"));
         fileChooser.setInitialFileName("venta_" + venta.getIdVenta() + ".pdf");
 
-        // Establecer carpeta Descargas como inicial
         String userHome = System.getProperty("user.home");
         File carpetaDescargas = new File(userHome, "Downloads");
         if (carpetaDescargas.exists()) {
@@ -165,13 +150,11 @@ public class UtilPDF {
                 PdfDocument pdf = new PdfDocument(writer);
                 Document document = new Document(pdf);
 
-                // Título
                 document.add(new Paragraph("Venta_" + venta.getIdVenta()).setBold().setFontSize(16));
 
                 float[] columnWidths = {100f, 100f, 100f, 100f, 100f, 100f};
                 Table table = new Table(columnWidths);
 
-                // Encabezados
                 table.addCell("idProducto");
                 table.addCell("Nombre_producto");
                 table.addCell("Marca");
@@ -197,10 +180,8 @@ public class UtilPDF {
     }
 
     /**
-     * Permite descargar un reporte de ventas en formato PDF
-     * y permite al usuario seleccionar dónde guardarlo
-     *
-     * @param ventas lista con los datos del reporte a descargar
+     * Permite descargar un reporte de ventas en formato PDF.
+     * * @param ventas Lista con los datos del reporte a descargar.
      */
     public void descargarReporte(List<ReporteVentaDTO> ventas) {
         FileChooser fileChooser = new FileChooser();
@@ -208,7 +189,6 @@ public class UtilPDF {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos PDF", "*.pdf"));
         fileChooser.setInitialFileName("Reporte_de_venta.pdf");
 
-        // Establecer carpeta Descargas como inicial
         String userHome = System.getProperty("user.home");
         File carpetaDescargas = new File(userHome, "Downloads");
         if (carpetaDescargas.exists()) {
@@ -225,13 +205,11 @@ public class UtilPDF {
                 PdfDocument pdf = new PdfDocument(writer);
                 Document document = new Document(pdf);
 
-                // Título
                 document.add(new Paragraph("Reporte de venta").setBold().setFontSize(16));
 
                 float[] columnWidths = {100f, 100f, 100f, 100f, 100f};
                 Table table = new Table(columnWidths);
 
-                // Encabezados
                 table.addCell("Fecha");
                 table.addCell("Nombre_producto");
                 table.addCell("Tipo");
@@ -254,82 +232,64 @@ public class UtilPDF {
     }
 
     /**
-     * Genera un archivo PDF que contiene una receta médica basada en una lista de objetos DatosReceta.
-     * @param datosReceta Lista de objetos DatosReceta que contienen la información a mostrar en la receta.
+     * Genera un archivo PDF que contiene una receta médica.
+     * * @param datosReceta Lista de objetos con la información de la receta.
      */
     public void crearReceta(List<DatosReceta> datosReceta) {
-
-        // Configuración inicial del FileChooser para guardar el PDF
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Guardar PDF");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos PDF", "*.pdf"));
         fileChooser.setInitialFileName("Receta.pdf");
 
-        // Seleccionar la carpeta Descargas como directorio inicial
         String userHome = System.getProperty("user.home");
         File carpetaDescargas = new File(userHome, "Downloads");
         if (carpetaDescargas.exists()) {
             fileChooser.setInitialDirectory(carpetaDescargas);
         }
 
-        // Mostrar ventana para elegir ubicación del archivo
         File archivo = fileChooser.showSaveDialog(new Stage());
         if (archivo != null) {
             String ruta = archivo.getAbsolutePath();
-
-            // Asegurar extensión .pdf
             if (!ruta.endsWith(".pdf")) {
                 ruta += ".pdf";
             }
 
             try {
-                // Inicialización del PDF
                 PdfWriter writer = new PdfWriter(ruta);
                 PdfDocument pdf = new PdfDocument(writer);
                 Document document = new Document(pdf);
 
-                // Cargar imagen del logo
-                String imgPath = getClass().getResource("/imagenes/logo.jpg").getPath();
-                ImageData imageData = ImageDataFactory.create(imgPath);
-                Image logo = new Image(imageData);
-                logo.scaleToFit(50, 50);
+                try {
+                    String imgPath = getClass().getResource("/imagenes/logo.jpg").getPath();
+                    ImageData imageData = ImageDataFactory.create(imgPath);
+                    Image logo = new Image(imageData);
+                    logo.scaleToFit(50, 50);
 
-                // Tabla para colocar logo y título en una misma fila
-                float[] colWidths = {1, 5};
-                Table encabezado = new Table(colWidths);
-                encabezado.setWidth(UnitValue.createPercentValue(100));
+                    float[] colWidths = {1, 5};
+                    Table encabezado = new Table(colWidths);
+                    encabezado.setWidth(UnitValue.createPercentValue(100));
 
-                // Celda con el logo
-                encabezado.addCell(
-                        new Cell()
-                                .add(logo)
-                                .setBorder(Border.NO_BORDER)
-                );
+                    encabezado.addCell(new Cell().add(logo).setBorder(Border.NO_BORDER));
+                    encabezado.addCell(new Cell().add(new Paragraph("Kroketa").setBold().setFontSize(24))
+                            .setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE));
 
-                // Celda con el nombre del negocio
-                encabezado.addCell(
-                        new Cell()
-                                .add(new Paragraph("Kroketa").setBold().setFontSize(24))
-                                .setBorder(Border.NO_BORDER)
-                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                );
+                    document.add(encabezado);
 
-                document.add(encabezado);
+                } catch (NullPointerException e) {
+                    document.add(new Paragraph("Kroketa - Receta Médica").setBold().setFontSize(24));
+                }
 
-                // Título de la receta
                 document.add(new Paragraph("Receta médica").setBold().setFontSize(16));
 
                 float[] columnWidths = {100f, 100f, 100f, 100f, 100f};
                 Table table = new Table(columnWidths);
 
-                // Encabezados de la tabla
                 table.addCell("Medicamento");
                 table.addCell("Dosis");
                 table.addCell("Cada");
                 table.addCell("Hasta");
                 table.addCell("Nota");
 
-                // Llenar filas de la tabla con datos
                 for (DatosReceta datos : datosReceta) {
                     table.addCell(String.valueOf(datos.getProducto()));
                     table.addCell(datos.getDosis());
@@ -340,49 +300,30 @@ public class UtilPDF {
 
                 document.add(table);
 
-                // Imagen ilustrativa
-                imgPath = getClass().getResource("/imagenes/decoracion.jpeg").getPath();
-                imageData = ImageDataFactory.create(imgPath);
-                Image image = new Image(imageData);
-                image.scaleToFit(80, 80);
+                // Intentar cargar imágenes de pie de página
+                try {
+                    String imgPath = getClass().getResource("/imagenes/decoracion.jpeg").getPath();
+                    ImageData imageData = ImageDataFactory.create(imgPath);
+                    Image image = new Image(imageData);
+                    image.scaleToFit(80, 80);
 
-                // Imagen firma
-                imgPath = getClass().getResource("/imagenes/firma.png").getPath();
-                imageData = ImageDataFactory.create(imgPath);
-                Image firma = new Image(imageData);
-                firma.scaleToFit(80, 80);
+                    imgPath = getClass().getResource("/imagenes/firma.png").getPath();
+                    imageData = ImageDataFactory.create(imgPath);
+                    Image firma = new Image(imageData);
+                    firma.scaleToFit(80, 80);
 
-                float[] colWidthsFirma = {2, 4, 3};
-                Table pie = new Table(colWidthsFirma);
-                pie.setWidth(UnitValue.createPercentValue(100));
+                    float[] colWidthsFirma = {2, 4, 3};
+                    Table pie = new Table(colWidthsFirma);
+                    pie.setWidth(UnitValue.createPercentValue(100));
 
-                // Imagen lateral del pie
-                pie.addCell(
-                        new Cell()
-                                .add(image)
-                                .setBorder(Border.NO_BORDER)
-                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                );
+                    pie.addCell(new Cell().add(image).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE));
+                    pie.addCell(new Cell().add(new Paragraph("Firma del veterinario:").setBold().setFontSize(12))
+                            .setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE));
+                    pie.addCell(new Cell().add(firma).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE));
 
-                // Texto del pie
-                pie.addCell(
-                        new Cell()
-                                .add(new Paragraph("Firma del veterinario:").setBold().setFontSize(12))
-                                .setBorder(Border.NO_BORDER)
-                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                );
+                    document.add(pie);
+                } catch (Exception ignored) {}
 
-                // Imagen de firma
-                pie.addCell(
-                        new Cell()
-                                .add(firma)
-                                .setBorder(Border.NO_BORDER)
-                                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                );
-
-                document.add(pie);
-
-                // Cerrar documento
                 document.close();
 
             } catch (Exception ex) {
@@ -390,5 +331,4 @@ public class UtilPDF {
             }
         }
     }
-
 }

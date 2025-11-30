@@ -7,21 +7,30 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.geometry.Insets;
-import javafx.scene.control.DatePicker;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import mx.uam.ayd.proyecto.negocio.modelo.Cita;
 import mx.uam.ayd.proyecto.negocio.modelo.TipoCita;
-import mx.uam.ayd.proyecto.negocio.modelo.Veterinario; // NUEVA IMPORTACIÓN
-import mx.uam.ayd.proyecto.util.ServicioVeterinarioConverter; // NUEVA IMPORTACIÓN
+import mx.uam.ayd.proyecto.negocio.modelo.Veterinario;
+import mx.uam.ayd.proyecto.util.ServicioVeterinarioConverter;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -29,64 +38,65 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * Ventana de gestión de citas.
+ * @author InovaSoftwareGroup
+ */
 @Component
 public class VentanaCitas {
 
     private Stage stage;
-    @Setter
     private ControlCitas control;
     private final ObservableList<Cita> citasData = FXCollections.observableArrayList();
     private boolean initialized = false;
 
-    private List<Veterinario> veterinariosDisponibles; // Almacenar la lista de veterinarios
-
-    // Componentes FXML de la tabla
+    private List<Veterinario> veterinariosDisponibles;
 
     @FXML private TableView<Cita> tableCitas;
     @FXML private TableColumn<Cita, Long> idColumn;
     @FXML private TableColumn<Cita, String> fechaHoraColumn;
     @FXML private TableColumn<Cita, TipoCita> tipoColumn;
-    @FXML private TableColumn<Cita, String> veterinarioColumn; // NUEVA COLUMNA
+    @FXML private TableColumn<Cita, String> veterinarioColumn;
     @FXML private TableColumn<Cita, String> nombreColumn;
     @FXML private TableColumn<Cita, String> contactoColumn;
     @FXML private TableColumn<Cita, String> estadoColumn;
 
     public VentanaCitas() {
+        // Constructor vacío
+    }
 
-        // Constructor
-
+    /**
+     * Asigna el controlador.
+     * @param control Controlador de citas.
+     */
+    public void setControl(ControlCitas control) {
+        this.control = control;
     }
 
     private void initializeUI() {
-
         if (initialized) return;
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(this::initializeUI);
             return;
-
         }
 
         try {
-
             stage = new Stage();
             stage.setTitle("Gestión de Citas");
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-gestionar-citas.fxml"));
             loader.setController(this);
-            Scene scene = new Scene(loader.load(), 950, 600); // Ajustar tamaño para nueva columna
+            Scene scene = new Scene(loader.load(), 950, 600);
             stage.setScene(scene);
 
             // Configurar columnas
-
             idColumn.setCellValueFactory(new PropertyValueFactory<>("idCita"));
             tipoColumn.setCellValueFactory(new PropertyValueFactory<>("tipo"));
             nombreColumn.setCellValueFactory(new PropertyValueFactory<>("nombreSolicitante"));
             contactoColumn.setCellValueFactory(new PropertyValueFactory<>("contacto"));
 
             // Columna de Veterinario
-
             veterinarioColumn.setCellValueFactory(cellData ->
                     new SimpleStringProperty(
                             cellData.getValue().getVeterinario() != null ?
@@ -95,15 +105,13 @@ public class VentanaCitas {
             );
 
             // Formato de Fecha y Hora
-
             fechaHoraColumn.setCellValueFactory(cellData ->
                     new SimpleStringProperty(
                             cellData.getValue().getFechaHora().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))
                     )
             );
 
-            // Columna de Estado Pendiente/Atendida
-
+            // Columna de Estado
             estadoColumn.setCellValueFactory(cellData ->
                     new SimpleStringProperty(cellData.getValue().isAtendida() ? "Atendida" : "Pendiente")
             );
@@ -111,56 +119,50 @@ public class VentanaCitas {
             tableCitas.setItems(citasData);
             initialized = true;
         } catch (IOException e) {
-            e.printStackTrace();
+            muestraAlerta("Error Crítico", "No se pudo cargar la interfaz: " + e.getMessage(), "ERROR");
         }
     }
 
     /**
-     * Muestra la ventana y carga la lista inicial de citas y veterinarios.
+     * Muestra la ventana con la lista de citas y veterinarios.
+     * * @param citas Lista de citas a mostrar.
+     * @param veterinarios Lista de veterinarios disponibles.
      */
-
     public void muestra(List<Cita> citas, List<Veterinario> veterinarios) {
-
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(() -> this.muestra(citas, veterinarios));
             return;
         }
 
-        this.veterinariosDisponibles = veterinarios; // Guardar la lista
+        this.veterinariosDisponibles = veterinarios;
 
         initializeUI();
         actualizarTabla(citas);
         stage.show();
-
     }
 
     /**
-     * Actualiza la tabla con una nueva lista de citas.
+     * Actualiza la tabla de citas.
+     * * @param citas Nueva lista de citas.
      */
-
     public void actualizarTabla(List<Cita> citas) {
-
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(() -> this.actualizarTabla(citas));
             return;
         }
         citasData.clear();
         citasData.addAll(citas);
-
     }
 
-    // Handlers de la Vista Principal
+    // --- HANDLERS DE LA VISTA PRINCIPAL ---
 
     @FXML
     private void handleCrearCita() {
-
         mostrarFormulario(null);
-
     }
 
     @FXML
     private void handleModificarCita() {
-
         Cita citaSeleccionada = tableCitas.getSelectionModel().getSelectedItem();
         if (citaSeleccionada == null) {
             muestraAlerta("Advertencia", "Seleccione una cita para modificar.", "WARNING");
@@ -171,12 +173,10 @@ public class VentanaCitas {
             return;
         }
         mostrarFormulario(citaSeleccionada);
-
     }
 
     @FXML
     private void handleEliminarCita() {
-
         Cita citaSeleccionada = tableCitas.getSelectionModel().getSelectedItem();
         if (citaSeleccionada == null) {
             muestraAlerta("Advertencia", "Seleccione una cita para cancelar.", "WARNING");
@@ -185,14 +185,14 @@ public class VentanaCitas {
         if (mostrarConfirmacion("Confirmación", "¿Está seguro de que desea cancelar la cita seleccionada?")) {
             control.eliminarCita(citaSeleccionada.getIdCita());
         }
-
     }
 
-    // HU-03: Generar comprobante PDF ***
-
+    /**
+     * Manejador para generar el comprobante PDF de la cita seleccionada.
+     * HU-03
+     */
     @FXML
     private void handleGenerarComprobante() {
-
         Cita citaSeleccionada = tableCitas.getSelectionModel().getSelectedItem();
 
         if (citaSeleccionada == null) {
@@ -200,28 +200,18 @@ public class VentanaCitas {
             return;
         }
 
-        // Llamada al controlador para generar el PDF
         control.generarComprobante(citaSeleccionada);
     }
 
     @FXML
     private void handleCerrar() {
-
         stage.close();
-
     }
 
-    /**
-     * Muestra un formulario en un modal para crear o modificar una cita.
-     */
-
     private void mostrarFormulario(Cita cita) {
-
         Dialog<Cita> dialog = new Dialog<>();
         dialog.setTitle(cita == null ? "Agendar Nueva Cita" : "Modificar Cita ID: " + cita.getIdCita());
         dialog.initModality(Modality.APPLICATION_MODAL);
-
-        // Controles del formulario
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -234,19 +224,11 @@ public class VentanaCitas {
         TextField nombreField = new TextField(cita != null ? cita.getNombreSolicitante() : "");
         TextField contactoField = new TextField(cita != null ? cita.getContacto() : "");
 
-        // Controles para la HU-02
-
         ComboBox<Veterinario> vetCombo = new ComboBox<>(FXCollections.observableArrayList(this.veterinariosDisponibles));
-
-        // Usa el convertidor para mostrar nombres en el ComboBox
-
         vetCombo.setConverter(new ServicioVeterinarioConverter(this.veterinariosDisponibles));
         TextField motivoField = new TextField(cita != null ? cita.getMotivo() : "");
         TextArea notasArea = new TextArea(cita != null ? cita.getNotas() : "");
         notasArea.setPrefRowCount(3);
-
-
-        // Valores por defecto
 
         tipoCombo.getSelectionModel().select(cita != null ? cita.getTipo() : TipoCita.Consulta);
         vetCombo.getSelectionModel().select(cita != null ? cita.getVeterinario() : (veterinariosDisponibles.isEmpty() ? null : veterinariosDisponibles.get(0)));
@@ -262,8 +244,6 @@ public class VentanaCitas {
         grid.add(new Label("Contacto (Correo/Teléfono):"), 0, 4);
         grid.add(contactoField, 1, 4);
 
-        // Agregar los nuevos controles al Grid
-
         grid.add(new Label("Veterinario:"), 0, 5);
         grid.add(vetCombo, 1, 5);
         grid.add(new Label("Motivo:"), 0, 6);
@@ -271,11 +251,10 @@ public class VentanaCitas {
         grid.add(new Label("Notas:"), 0, 7);
         grid.add(notasArea, 1, 7);
 
-
         CheckBox enviarCorreoCheck = null;
         if (cita == null) {
             enviarCorreoCheck = new CheckBox("Enviar confirmación por correo (si el contacto es un email)");
-            grid.add(enviarCorreoCheck, 1, 8); // Ajustar fila
+            grid.add(enviarCorreoCheck, 1, 8);
         }
 
         dialog.getDialogPane().setContent(grid);
@@ -284,41 +263,26 @@ public class VentanaCitas {
 
         final CheckBox finalEnviarCorreoCheck = enviarCorreoCheck;
 
-        // Lógica al presionar "Guardar" o "Agendar"
-
         dialog.setResultConverter(dialogButton -> {
-
             if (dialogButton == botonGuardar) {
                 try {
-                    // Datos HU-01
-
                     LocalDate fecha = datePicker.getValue();
                     LocalTime hora = LocalTime.parse(timeField.getText());
                     LocalDateTime fechaHora = LocalDateTime.of(fecha, hora);
                     TipoCita tipo = tipoCombo.getValue();
                     String nombre = nombreField.getText();
                     String contacto = contactoField.getText();
-                    boolean enviar = (cita == null && finalEnviarCorreoCheck != null && finalEnviarCorreoCheck.isSelected());
 
-                    // Datos HU-02
+                    boolean enviar = (cita == null && finalEnviarCorreoCheck != null && finalEnviarCorreoCheck.isSelected());
 
                     Veterinario veterinario = vetCombo.getValue();
                     String motivo = motivoField.getText();
                     String notas = notasArea.getText();
 
-
                     if (cita == null) {
-
-                        // Crear
-
                         control.agendarCita(fechaHora, tipo, nombre, contacto, enviar, veterinario, motivo, notas);
-
                     } else {
-
-                        // Modificar
-
                         control.modificarCita(cita.getIdCita(), fechaHora, tipo, nombre, contacto, veterinario, motivo, notas);
-
                     }
                     return null;
 
@@ -333,8 +297,13 @@ public class VentanaCitas {
         dialog.showAndWait();
     }
 
+    /**
+     * Muestra una alerta al usuario.
+     * * @param title Título de la alerta.
+     * @param message Mensaje de la alerta.
+     * @param type Tipo de alerta (ERROR, WARNING, etc.).
+     */
     public void muestraAlerta(String title, String message, String type) {
-
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(() -> this.muestraAlerta(title, message, type));
             return;
@@ -350,16 +319,19 @@ public class VentanaCitas {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-
     }
 
+    /**
+     * Muestra un diálogo de confirmación.
+     * * @param title Título.
+     * @param message Mensaje.
+     * @return true si el usuario acepta, false si cancela.
+     */
     public boolean mostrarConfirmacion(String title, String message) {
-
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         return alert.showAndWait().filter(response -> response == ButtonType.OK).isPresent();
     }
-
 }
