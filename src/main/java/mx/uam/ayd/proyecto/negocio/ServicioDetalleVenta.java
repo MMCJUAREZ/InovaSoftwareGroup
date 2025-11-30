@@ -10,10 +10,12 @@ import org.slf4j.LoggerFactory;
 import mx.uam.ayd.proyecto.datos.VentaRepository;
 import mx.uam.ayd.proyecto.datos.DetalleVentaRepository;
 import mx.uam.ayd.proyecto.datos.ProductoRepository;
+import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
 import mx.uam.ayd.proyecto.negocio.modelo.Venta;
 import mx.uam.ayd.proyecto.negocio.modelo.DetalleVenta;
 import mx.uam.ayd.proyecto.negocio.modelo.Producto;
-
+import mx.uam.ayd.proyecto.negocio.modelo.Membresia;
+import mx.uam.ayd.proyecto.negocio.modelo.TipoMembresia;
 /**
  * Servicio para gestionar la creacion de los detalle de venta.
  */
@@ -54,33 +56,40 @@ public class ServicioDetalleVenta {
      * @throws IllegalArgumentException si producto o venta son nulos, o cantidad es <= 0
      * @throws IllegalStateException si el producto ya está en la lista o la cantidad supera el stock disponible
      */
-    public DetalleVenta newDetalleVenta(Producto producto, int cantidadVendida, Venta venta, List<DetalleVenta> detallesVenta){
-        if(producto == null) {
+    public DetalleVenta newDetalleVenta(Producto producto, int cantidadVendida, Venta venta, List<DetalleVenta> detallesVenta, Cliente cliente){
+        if (producto == null) {
             throw new IllegalArgumentException("El producto no puede ser nulo");
         }
-        for(DetalleVenta detalleVentaL : detallesVenta){
+        for (DetalleVenta detalleVentaL : detallesVenta){
             if(detalleVentaL.getProducto() == producto){
                 throw new IllegalStateException("El producto ya esta en la tabla");
             }
         }
-        if(cantidadVendida <= 0) {
+        if (cantidadVendida <= 0) {
             throw new IllegalArgumentException("La cantidad no puede ser menor o igual a 0");
         }
-        if(cantidadVendida > producto.getCantidadStock()){
+        if (cantidadVendida > producto.getCantidadStock()){
             throw new IllegalStateException("La cantidad vendida no puede ser mayor al stock");
         }
-        if(venta == null) {
+        if (venta == null) {
             throw new IllegalArgumentException("La venta no puede ser nulo");
         }
 
         log.info("Agregando producto " + producto.getNombre());
+        Membresia membresia = cliente.getMembresia();
 
         DetalleVenta detalleVenta = new DetalleVenta();
         detalleVenta.setVenta(venta);
         detalleVenta.setProducto(producto);
         double subtotal = producto.getPrecio() * cantidadVendida;
         detalleVenta.setCantidadVendida(cantidadVendida);
-        detalleVenta.setSubtotal(subtotal);
+        if (cliente == null || membresia == null){
+            detalleVenta.setSubtotal(subtotal);
+        }else if (membresia.getTipoMembresia() == TipoMembresia.Standard){
+            detalleVenta.setSubtotal(subtotal*0.9);
+        }else {
+            detalleVenta.setSubtotal(subtotal*0.85);
+        }
 
         return detalleVenta;
     }

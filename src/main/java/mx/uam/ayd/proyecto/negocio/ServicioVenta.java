@@ -77,13 +77,13 @@ public class ServicioVenta {
      */
     public void actualizarStock(Producto producto, int cantidadVendida){
         Umbral umbral = umbralRepository.findByProductoIdProducto(producto.getIdProducto());
-        if(producto == null){
+        if (producto == null){
             throw new IllegalArgumentException("Producto no puede ser nulo");
         }
-        if(cantidadVendida <= 0){
+        if (cantidadVendida <= 0){
             throw new IllegalArgumentException("La cantidad vendida no puede ser menor a 0");
         }
-        if(cantidadVendida > producto.getCantidadStock()){
+        if (cantidadVendida > producto.getCantidadStock()){
             throw new IllegalStateException("La cantidad vendida no puede ser mayor al stock");
         }
 
@@ -92,11 +92,6 @@ public class ServicioVenta {
 
         productoRepository.save(producto);
 
-        /*if(umbral != null){
-            if(umbral.getValorMinimo() >= producto.getCantidadStock()){
-                servicioCorreo.enviarCorreo("jmjj271006@gmail.com", "Alerta Stock", "El stock del producto: " + producto.toString() + " esta por debajo del umbral establecido");
-            }
-        }*/
     }
 
     /**
@@ -107,13 +102,13 @@ public class ServicioVenta {
      * @throws IllegalArgumentException si la venta es nula o el monto es inválido
      */
     public void guardarVenta(Venta venta, double montoTotal, Cliente cliente){
-        if(venta == null){
+        if (venta == null){
             throw new IllegalArgumentException("La venta no puede ser nulo");
         }
         if (montoTotal <= 0) {
             throw new IllegalArgumentException("El monto total no puede ser menor o igual a 0");
         }
-        if(cliente != null){
+        if (cliente != null){
             Double montoActual = cliente.getMontoAcumulado();
             Double total = montoActual + montoTotal;
             cliente.setMontoAcumulado(total);
@@ -131,12 +126,12 @@ public class ServicioVenta {
      * @throws IllegalStateException si la lista está vacía o contiene productos duplicados
      */
     public void agregarDetallesVenta(List<DetalleVenta> detallesVenta) {
-        if(detallesVenta.isEmpty()){
+        if (detallesVenta.isEmpty()){
             throw new IllegalStateException("La lista no puede estar vacia");
         }
         Set<Producto> productos = new HashSet<>();
-        for(DetalleVenta detalleVenta : detallesVenta){
-            if(!productos.add(detalleVenta.getProducto())){
+        for (DetalleVenta detalleVenta : detallesVenta){
+            if (!productos.add(detalleVenta.getProducto())){
                 throw new IllegalStateException("La lista de detalles contiene productos duplicados");
             }
         }
@@ -153,10 +148,9 @@ public class ServicioVenta {
      * @return lista de objetos {@link ReporteVentaDTO} con la información del reporte
      */
     public List<ReporteVentaDTO> recuperarVenta(LocalDate desde, LocalDate hasta, TipoProducto tipoProducto, String periodicidad) {
-        if(periodicidad.equals("Mensual")){
+        if (periodicidad.equals("Mensual")){
             return ventaRepository.obtenerReporteVentasMensual(desde, hasta, tipoProducto);
-        }
-        else{
+        } else {
             return ventaRepository.obtenerReporteVentasDiario(desde, hasta, tipoProducto);
         }
     }

@@ -32,4 +32,8 @@ public class Membresia {
     @ToString.Exclude 
     private Cliente cliente;
 
+    public TipoMembresia getTipoMembresia() {
+        return tipo;
+    }
+
 }

@@ -100,7 +100,7 @@ public class ControlRegistroVentas {
                 ventana.muestraDialogoConMensaje("Ocurrió un error al crear la venta");
             }
 
-            ventana.muestra(productos, venta);
+            ventana.muestra(productos, venta, cliente);
         }
     }
 
@@ -115,9 +115,9 @@ public class ControlRegistroVentas {
      * @return El detalle de venta creado.
      * @throws Exception Si ocurre algún error al agregar el producto.
      */
-    public DetalleVenta crearDetalleVenta(Producto producto, int cantidad, List<DetalleVenta> detalleVentas) {
+    public DetalleVenta crearDetalleVenta(Producto producto, int cantidad, List<DetalleVenta> detalleVentas, Cliente cliente) {
         try {
-            DetalleVenta detalleVenta = servicioDetalleVenta.newDetalleVenta(producto, cantidad, venta, detalleVentas);
+            DetalleVenta detalleVenta = servicioDetalleVenta.newDetalleVenta(producto, cantidad, venta, detalleVentas, cliente);
             ventana.muestraDialogoConMensaje("Producto agregado exitosamente");
             return detalleVenta;
         } catch (Exception ex) {
