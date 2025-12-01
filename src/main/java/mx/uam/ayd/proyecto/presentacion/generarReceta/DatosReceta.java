@@ -1,9 +1,11 @@
 package mx.uam.ayd.proyecto.presentacion.generarReceta;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import mx.uam.ayd.proyecto.negocio.modelo.Producto;
 
 /**
- * @class DatosReceta
+ * @class Medicacion
  * @brief Modelo que representa un elemento dentro de una receta veterinaria.
  *
  * Contiene la información necesaria para generar una línea dentro de la receta:
@@ -12,16 +14,16 @@ import mx.uam.ayd.proyecto.negocio.modelo.Producto;
 public class DatosReceta {
 
     /** Nombre del producto recetado. */
-    private String producto;
+    private Producto producto;
 
     /** Dosis recomendada. */
-    private String dosis;
+    private IntegerProperty dosis = new SimpleIntegerProperty();
 
     /** Intervalo de administración. */
-    private String cada;
+    private IntegerProperty cada = new SimpleIntegerProperty();
 
     /** Duración del tratamiento. */
-    private String hasta;
+    private IntegerProperty hasta = new SimpleIntegerProperty();
 
     /** Nota o instrucción adicional del tratamiento. */
     private String nota;
@@ -44,52 +46,57 @@ public class DatosReceta {
      * @param hasta Duración o fecha límite del tratamiento.
      * @param nota Notas adicionales.
      */
-    public DatosReceta(Producto producto, String dosis, String cada, String hasta, String nota) {
-        this.producto = producto.getNombre();
-        this.dosis = dosis;
-        this.cada = cada;
-        this.hasta = hasta;
+    public DatosReceta(Producto producto, int dosis, int cada, int hasta, String nota) {
+        this.producto = producto;
+        this.dosis.set(dosis);
+        this.cada.set(cada);
+        this.hasta.set(hasta);
         this.nota = nota;
     }
 
     /** @return Nombre del producto recetado. */
-    public String getProducto() {
+    public Producto getProducto() {
         return producto;
     }
 
     /** @param producto Nombre del producto recetado. */
-    public void setProducto(String producto) {
+    public void setProducto(Producto producto) {
         this.producto = producto;
     }
 
+    /** @return Nombre del producto recetado. */
+    public String getNombreProducto() {
+        return producto.getNombre();
+    }
+
     /** @return La dosis recomendada. */
-    public String getDosis() {
-        return dosis;
+    public int getDosis() {
+        return dosis.get();
     }
 
     /** @param dosis Dosis recomendada. */
-    public void setDosis(String dosis) {
-        this.dosis = dosis;
+    public void setDosis(int dosis) {
+        this.dosis.set(dosis);
     }
 
     /** @return Intervalo de administración. */
-    public String getCada() {
-        return cada;
+    public int getCada() {
+        return cada.get();
     }
 
     /** @param cada Intervalo de administración. */
-    public void setCada(String cada) {
-        this.cada = cada;
+    public void setCada(int cada) {
+        this.cada.set(cada);
     }
 
     /** @return Duración del tratamiento. */
-    public String getHasta() {
-        return hasta;
+    public int getHasta() {
+        return hasta.get();
     }
 
     /** @param hasta Duración del tratamiento. */
-    public void setHasta(String hasta) {
-        this.hasta = hasta;
+    public void setHasta(int hasta) {
+        this.hasta.set(hasta);
     }
 
     /** @return Nota adicional de la receta. */
