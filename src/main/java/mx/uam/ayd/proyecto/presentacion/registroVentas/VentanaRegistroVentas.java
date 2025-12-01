@@ -29,6 +29,7 @@ import java.util.function.LongToDoubleFunction;
 import mx.uam.ayd.proyecto.negocio.modelo.Venta;
 import mx.uam.ayd.proyecto.negocio.modelo.DetalleVenta;
 import mx.uam.ayd.proyecto.negocio.modelo.Producto;
+import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
 
 /**
  * Controla la ventana para registrar ventas.
@@ -42,6 +43,7 @@ public class VentanaRegistroVentas{
     private ControlRegistroVentas control;
 
     private Venta venta;
+    private Cliente cliente;
 
     @FXML
     private TextField txtCantidad;
@@ -183,6 +185,34 @@ public class VentanaRegistroVentas{
         stage.show();
     }
 
+        public void muestra(List<Producto> productos, Venta venta, Cliente cliente) {
+        if (!Platform.isFxApplicationThread()) {
+            Platform.runLater(() -> this.muestra(productos, venta, cliente));
+            return;
+        }
+
+        initializeUI();
+
+        // Limpia cantidad y lista previa
+        txtCantidad.setText("");
+        cmbProductos.getItems().clear();
+
+        // Agrega productos al ComboBox
+        for(Producto producto : productos) {
+            cmbProductos.getItems().add(producto);
+        }
+
+        // Selecciona el primer producto si la lista no está vacía
+        if(!cmbProductos.getItems().isEmpty()) {
+            cmbProductos.setValue(cmbProductos.getItems().get(0));
+        }
+
+        this.venta = venta;
+        this.cliente = cliente;
+
+        stage.show();
+    }
+
     /**
      * Muestra un diálogo informativo con el mensaje proporcionado.
      * Se asegura que la llamada se realice en el hilo de JavaFX.
@@ -248,7 +278,8 @@ public class VentanaRegistroVentas{
             detallesVenta.add(control.crearDetalleVenta(
                     cmbProductos.getValue(),
                     Integer.parseInt(txtCantidad.getText()),
-                    detallesVenta));
+                    detallesVenta,
+                    cliente));
 
             // Actualiza la tabla de venta con la lista actualizada
             tableVenta.setItems(detallesVenta);
