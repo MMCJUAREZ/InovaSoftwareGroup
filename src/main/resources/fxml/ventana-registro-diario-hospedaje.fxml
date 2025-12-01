@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox spacing="8" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="mx.uam.ayd.proyecto.presentacion.RegistroDiarioHospedaje.VentanaRegistroDiarioHospedaje">
+    <Label text="Registro diario de hospedaje"
+           style="-fx-font-size:16px; -fx-font-weight:bold;" />
+    <HBox spacing="8">
+        <Label text="Hospedaje:" />
+        <Label fx:id="lblHospedaje" text="(no seleccionado)" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="Cerrar" onAction="#handleCerrar" />
+    </HBox>
+
+    <GridPane hgap="10" vgap="6">
+        <Label text="Dueño:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <Label fx:id="lblDueno" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Mascota:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <Label fx:id="lblMascota" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Entrada:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <Label fx:id="lblEntrada" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Salida:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <Label fx:id="lblSalida" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <GridPane hgap="8" vgap="6">
+        <Label text="Fecha:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <Label fx:id="lblFecha" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label text="Alimentación:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextArea fx:id="taAlimentacion" prefRowCount="2" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="Salud:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextArea fx:id="taSalud" prefRowCount="2" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="Comportamiento:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextArea fx:id="taComportamiento" prefRowCount="2" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <Label text="Observaciones:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <TextArea fx:id="taObservaciones" prefRowCount="2" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Guardar registro" onAction="#handleGuardarRegistro" />
+    </HBox>
+
+    <Label text="Historial (más reciente arriba)" />
+    <TableView fx:id="tableRegistros" prefHeight="240">
+        <columns>
+            <TableColumn fx:id="colFecha" text="Fecha" prefWidth="170"/>
+            <TableColumn fx:id="colAlimentacion" text="Alimentación" prefWidth="200"/>
+            <TableColumn fx:id="colSalud" text="Salud" prefWidth="200"/>
+            <TableColumn fx:id="colComportamiento" text="Comportamiento" prefWidth="200"/>
+            <TableColumn fx:id="colObservaciones" text="Observaciones" prefWidth="200"/>
+        </columns>
+    </TableView>
+</VBox>
