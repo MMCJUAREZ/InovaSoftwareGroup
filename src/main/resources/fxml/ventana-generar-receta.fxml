@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="825.0" prefWidth="645.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="panePrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="802.0" prefWidth="653.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox layoutX="35.0" layoutY="85.0" prefHeight="85.0" prefWidth="601.0">
          <children>
@@ -36,7 +36,7 @@
       </HBox>
       <Label layoutX="35.0" layoutY="39.0" text="Generar receta medica">
          <font>
-            <Font name="System Bold" size="20.0" />
+            <Font name="System Bold" size="18.0" />
          </font>
       </Label>
       <HBox layoutX="35.0" layoutY="170.0" prefHeight="85.0" prefWidth="543.0">
@@ -85,14 +85,14 @@
             <TextArea fx:id="txtAreaNota" prefHeight="85.0" prefWidth="479.0" />
          </children>
       </HBox>
-      <Button fx:id="btnAgregar" layoutX="281.0" layoutY="372.0" mnemonicParsing="false" onAction="#handleAgregar" text="Agregar a la tabla" />
+      <Button fx:id="btnAgregar" layoutX="232.0" layoutY="370.0" mnemonicParsing="false" onAction="#handleAgregar" prefHeight="30.0" prefWidth="200.0" text="Agregar a la receta" />
       <TableView fx:id="tblReceta" layoutX="35.0" layoutY="430.0" prefHeight="200.0" prefWidth="575.0">
         <columns>
           <TableColumn fx:id="clmMedicamento" prefWidth="106.0" text="Medicamento" />
-          <TableColumn fx:id="clmDosis" prefWidth="73.0" text="Dosis" />
-            <TableColumn fx:id="clmCada" prefWidth="81.0" text="Cada" />
-            <TableColumn fx:id="clmHasta" prefWidth="104.0" text="Hasta" />
-            <TableColumn fx:id="clmNota" prefWidth="210.0" text="Nota" />
+          <TableColumn fx:id="clmDosis" prefWidth="75.0" text="Dosis" />
+            <TableColumn fx:id="clmCada" prefWidth="103.0" text="Cada" />
+            <TableColumn fx:id="clmHasta" prefWidth="106.0" text="Hasta" />
+            <TableColumn fx:id="clmNota" prefWidth="184.0" text="Nota" />
         </columns>
       </TableView>
       <HBox layoutX="204.0" layoutY="654.0" prefHeight="34.0" prefWidth="263.0">
@@ -103,17 +103,20 @@
                </padding></Label>
             <TextField fx:id="txtCorreo" />
          </children></HBox>
-      <HBox layoutX="184.0" layoutY="704.0" prefHeight="25.0" prefWidth="303.0">
+      <HBox layoutX="15.0" layoutY="704.0" prefHeight="25.0" prefWidth="639.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#handleCancelar" text="Cancelar">
+            <Button fx:id="btnGenerarReceta" minHeight="30.0" minWidth="200.0" mnemonicParsing="false" onAction="#handleGenerar" text="Generar receta">
                <HBox.margin>
-                  <Insets right="15.0" />
+                  <Insets right="10.0" />
                </HBox.margin></Button>
-            <Button mnemonicParsing="false" onAction="#handleEliminar" text="Eliminar de la tabla">
+            <Button minHeight="30.0" minWidth="200.0" mnemonicParsing="false" onAction="#handleEliminar" text="Eliminar de la tabla">
                <HBox.margin>
-                  <Insets right="15.0" />
+                  <Insets right="10.0" />
                </HBox.margin></Button>
-            <Button mnemonicParsing="false" onAction="#handleGenerar" text="Generar receta" />
+            <Button minHeight="30.0" minWidth="200.0" mnemonicParsing="false" onAction="#handleCancelar" text="Cancelar">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin></Button>
          </children>
       </HBox>
    </children>
