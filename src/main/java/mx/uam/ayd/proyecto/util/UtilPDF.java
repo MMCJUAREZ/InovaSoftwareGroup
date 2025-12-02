@@ -235,7 +235,7 @@ public class UtilPDF {
      * Genera un archivo PDF que contiene una receta médica.
      * * @param datosReceta Lista de objetos con la información de la receta.
      */
-    public void crearReceta(List<DatosReceta> datosReceta) {
+    public String crearReceta(List<DatosReceta> datosReceta) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Guardar PDF");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos PDF", "*.pdf"));
@@ -326,9 +326,14 @@ public class UtilPDF {
 
                 document.close();
 
+                return ruta;
+
             } catch (Exception ex) {
                 ex.printStackTrace();
+                return null;
             }
         }
+
+        return null;
     }
 }
