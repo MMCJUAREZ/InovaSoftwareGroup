@@ -4,7 +4,6 @@ import mx.uam.ayd.proyecto.datos.HospedajeRepository;
 import mx.uam.ayd.proyecto.negocio.modelo.Cliente;
 import mx.uam.ayd.proyecto.negocio.modelo.Hospedaje;
 import mx.uam.ayd.proyecto.negocio.modelo.Mascota;
-import mx.uam.ayd.proyecto.negocio.ServicioCorreo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -25,6 +24,9 @@ class ServicioHospedajeTest {
     @Mock
     private HospedajeRepository hospedajeRepository;
 
+    @Mock
+    private ServicioCorreo servicioCorreo;
+
     @InjectMocks
     private ServicioHospedaje servicioHospedaje;
 
@@ -44,17 +46,25 @@ class ServicioHospedajeTest {
         when(hospedajeRepository.save(any(Hospedaje.class))).thenReturn(hospedajeMock);
 
         Hospedaje resultado = servicioHospedaje.registrar(
-                cliente, mascota, LocalDate.now().plusDays(1), LocalDate.now().plusDays(3), "Ninguna");
+                cliente, mascota, LocalDate.now().plusDays(1),
+                LocalDate.now().plusDays(3), "Ninguna");
 
         assertNotNull(resultado);
+
         verify(hospedajeRepository, times(1)).save(any(Hospedaje.class));
+
+        // Verifica que se envió el correo
+        verify(servicioCorreo, times(1))
+                .enviarCorreoConfirmacionHospedaje(eq(cliente), eq(mascota), any(Hospedaje.class));
     }
 
     @Test
     void testRegistrar_FechaEntradaAnteriorAHoy() {
         Exception ex = assertThrows(IllegalArgumentException.class, () ->
                 servicioHospedaje.registrar(cliente, mascota,
-                        LocalDate.now().minusDays(1), LocalDate.now().plusDays(2), ""));
+                        LocalDate.now().minusDays(1),
+                        LocalDate.now().plusDays(2), ""));
+
         assertEquals("La fecha de entrada no puede ser anterior a hoy.", ex.getMessage());
     }
 
@@ -62,7 +72,9 @@ class ServicioHospedajeTest {
     void testRegistrar_FechaSalidaInvalida() {
         Exception ex = assertThrows(IllegalArgumentException.class, () ->
                 servicioHospedaje.registrar(cliente, mascota,
-                        LocalDate.now().plusDays(2), LocalDate.now().plusDays(1), ""));
+                        LocalDate.now().plusDays(2),
+                        LocalDate.now().plusDays(1), ""));
+
         assertEquals("La fecha de salida debe ser posterior a la fecha de entrada.", ex.getMessage());
     }
 
@@ -70,6 +82,7 @@ class ServicioHospedajeTest {
     void testEliminarHospedaje_Exito() {
         Hospedaje hospedaje = new Hospedaje();
         hospedaje.setFechaEntrada(LocalDate.now().plusDays(2));
+
         when(hospedajeRepository.findById(1L)).thenReturn(Optional.of(hospedaje));
 
         servicioHospedaje.eliminarHospedaje(1L);
@@ -81,8 +94,9 @@ class ServicioHospedajeTest {
     void testEliminarHospedaje_NoExiste() {
         when(hospedajeRepository.findById(99L)).thenReturn(Optional.empty());
 
-        Exception ex = assertThrows(IllegalArgumentException.class, () ->
-                servicioHospedaje.eliminarHospedaje(99L));
+        Exception ex = assertThrows(IllegalArgumentException.class,
+                () -> servicioHospedaje.eliminarHospedaje(99L));
+
         assertTrue(ex.getMessage().contains("No existe el registro de hospedaje"));
     }
 
@@ -90,10 +104,14 @@ class ServicioHospedajeTest {
     void testEliminarHospedaje_FechaPasada() {
         Hospedaje hospedaje = new Hospedaje();
         hospedaje.setFechaEntrada(LocalDate.now().minusDays(1));
+
         when(hospedajeRepository.findById(2L)).thenReturn(Optional.of(hospedaje));
 
-        Exception ex = assertThrows(IllegalStateException.class, () ->
-                servicioHospedaje.eliminarHospedaje(2L));
-        assertEquals("No se puede eliminar el registro, la mascota ya ingresó (la fecha de entrada ya pasó).", ex.getMessage());
+        Exception ex = assertThrows(IllegalStateException.class,
+                () -> servicioHospedaje.eliminarHospedaje(2L));
+
+        assertEquals(
+                "No se puede eliminar el registro, la mascota ya ingresó (la fecha de entrada ya pasó).",
+                ex.getMessage());
     }
 }
