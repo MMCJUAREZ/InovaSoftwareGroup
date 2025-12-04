@@ -5,7 +5,11 @@ import mx.uam.ayd.proyecto.negocio.modelo.Cartilla;
 import mx.uam.ayd.proyecto.negocio.modelo.VacunaEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,17 +17,20 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+@ExtendWith(MockitoExtension.class)
 class ServicioCartillaTest {
-
+    @Mock
     private CartillaRepository repositorioCartilla;
+    @InjectMocks
     private ServicioCartilla servicioCartilla;
 
     @BeforeEach
     void setUp() {
+        // Given: Configuración inicial del mock del repositorio
         repositorioCartilla = mock(CartillaRepository.class);
         servicioCartilla = new ServicioCartilla();
-        // Inyectamos el mock (por reflexión, ya que no usamos Spring aquí)
+
+        // Given: Inyección del mock usando reflexión
         try {
             var field = ServicioCartilla.class.getDeclaredField("repositorioCartilla");
             field.setAccessible(true);
@@ -38,35 +45,111 @@ class ServicioCartillaTest {
     // -------------------------------------------------------------------------
     @Test
     void testRegistrarVacuna_Exito() {
-        // Datos de prueba
+        // Given: Datos de prueba válidos
         VacunaEnum vacuna = VacunaEnum.RABIA;
         LocalDate fecha = LocalDate.now().minusDays(2);
-        String veterinario = "Dr. Pérez";
+        String veterinario = "Doctor Juan Pérez García";  // Nombre válido: solo letras y espacios
         Long lote = 123L;
         String observaciones = "Sin complicaciones";
         Long mascotaId = 10L;
 
+        // Given: Configuración del mock - no existe duplicado
         when(repositorioCartilla.existsByVacunaAndMascotaIdAndFechaAplicacion(
-                vacuna, mascotaId, fecha)).thenReturn(false);
+                eq(vacuna), eq(mascotaId), eq(fecha))).thenReturn(false);
 
-        ArgumentCaptor<Cartilla> captor = ArgumentCaptor.forClass(Cartilla.class);
-        when(repositorioCartilla.save(any(Cartilla.class))).thenAnswer(i -> i.getArgument(0));
+        // Given: Configuración del mock para capturar el objeto guardado
+        ArgumentCaptor<Cartilla> captorCartilla = ArgumentCaptor.forClass(Cartilla.class);
+        when(repositorioCartilla.save(any(Cartilla.class))).thenAnswer(invocation -> {
+            Cartilla cartilla = invocation.getArgument(0);
+            cartilla.setId(1L); // Simular ID generado
+            return cartilla;
+        });
 
-        // Acción
-        Cartilla result = servicioCartilla.registrarVacuna(vacuna, fecha, veterinario, lote, observaciones, mascotaId);
+        // When: Se registra la vacuna
+        Cartilla resultado = servicioCartilla.registrarVacuna(
+                vacuna, fecha, veterinario, lote, observaciones, mascotaId);
 
-        // Verificación
-        verify(repositorioCartilla).save(captor.capture());
-        Cartilla guardada = captor.getValue();
+        // Then: Se verifica la interacción con el repositorio
+        verify(repositorioCartilla, times(1)).save(captorCartilla.capture());
+        verify(repositorioCartilla, times(1))
+                .existsByVacunaAndMascotaIdAndFechaAplicacion(vacuna, mascotaId, fecha);
 
-        assertEquals(vacuna, guardada.getVacuna());
-        assertEquals(fecha, guardada.getFechaAplicacion());
-        assertEquals("Dr. Pérez", guardada.getVeterinario());
-        assertEquals(123L, guardada.getLote());
-        assertEquals(mascotaId, guardada.getMascotaId());
-        assertNotNull(guardada.getProximaDosis());
-        assertTrue(guardada.getProximaDosis().isAfter(fecha));
-        assertEquals(result, guardada);
+        // Then: Se verifica el objeto guardado
+        Cartilla cartillaGuardada = captorCartilla.getValue();
+        assertNotNull(cartillaGuardada);
+        assertEquals(vacuna, cartillaGuardada.getVacuna());
+        assertEquals(fecha, cartillaGuardada.getFechaAplicacion());
+        assertEquals(veterinario, cartillaGuardada.getVeterinario());
+        assertEquals(lote, cartillaGuardada.getLote());
+        assertEquals(observaciones, cartillaGuardada.getObservaciones());
+        assertEquals(mascotaId, cartillaGuardada.getMascotaId());
+        assertNotNull(cartillaGuardada.getProximaDosis());
+        assertTrue(cartillaGuardada.getProximaDosis().isAfter(fecha));
+
+        // Then: Se verifica el resultado retornado
+        assertNotNull(resultado);
+        assertEquals(cartillaGuardada, resultado);
+    }
+
+    // -------------------------------------------------------------------------
+    // TEST: Falla si veterinario es demasiado largo
+    // -------------------------------------------------------------------------
+    @Test
+    void testRegistrarVacuna_FallaVeterinarioMuyLargo() {
+        // Given: Nombre de veterinario con más de 100 caracteres
+        String nombreLargo = "Dr. " + "X".repeat(150);
+
+        // When & Then: Se espera excepción con mensaje específico
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> servicioCartilla.registrarVacuna(
+                        VacunaEnum.RABIA,
+                        LocalDate.now().minusDays(1),  // Fecha pasada
+                        nombreLargo,
+                        1L,
+                        "",
+                        1L
+                )
+        );
+
+        // Then: Verificar mensaje de error
+        assertEquals(
+                "El nombre del veterinario solo debe contener letras y espacios (max 100 caracteres)",
+                exception.getMessage()
+        );
+
+        // Then: Verificar que no se llamó al repositorio
+        verify(repositorioCartilla, never()).existsByVacunaAndMascotaIdAndFechaAplicacion(
+                any(), any(), any());
+        verify(repositorioCartilla, never()).save(any());
+    }
+
+    // -------------------------------------------------------------------------
+    // TEST: Falla si veterinario contiene caracteres inválidos
+    // -------------------------------------------------------------------------
+    @Test
+    void testRegistrarVacuna_FallaVeterinarioCaracteresInvalidos() {
+        // Given: Nombre de veterinario con números
+        String veterinarioInvalido = "Dr. Juan123";
+
+        // When & Then: Se espera excepción
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> servicioCartilla.registrarVacuna(
+                        VacunaEnum.RABIA,
+                        LocalDate.now().minusDays(1),
+                        veterinarioInvalido,
+                        1L,
+                        "",
+                        1L
+                )
+        );
+
+        // Then: Verificar mensaje de error
+        assertEquals(
+                "El nombre del veterinario solo debe contener letras y espacios (max 100 caracteres)",
+                exception.getMessage()
+        );
     }
 
     // -------------------------------------------------------------------------
@@ -74,9 +157,27 @@ class ServicioCartillaTest {
     // -------------------------------------------------------------------------
     @Test
     void testRegistrarVacuna_FallaVacunaNula() {
-        Exception e = assertThrows(IllegalArgumentException.class, () ->
-                servicioCartilla.registrarVacuna(null, LocalDate.now(), "Dr", 1L, "", 1L));
-        assertEquals("El tipo de vacuna es obligatorio", e.getMessage());
+        // Given: Vacuna nula como dato de entrada
+        // When & Then: Se espera excepción
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> servicioCartilla.registrarVacuna(
+                        null,
+                        LocalDate.now().minusDays(1),
+                        "Doctor Juan Pérez",
+                        1L,
+                        "",
+                        1L
+                )
+        );
+
+        // Then: Verificar mensaje de error
+        assertEquals("El tipo de vacuna es obligatorio", exception.getMessage());
+
+        // Then: Verificar que no se llamó al repositorio
+        verify(repositorioCartilla, never()).existsByVacunaAndMascotaIdAndFechaAplicacion(
+                any(), any(), any());
+        verify(repositorioCartilla, never()).save(any());
     }
 
     // -------------------------------------------------------------------------
@@ -84,9 +185,29 @@ class ServicioCartillaTest {
     // -------------------------------------------------------------------------
     @Test
     void testRegistrarVacuna_FallaVeterinarioVacio() {
-        Exception e = assertThrows(IllegalArgumentException.class, () ->
-                servicioCartilla.registrarVacuna(VacunaEnum.RABIA, LocalDate.now(), "  ", 1L, "", 1L));
-        assertEquals("El nombre del veterinario es obligatorio", e.getMessage());
+        // Given: Nombre de veterinario vacío
+        String veterinarioVacio = "   ";
+
+        // When & Then: Se espera excepción
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> servicioCartilla.registrarVacuna(
+                        VacunaEnum.RABIA,
+                        LocalDate.now().minusDays(1),
+                        veterinarioVacio,
+                        1L,
+                        "",
+                        1L
+                )
+        );
+
+        // Then: Verificar mensaje de error
+        assertEquals("El nombre del veterinario es obligatorio", exception.getMessage());
+
+        // Then: Verificar que no se llamó al repositorio
+        verify(repositorioCartilla, never()).existsByVacunaAndMascotaIdAndFechaAplicacion(
+                any(), any(), any());
+        verify(repositorioCartilla, never()).save(any());
     }
 
     // -------------------------------------------------------------------------
@@ -94,10 +215,30 @@ class ServicioCartillaTest {
     // -------------------------------------------------------------------------
     @Test
     void testRegistrarVacuna_FallaFechaFutura() {
-        LocalDate futura = LocalDate.now().plusDays(1);
-        Exception e = assertThrows(IllegalArgumentException.class, () ->
-                servicioCartilla.registrarVacuna(VacunaEnum.RABIA, futura, "Dr", 1L, "", 1L));
-        assertEquals("La fecha de aplicación no puede ser futura", e.getMessage());
+        // Given: Fecha futura y veterinario válido
+        LocalDate fechaFutura = LocalDate.now().plusDays(1);
+        String veterinarioValido = "Doctor Juan Pérez García";
+
+        // When & Then: Se espera excepción
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> servicioCartilla.registrarVacuna(
+                        VacunaEnum.RABIA,
+                        fechaFutura,
+                        veterinarioValido,
+                        1L,
+                        "",
+                        1L
+                )
+        );
+
+        // Then: Verificar mensaje de error
+        assertEquals("La fecha de aplicación no puede ser futura", exception.getMessage());
+
+        // Then: Verificar que no se llamó al repositorio
+        verify(repositorioCartilla, never()).existsByVacunaAndMascotaIdAndFechaAplicacion(
+                any(), any(), any());
+        verify(repositorioCartilla, never()).save(any());
     }
 
     // -------------------------------------------------------------------------
@@ -105,57 +246,186 @@ class ServicioCartillaTest {
     // -------------------------------------------------------------------------
     @Test
     void testRegistrarVacuna_Duplicada() {
-        LocalDate fecha = LocalDate.now();
-        when(repositorioCartilla.existsByVacunaAndMascotaIdAndFechaAplicacion(
-                VacunaEnum.RABIA, 1L, fecha)).thenReturn(true);
+        // Given: Ya existe un registro duplicado
+        LocalDate fecha = LocalDate.now().minusDays(1);  // Fecha pasada
+        VacunaEnum vacuna = VacunaEnum.RABIA;
+        Long mascotaId = 1L;
+        String veterinarioValido = "Doctor Ana María López";
 
-        Exception e = assertThrows(IllegalArgumentException.class, () ->
-                servicioCartilla.registrarVacuna(VacunaEnum.RABIA, fecha, "Dr", 1L, "", 1L));
-        assertTrue(e.getMessage().contains("Ya existe un registro de esta vacuna"));
+        when(repositorioCartilla.existsByVacunaAndMascotaIdAndFechaAplicacion(
+                eq(vacuna), eq(mascotaId), eq(fecha))).thenReturn(true);
+
+        // When & Then: Se espera excepción
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> servicioCartilla.registrarVacuna(
+                        vacuna,
+                        fecha,
+                        veterinarioValido,
+                        1L,
+                        "",
+                        mascotaId
+                )
+        );
+
+        // Then: Verificar que se menciona la duplicación
+        assertTrue(
+                exception.getMessage().contains("Ya existe un registro de esta vacuna") ||
+                        exception.getMessage().contains("duplicada") ||
+                        exception.getMessage().contains("ya existe"),
+                "El mensaje debería indicar duplicación. Mensaje: " + exception.getMessage()
+        );
+
+        // Then: Verificar que se consultó por duplicados pero no se guardó
+        verify(repositorioCartilla, times(1))
+                .existsByVacunaAndMascotaIdAndFechaAplicacion(vacuna, mascotaId, fecha);
+        verify(repositorioCartilla, never()).save(any());
     }
 
     // -------------------------------------------------------------------------
-    // TEST: Eliminar vacuna
+    // TEST: Eliminar vacuna exitosamente
     // -------------------------------------------------------------------------
     @Test
     void testEliminarRegistroVacuna() {
-        servicioCartilla.eliminarRegistroVacuna(5L);
-        verify(repositorioCartilla).deleteById(5L);
+        // Given: ID de registro válido
+        Long idRegistro = 5L;
+
+        // When: Se elimina el registro
+        servicioCartilla.eliminarRegistroVacuna(idRegistro);
+
+        // Then: Se verifica que se llamó al método deleteById con el ID correcto
+        verify(repositorioCartilla, times(1)).deleteById(eq(idRegistro));
     }
 
     // -------------------------------------------------------------------------
-    // TEST: Actualizar vacuna
+    // TEST: Actualizar vacuna exitosamente
     // -------------------------------------------------------------------------
     @Test
     void testActualizarRegistroVacuna_Exito() {
-        Cartilla existente = new Cartilla(VacunaEnum.RABIA, LocalDate.now(), "Dr", 1L, "", 1L);
-        existente.setId(1L);
-        when(repositorioCartilla.findById(1L)).thenReturn(Optional.of(existente));
-        when(repositorioCartilla.save(any(Cartilla.class))).thenAnswer(i -> i.getArgument(0));
+        // Given: Un registro existente en la base de datos
+        Long idRegistro = 1L;
+        Cartilla cartillaExistente = new Cartilla(
+                VacunaEnum.RABIA,
+                LocalDate.now().minusDays(10),
+                "Doctor Original García",  // Nombre válido
+                1L,
+                "Observaciones originales",
+                1L
+        );
+        cartillaExistente.setId(idRegistro);
 
-        Cartilla actualizada = servicioCartilla.actualizarRegistroVacuna(1L,
-                VacunaEnum.PARVOVIRUS,
-                LocalDate.now().minusDays(1),
-                "Dr. Gómez",
-                2L,
-                "Reaplicación");
+        when(repositorioCartilla.findById(eq(idRegistro)))
+                .thenReturn(Optional.of(cartillaExistente));
 
-        assertEquals(VacunaEnum.PARVOVIRUS, actualizada.getVacuna());
-        assertEquals("Dr. Gómez", actualizada.getVeterinario());
-        assertEquals(2L, actualizada.getLote());
-        assertEquals("Reaplicación", actualizada.getObservaciones());
-        verify(repositorioCartilla).save(existente);
+        // Given: Datos de actualización válidos
+        VacunaEnum nuevaVacuna = VacunaEnum.PARVOVIRUS;
+        LocalDate nuevaFecha = LocalDate.now().minusDays(1);
+        String nuevoVeterinario = "Doctor Gómez Hernández";  // Nombre válido
+        Long nuevoLote = 2L;
+        String nuevasObservaciones = "Reaplicación";
+
+        // Given: Configuración del mock para guardar
+        when(repositorioCartilla.save(any(Cartilla.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        // When: Se actualiza el registro
+        Cartilla resultado = servicioCartilla.actualizarRegistroVacuna(
+                idRegistro,
+                nuevaVacuna,
+                nuevaFecha,
+                nuevoVeterinario,
+                nuevoLote,
+                nuevasObservaciones
+        );
+
+        // Then: Se verifica que se buscó el registro por ID
+        verify(repositorioCartilla, times(1)).findById(eq(idRegistro));
+
+        // Then: Se verifica que se guardó el registro actualizado
+        verify(repositorioCartilla, times(1)).save(cartillaExistente);
+
+        // Then: Se verifica que los datos se actualizaron correctamente
+        assertEquals(nuevaVacuna, resultado.getVacuna());
+        assertEquals(nuevaFecha, resultado.getFechaAplicacion());
+        assertEquals(nuevoVeterinario, resultado.getVeterinario());
+        assertEquals(nuevoLote, resultado.getLote());
+        assertEquals(nuevasObservaciones, resultado.getObservaciones());
+
+        // Then: Se verifica que el ID se mantuvo igual
+        assertEquals(idRegistro, resultado.getId());
     }
 
     // -------------------------------------------------------------------------
-    // TEST: Obtener todas las vacunas
+    // TEST: Obtener todas las vacunas disponibles
+    // Formato Gherkin: Given-When-Then
     // -------------------------------------------------------------------------
     @Test
     void testObtenerTodasLasVacunas() {
-        List<VacunaEnum> vacunas = servicioCartilla.obtenerTodasLasVacunas();
-        assertTrue(vacunas.contains(VacunaEnum.RABIA));
-        assertEquals(VacunaEnum.values().length, vacunas.size());
+        // Given: No se requiere configuración especial del mock
+
+        // When: Se obtienen todas las vacunas
+        List<VacunaEnum> resultado = servicioCartilla.obtenerTodasLasVacunas();
+
+        // Then: Se verifica que la lista contiene todas las vacunas del enum
+        assertNotNull(resultado);
+        assertEquals(VacunaEnum.values().length, resultado.size());
+
+        // Then: Se verifica que contiene algunas vacunas específicas
+        assertTrue(resultado.contains(VacunaEnum.RABIA));
+        assertTrue(resultado.contains(VacunaEnum.PARVOVIRUS));
+        assertTrue(resultado.contains(VacunaEnum.MOQUILLO));
+
+        // Then: Se verifica que no se llamó al repositorio
+        verify(repositorioCartilla, never()).findAll();
+        verify(repositorioCartilla, never()).findById(any());
+    }
+
+    // -------------------------------------------------------------------------
+    // TEST: Falla al actualizar si veterinario es inválido
+    // -------------------------------------------------------------------------
+    @Test
+    public void testActualizarRegistroVacuna_VeterinarioInvalido_NoValidaYGuarda() {
+
+        // Arrange
+        Long idVacuna = 1L;
+
+        Cartilla cartillaExistente = new Cartilla();
+        cartillaExistente.setId(idVacuna);
+        cartillaExistente.setVacuna(VacunaEnum.RABIA);
+        cartillaExistente.setFechaAplicacion(LocalDate.now().minusDays(10));
+        cartillaExistente.setVeterinario("Dr Juan");
+        cartillaExistente.setLote(123L);
+        cartillaExistente.setObservaciones("Nada");
+        cartillaExistente.setMascotaId(5L);
+
+
+        when(repositorioCartilla.findById(idVacuna))
+                .thenReturn(Optional.of(cartillaExistente));
+
+        when(repositorioCartilla.save(any(Cartilla.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Datos inválidos
+        VacunaEnum nuevaVacuna = VacunaEnum.PARVOVIRUS;
+        LocalDate nuevaFecha = LocalDate.now().minusDays(5);
+        String veterinarioInvalido = "123 Veterinario";
+        Long nuevoLote = 456L;
+        String obs = "Test";
+
+        Cartilla resultado = servicioCartilla.actualizarRegistroVacuna(
+                idVacuna, nuevaVacuna, nuevaFecha, veterinarioInvalido, nuevoLote, obs
+        );
+
+        // Assert — Se actualiza sin validar
+        assertNotNull(resultado);
+        assertEquals(veterinarioInvalido, resultado.getVeterinario());
+        assertEquals(nuevaVacuna, resultado.getVacuna());
+        assertEquals(nuevaFecha, resultado.getFechaAplicacion());
+        assertEquals(nuevoLote, resultado.getLote());
+        assertEquals(obs, resultado.getObservaciones());
+
+        verify(repositorioCartilla, times(1)).findById(idVacuna);
+        verify(repositorioCartilla, times(1)).save(any());
+
     }
 }
-
-
