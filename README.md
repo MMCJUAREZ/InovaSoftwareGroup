@@ -130,3 +130,6 @@ Datos:
     User Name: admin
     Password: 1234
     Driver Class: org.h2.Driver
+
+Correr test E2E
+mvn clean test -Dtest=RegistrarClienteSystemTest
