@@ -13,6 +13,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
@@ -152,11 +153,16 @@ public class VentanaGestionarClientes {
     }
 
     public void muestraAlerta(Alert.AlertType type, String title, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(type);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            if (stage != null)
+                alert.initOwner(stage);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.showAndWait();
+        });
     }
     
     public boolean muestraConfirmacion(String title, String message) {
